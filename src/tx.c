@@ -19,7 +19,7 @@ void transmit_cycles(int cycles, int send_signal)
 	}
 }
 
-void transmit_byte(unsigned char data)//little endian transmission of a byte 
+void transmit_byte(unsigned int data)//little endian transmission of a byte 
 {
 /*	const int CYCLES_MULTIPLE = 23;
 	const int CYCLES_HEADER = CYCLES_MULTIPLE*4;

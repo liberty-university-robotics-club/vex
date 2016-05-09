@@ -3,7 +3,6 @@
 #define SERVO_PIN 3
 //Servo aimservo;
 #define POWER_PIN 6
-void tx_ec(int m);
 /*void setup() {
 	// initialize digital pin 13 as an output.
 	pinMode(13, OUTPUT);
@@ -20,7 +19,7 @@ void aim(int v){
 	aimservo.write(cv);
 }
 */
-void loop()
+void master_loop()
 {
 	// put your main code here, to run repeatedly:
 	int i = 0;
@@ -44,7 +43,7 @@ void loop()
 			delay(25);
 		}*/
 		for(i=110;i>60;i=i-1){
-			analogWrite(POWER_PIN,255-i);
+//			analogWrite(POWER_PIN,255-i); //TODO: fix analogWrite
 			//170 is about 2 feet and the lower the value is the farther it reaches (This is due to the properties of the transistor led driver hardware and can be chagned by changing the hardware)
 			tx_ec(i);
 			delay(25);

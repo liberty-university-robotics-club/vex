@@ -1,9 +1,8 @@
 #include "../include/ir.h"
-void tx_ec(int m){
+void tx_ec(unsigned int m){
 	transmit_byte(m);
 	transmit_byte(m);
 	transmit_byte(m);
-
 }
 
 unsigned int rx_ec(){

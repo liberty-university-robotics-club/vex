@@ -1,3 +1,5 @@
+#ifndef ir_h
+#define ir_h
 #define RX_PIN 2
 #define CYCLE_LEN 13
 #define CYCLES_MULTIPLE  23
@@ -11,3 +13,4 @@ unsigned int rx_ec(void);
 //transmit
 void transmit_byte(unsigned int);
 void tx_ec(unsigned int);
+#endif

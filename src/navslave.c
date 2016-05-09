@@ -6,7 +6,7 @@
 	Serial.begin(9600);
 }*/
 
-void loop()
+void slave_loop()
 {
 	// put your main code here, to run repeatedly:
 	//Serial.println(recive_byte());
