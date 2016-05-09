@@ -11,9 +11,12 @@ void slave_loop()
 	// put your main code here, to run repeatedly:
 	//Serial.println(recive_byte());
 	int a=rx_ec();
+//	int a=recive_byte();
 	if(a>1)
 		printf("%d\n",a);
-	//delay (200);
+//	taskDelay(100);//We are running at a very high priority 
+	//so we need to yeild the cpu to other tasks
+	//in the future we should use an ISR for watching the state of the recive pin
 
 
 }

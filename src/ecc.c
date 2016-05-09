@@ -13,7 +13,7 @@ unsigned int rx_ec(){
 		c=c+1;
 	else
 		c=0;
-	if(c>=2){
+	if(c>=1){
 		c=0;
 		l=0;
 		return b;
