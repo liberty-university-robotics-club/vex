@@ -13,4 +13,7 @@ unsigned int rx_ec(void);
 //transmit
 void transmit_byte(unsigned int);
 void tx_ec(unsigned int);
+//interface to main auto code
+void slave_loop(void);
+void master_loop(void);
 #endif
