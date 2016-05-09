@@ -20,12 +20,13 @@ unsigned int recive_byte() {
 }
 int recive_bit() {
 	int c=0;
-	while(digitalRead(RX_PIN));
+	while(digitalRead(RX_PIN))printf("start");
 	while(!digitalRead(RX_PIN)){
 		c=c+1;
 		delayMicroseconds(52);
 		
 	}
+	printf("stop");
 	return c/CYCLES_MULTIPLE;
 
 }

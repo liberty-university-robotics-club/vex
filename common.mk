@@ -19,7 +19,7 @@ MCUPREPARE=$(OBJCOPY) $(OUT) -O binary $(BINDIR)/$(OUTBIN)
 # Advanced sizing flags
 SIZEFLAGS=
 # Uploads program using java
-UPLOAD=@java -jar firmware/uniflash.jar vex $(BINDIR)/$(OUTBIN)
+UPLOAD=@java -jar firmware/uniflash.jar vex $(BINDIR)/$(OUTBIN) -P/dev/ttyUSB0
 
 # Advanced options
 ASMEXT=s

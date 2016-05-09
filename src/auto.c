@@ -3,6 +3,7 @@
 void autonomous() {
 #ifdef ALEN
 #pragma message ("building auto for Alen")
-	slave_loop(); //TODO: user interupts
+	printf("Start Alen auto....");
+	while(1) slave_loop(); //TODO: user interupts
 #endif
 }
