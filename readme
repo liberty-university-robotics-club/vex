@@ -1,0 +1,7 @@
+#LST6 Vex Competition firmware 
+	Note this repository contains the firmware source for both robots
+	To make the firwmare for Alen run the following  
+
+	`make UCFLAGS="-DALEN"`
+
+
