@@ -1,0 +1,10 @@
+#!/bin/bash
+
+i=0
+grep="";
+while [ "$grep" != "Starting user code" ] ;
+do
+	grep=`make upload | tee /dev/tty | grep "Starting user code"`;
+	let i=i+1;
+	echo "--------Attempt $i--------"
+done

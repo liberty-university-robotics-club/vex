@@ -35,6 +35,9 @@ clean:
 upload: all
 	$(UPLOAD)
 
+u: all
+	$(U)
+
 # Phony force-look target
 _force_look:
 	@true

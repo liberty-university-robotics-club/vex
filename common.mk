@@ -21,6 +21,8 @@ SIZEFLAGS=
 # Uploads program using java
 UPLOAD=@java -jar firmware/uniflash.jar vex $(BINDIR)/$(OUTBIN) -P/dev/ttyUSB0
 
+U="./upload"
+
 # Advanced options
 ASMEXT=s
 CEXT=c
