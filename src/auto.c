@@ -1,4 +1,5 @@
 #include "main.h"
+#include "robot.h"
 #include "ir.h"
 #define TASK_STACK_D 70 
 #define IR_PRIORITY TASK_PRIORITY_HIGHEST-2
