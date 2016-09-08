@@ -6,6 +6,10 @@
 #define CYCLES_HEADER  CYCLES_MULTIPLE*4
 #define CYCLES_TRUE CYCLES_MULTIPLE*2
 #define CYCLES_FALSE  CYCLES_MULTIPLE
+//constants defining packets
+#define ID_LEN 3
+#define DATA_LEN 8
+#define CHECK_LEN 3
 //recive
 unsigned int recive_byte(void);
 unsigned int rx_ec(void);
@@ -13,6 +17,8 @@ unsigned int rx_ec(void);
 //transmit
 void transmit_byte(unsigned int);
 void tx_ec(unsigned int);
+//check
+unsigned int checkgen(unsigned int, unsigned int);
 //interface to main auto code
 void slave_loop(void);
 void master_loop(void);

@@ -18,14 +18,41 @@ void transmit_cycles(int cycles, int send_signal)
 		delayMicroseconds(13);
 	}
 }
+void transmit_n(int n, unsigned int *data)
+{//untested
+	if(n>sizeof(int)*8)
+		n=sizeof(int)*8;
+	int j=0;
+	for(;j<n;j++)
+	{
 
+		int mybit = *data%2;
+		*data = *data/2;
+		if(mybit)
+		{
+			transmit_cycles(CYCLES_TRUE, true);
+		}
+		else
+		{
+			transmit_cycles(CYCLES_FALSE, true);
+		}
+	}
+}
+void transmitob(unsigned int id, unsigned int val)
+{
+	unsigned int check=checkgen(id,val);
+	transmit_cycles(CYCLES_HEADER, true);
+	transmit_n(ID_LEN,&id);
+	transmit_n(DATA_LEN,&val);
+	transmit_n(CHECK_LEN,&check);
+	transmit_cycles(CYCLES_HEADER, false);
+}
 void transmit_byte(unsigned int data)//little endian transmission of a byte 
 {
 /*	const int CYCLES_MULTIPLE = 23;
 	const int CYCLES_HEADER = CYCLES_MULTIPLE*4;
 	const int CYCLES_TRUE = CYCLES_MULTIPLE*2;
 	const int CYCLES_FALSE = CYCLES_MULTIPLE;*/
-	int i=0;
 
 	transmit_cycles(CYCLES_HEADER, true);
 

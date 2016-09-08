@@ -2,7 +2,29 @@
 #include "../include/API.h"
 int recive_bit();
 unsigned int recive_byte();
+int recive_ob(unsigned int *,unsigned int *);
+unsigned int recive_n(int);
 
+
+int recive_ob(unsigned int *id, unsigned int *ob){
+	*id=recive_n(ID_LEN);
+	*ob=recive_n(DATA_LEN);
+	unsigned int check=checkgen(*id,*ob);
+	unsigned int rcheck=recive_n(CHECK_LEN);
+	if(rcheck==check)
+		return 1;
+	return 0;
+}
+unsigned int recive_n(int n) {
+	int i=0;
+	unsigned int r=0;
+	while(recive_bit()<2);
+	for(i=0;i<n;i++){
+		r=r|(recive_bit()<<i);
+	}
+	return r;
+
+}
 unsigned int recive_byte() {
 	int i=0;
 	unsigned int r=0;
@@ -27,6 +49,5 @@ int recive_bit() {
 		
 	}
 	return c/CYCLES_MULTIPLE;
-
 }
 
