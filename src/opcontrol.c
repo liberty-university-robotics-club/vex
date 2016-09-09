@@ -3,29 +3,18 @@
 #include "API.h"
 #include <math.h>
 
+
 #define DONT_MOVE 0
 
-void operatorControl() {
-
-	autonomous(); //TODO: remove this (too lazy to grab joysticks rn)
-	while (1) {
-		opcontrol();
-		delay(20);
+void controlmotors(int lb, int rb, int lf, int rf)
+{
+	if(!DONT_MOVE)
+	{
+		motorSet(MLB,lb);
+		motorSet(MLF,lf);
+		motorSet(MRB,rb);
+		motorSet(MRF,rf);
 	}
-}
-void opcontrol()
-{
-	driveoperation();
-}
-
-void driveoperation()
-{
-	int joyforwardT = (abs(joystickGetAnalog(1,JOY_FORWARD_T)) > JOY_DEAD_T) ? joystickGetAnalog(1,JOY_FORWARD_T) : 0;
-	int joyforwardS = (abs(joystickGetAnalog(1,JOY_FORWARD2_T)) > JOY_DEAD_T) ? joystickGetAnalog(1,JOY_FORWARD_S) : 0;
-	int joyturnT = (abs((joystickGetAnalog(1,JOY_TURN_T))) > JOY_DEAD_T) ? joystickGetAnalog(1,JOY_TURN_T) : 0;
-	int joystrafingS = (abs(joystickGetAnalog(1,JOY_STRAFING)) > JOY_DEAD_T) ? joystickGetAnalog(1,JOY_STRAFING_S) : 0;
-
-	controldrive(joyturnT,joyforwardT+joyforwardS,joystrafingS);
 }
 
 void controldrive(int t, int f, int s)
@@ -43,10 +32,10 @@ void controldrive(int t, int f, int s)
 	int forward_rf = -1 * forward;
 	int forward_rb = -1 * forward;
 
-	int sideways_lf = -1  * strafe;
-	int sideways_lb = 1 * strafe;
-	int sideways_rf = -1  * strafe;
-	int sideways_rb = 1 * strafe;
+	int sideways_lf = 1  * strafe;
+	int sideways_lb = -1 * strafe;
+	int sideways_rf = 1  * strafe;
+	int sideways_rb = -1 * strafe;
 	
 	
 	
@@ -63,13 +52,26 @@ void controldrive(int t, int f, int s)
 	controlmotors(lb, rb, lf, rf); 
 }
 
-void controlmotors(int lb, int rb, int lf, int rf)
+void driveoperation()
 {
-	if(!DONT_MOVE)
-	{
-		motorSet(MLB,lb);
-		motorSet(MLF,lf);
-		motorSet(MRB,rb);
-		motorSet(MRF,rf);
+	int joyforwardT  = (abs(joystickGetAnalog(1,JOY_FORWARD_T )) > JOY_DEAD_T) ? joystickGetAnalog(1,JOY_FORWARD_T ) : 0;
+	int joyforwardS  = (abs(joystickGetAnalog(1,JOY_FORWARD_S )) > JOY_DEAD_T) ? joystickGetAnalog(1,JOY_FORWARD_S ) : 0;
+	int joyturnT     = (abs(joystickGetAnalog(1,JOY_TURN_T    )) > JOY_DEAD_T) ? joystickGetAnalog(1,JOY_TURN_T    ) : 0;
+	int joystrafingS = (abs(joystickGetAnalog(1,JOY_STRAFING_S)) > JOY_DEAD_T) ? joystickGetAnalog(1,JOY_STRAFING_S) : 0;
+
+	controldrive(joyturnT,joyforwardT+joyforwardS,joystrafingS);
+}
+
+void opcontrol()
+{
+	driveoperation();
+}
+
+void operatorControl() {
+
+	autonomous(); //TODO: remove this (too lazy to grab joysticks rn)
+	while (1) {
+		opcontrol();
+		delay(20);
 	}
 }
