@@ -38,6 +38,8 @@ upload: all
 u: all
 	$(U)
 
+uw: all
+	$(UW)
 # Phony force-look target
 _force_look:
 	@true

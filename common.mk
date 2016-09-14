@@ -22,6 +22,7 @@ SIZEFLAGS=
 UPLOAD=@java -jar firmware/uniflash.jar vex $(BINDIR)/$(OUTBIN) -P/dev/ttyUSB0
 
 U="./upload"
+UW="./uploadcp"
 
 # Advanced options
 ASMEXT=s

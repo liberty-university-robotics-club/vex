@@ -23,8 +23,8 @@ void master_loop()
 {
 	// put your main code here, to run repeatedly:
 	int i = 0;
-	const int min = 20;
-	const int max =120;
+//	const int min = 20;
+//	const int max =120;
 	/*for(i=0;i<256;i++)
 	{
 		aim(i);
