@@ -1,0 +1,9 @@
+#!/bin/bash
+i=0
+grep="";
+while [ "$grep" != "Starting user code" ] ;
+do
+        grep=`java -jar firmware/uniflash.jar vex ./bin/output.bin -PCOM3 | tee /dev/tty | grep "Starting user code"`;
+        let i=i+1;
+        echo "--------Attempt $i--------"
+done

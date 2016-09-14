@@ -1,0 +1,3 @@
+#!/bin/bash
+rm -rf /mnt/c/lugit/turing/*
+cp -r ./* /mnt/c/lugit/turing/
