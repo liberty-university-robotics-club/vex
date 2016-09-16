@@ -49,7 +49,7 @@ void controldrive(int t, int f, int s)
 	rf+=turn;
 	rb+=turn;
 	
-	controlmotors(lb, rb, lf, rf); 
+	controlmotors(lb, rb, lf, rf);
 }
 
 void driveoperation()
