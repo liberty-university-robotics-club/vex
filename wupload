@@ -6,4 +6,9 @@ do
         grep=`java -jar firmware/uniflash.jar vex ./bin/output.bin -PCOM3 | tee /dev/tty | grep "Starting user code"`;
         let i=i+1;
         echo "--------Attempt $i--------"
+        if [ "$i" == "$1" ];
+        then
+			grep="Starting user code"
+			echo "WARNING: All $i attempts exhausted!"
+		fi
 done
