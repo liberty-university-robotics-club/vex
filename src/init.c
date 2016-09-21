@@ -59,4 +59,10 @@ void initializeIO() {
  * can be implemented in this task if desired.
  */
 void initialize() {
+	imecount=imeInitializeAll();
+	ENC_LB = encoderInit(ENC_LBT,ENC_LBB,FORWARD_lf);
+	ENC_LF = encoderInit(ENC_LFT,ENC_LFB,FORWARD_lb);
+	ENC_RB = encoderInit(ENC_RBT,ENC_RBB,FORWARD_rf);
+	ENC_RF = encoderInit(ENC_RFT,ENC_RFB,FORWARD_rb);
+	
 }
