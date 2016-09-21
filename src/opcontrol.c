@@ -25,6 +25,12 @@ void controldrive(int t, int f, int s)
 	int forward = f;
 	int lf,lb,rf,rb;
 	
+	static int last_lf = 0;
+	static int last_lb = 0;
+	static int last_rf = 0;
+	static int last_rb = 0;
+	
+	
 	//Motor power
 	//FORWARD_lf is 1 or -1 stating motor direction, forward is joystick magnitude
 	//likewise for sideways
@@ -51,6 +57,7 @@ void controldrive(int t, int f, int s)
 	rb+=turn;
 	
 	//Sensor data
+	/*
 	simtank
 	(
 		&ltank,
@@ -59,13 +66,12 @@ void controldrive(int t, int f, int s)
 		encoderGet(ENC_LF),
 		encoderGet(ENC_RB),
 		encoderGet(ENC_RF)
-	);
+	);//*/
 	
 	encoderReset(ENC_LB);
 	encoderReset(ENC_LF);
 	encoderReset(ENC_RB);
 	encoderReset(ENC_RF);
-	
 	
 	controlmotors(lb, rb, lf, rf);
 }

@@ -33,6 +33,8 @@
  */
 
 #include "main.h"
+#include "robot.h"
+#include "API.h"
 
 /*
  * Runs pre-initialization code. This function will be started in kernel mode one time while the
@@ -58,11 +60,11 @@ void initializeIO() {
  * will not start. An autonomous mode selection menu like the pre_auton() in other environments
  * can be implemented in this task if desired.
  */
+int imecount=0;
 void initialize() {
-	imecount=imeInitializeAll();
+	//imecount=imeInitializeAll();
 	ENC_LB = encoderInit(ENC_LBT,ENC_LBB,FORWARD_lf);
 	ENC_LF = encoderInit(ENC_LFT,ENC_LFB,FORWARD_lb);
 	ENC_RB = encoderInit(ENC_RBT,ENC_RBB,FORWARD_rf);
 	ENC_RF = encoderInit(ENC_RFT,ENC_RFB,FORWARD_rb);
-	
 }

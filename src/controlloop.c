@@ -1,5 +1,5 @@
 #include "../include/controlloop.h"
-
+/*
 int controlLoop(int current, int target, state* state)
 {
     int increase = 1;
@@ -11,3 +11,4 @@ int controlLoop(int current, int target, state* state)
         return current -= increase;
     }
 }
+//*/
