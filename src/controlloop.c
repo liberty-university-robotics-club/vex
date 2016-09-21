@@ -1,6 +1,6 @@
 #include "../include/controlloop.h"
-/*
-int controlLoop(int current, int target, state* state)
+
+int controlLoop(int current, int target, state* st)
 {
     int increase = 1;
     if (current < target)
@@ -11,4 +11,3 @@ int controlLoop(int current, int target, state* state)
         return current -= increase;
     }
 }
-//*/
