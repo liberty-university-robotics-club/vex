@@ -12,4 +12,8 @@ void init_lift();
 
 void set_lift(bool value);
 
+bool get_lift();
+
+void manage_lift();
+
 #endif
