@@ -6,7 +6,7 @@
 
 #define DONT_MOVE 0
 
-void controlmotors(int lb, int rb, int lf, int rf)
+void controlmotors(int lb, int lf, int rb, int rf)
 {
 	if(!DONT_MOVE)
 	{
@@ -22,85 +22,102 @@ float max (float a, float b)
 }
 void controldrive(int t, int f, int s)
 {
-	printf("titus_controldrive()");
+	//printf("titus_controldrive()");
 	int strafe = s;
 	int turn = t;
 	int forward = f;
-	int lf,lb,rf,rb;
+	
+	int lb;
+	int lf;
+	int rb;
+	int rf;
 	
 	//*
-	static int last_lf = 0;
-	static int last_lb = 0;
-	static int last_rf = 0;
-	static int last_rb = 0;
+	static float last_lb = 1;
+	static float last_lf = 1;
+	static float last_rb = 1;
+	static float last_rf = 1;
 	//*/
 	
-	//*
-	static float suggested_lf = 1.0;
+	/*
 	static float suggested_lb = 1.0;
-	static float suggested_rf = 1.0;
+	static float suggested_lf = 1.0;
 	static float suggested_rb = 1.0;
+	static float suggested_rf = 1.0;
 	//*/
 	
 	//Motor power
 	//FORWARD_lf is 1 or -1 stating motor direction, forward is joystick magnitude
 	//likewise for sideways
 	//constants now in robot.h
-	int forward_lf = FORWARD_lf * forward;
 	int forward_lb = FORWARD_lb * forward;
-	int forward_rf = FORWARD_rf * forward;
+	int forward_lf = FORWARD_lf * forward;
 	int forward_rb = FORWARD_rb * forward;
+	int forward_rf = FORWARD_rf * forward;
 
-	int sideways_lf = SIDEWAYS_lf * strafe;
 	int sideways_lb = SIDEWAYS_lb * strafe;
-	int sideways_rf = SIDEWAYS_rf * strafe;
+	int sideways_lf = SIDEWAYS_lf * strafe;
 	int sideways_rb = SIDEWAYS_rb * strafe;
+	int sideways_rf = SIDEWAYS_rf * strafe;
 	
-	lf = forward_lf + sideways_lf;
 	lb = forward_lb + sideways_lb;
-	rf = forward_rf + sideways_rf;
+	lf = forward_lf + sideways_lf;
 	rb = forward_rb + sideways_rb;
+	rf = forward_rf + sideways_rf;
 
-	lf+=turn;
 	lb+=turn;
-	rf+=turn;
+	lf+=turn;
 	rb+=turn;
+	rf+=turn;
 	
 	//Sensor data
-	float scaled_speed_lf = encoderGet(ENC_LB) * (SCALED_SPEED_CONVERSION) * (FORWARD_lf);
-	float scaled_speed_lb = encoderGet(ENC_LF) * (SCALED_SPEED_CONVERSION) * (FORWARD_lb);
-	float scaled_speed_rf = encoderGet(ENC_RB) * (SCALED_SPEED_CONVERSION) * (FORWARD_rf);
-	float scaled_speed_rb = encoderGet(ENC_RF) * (SCALED_SPEED_CONVERSION) * (FORWARD_rb);
+	float scaled_speed_lb = encoderGet(ENC_LB) * (SCALED_SPEED_CONVERSION) * (FORWARD_lb);
+	float scaled_speed_lf = encoderGet(ENC_LF) * (SCALED_SPEED_CONVERSION) * (FORWARD_lf);
+	float scaled_speed_rb = encoderGet(ENC_RB) * (SCALED_SPEED_CONVERSION) * (FORWARD_rb);
+	float scaled_speed_rf = encoderGet(ENC_RF) * (SCALED_SPEED_CONVERSION) * (FORWARD_rf);
 	
-	float weighted_lf = 1.0*last_lf/scaled_speed_lf;
 	float weighted_lb = 1.0*last_lb/scaled_speed_lb;
-	float weighted_rf = 1.0*last_rf/scaled_speed_rf;
+	float weighted_lf = 1.0*last_lf/scaled_speed_lf;
 	float weighted_rb = 1.0*last_rb/scaled_speed_rb;
+	float weighted_rf = 1.0*last_rf/scaled_speed_rf;
 	
 	float weighted_max = max(
 		max(
-			weighted_lf,
-			weighted_lb
-		),
-		max(
-			weighted_rf,
-			weighted_rb
+			weighted_lb,
+			weighted_lf),max(
+			weighted_rb,
+			weighted_rf
 		)
 	);
 	
-	weighted_lf /= weighted_max;
 	weighted_lb /= weighted_max;
-	weighted_rf /= weighted_max;
+	weighted_lf /= weighted_max;
 	weighted_rb /= weighted_max;
+	weighted_rf /= weighted_max;
 	
-	
+	printf("%d %d %d %d \r\n",
+		encoderGet(ENC_LB),
+		encoderGet(ENC_LF),
+		encoderGet(ENC_RB),
+		encoderGet(ENC_RF)
+	);
+	printf("%f %f %f %f\r\n",
+		scaled_speed_lb,
+		scaled_speed_lf,
+		scaled_speed_rb,
+		scaled_speed_rf
+	);
+	printf("%f %f %f %f\r\n",
+		weighted_lb,
+		weighted_lf,
+		weighted_rb,
+		weighted_rf
+	);
 	
 	
 	/*
 	simtank
-	(
-		&ltank,
-		
+	(	&ltank,
 		encoderGet(ENC_LB),
 		encoderGet(ENC_LF),
 		encoderGet(ENC_RB),
@@ -112,7 +129,7 @@ void controldrive(int t, int f, int s)
 	encoderReset(ENC_RB);
 	encoderReset(ENC_RF);
 	
-	controlmotors(lb, rb, lf, rf);
+	controlmotors(lb, lf, rb, rf);
 }
 
 void driveoperation()
@@ -135,6 +152,6 @@ void operatorControl() {
 	autonomous(); //TODO: remove this (too lazy to grab joysticks rn)
 	while (1) {
 		opcontrol();
-		delay(20);
+		delay(1000);
 	}
 }

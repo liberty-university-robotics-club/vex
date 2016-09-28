@@ -8,27 +8,27 @@
 #define MRB 4
 #define MRF 5
 
-#define FORWARD_lf 1  
-#define FORWARD_lb 1  
-#define FORWARD_rf -1 
-#define FORWARD_rb -1 
+#define FORWARD_lb 1
+#define FORWARD_lf 1
+#define FORWARD_rb -1
+#define FORWARD_rf -1
 
-#define SIDEWAYS_lf 1 
 #define SIDEWAYS_lb -1
-#define SIDEWAYS_rf 1 
+#define SIDEWAYS_lf 1
 #define SIDEWAYS_rb -1
+#define SIDEWAYS_rf 1
 
 
 // SENSOR PINS + CONSTANTS
 
-#define ENC_LBT 3
-#define ENC_LBB 4
-#define ENC_LFT 5
-#define ENC_LFB 6
-#define ENC_RBT 7
-#define ENC_RBB 8
-#define ENC_RFT 9
-#define ENC_RFB 10
+#define ENC_LBT 1
+#define ENC_LBB 2
+#define ENC_LFT 3
+#define ENC_LFB 4
+#define ENC_RBT 5
+#define ENC_RBB 6
+#define ENC_RFT 7
+#define ENC_RFB 8
 
 void* ENC_LB;
 void* ENC_LF;
@@ -46,7 +46,7 @@ void* ENC_RF;
 // OTHER THRESHOLDS AND CONSTANTS
 
 #define JOY_DEAD_T 20
-#define SCALED_SPEED_CONVERSION 1.0
+#define SCALED_SPEED_CONVERSION -1.0
 
 
 #endif
