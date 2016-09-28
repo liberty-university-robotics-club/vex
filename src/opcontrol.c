@@ -22,6 +22,8 @@ float max (float a, float b)
 }
 void controldrive(int t, int f, int s)
 {
+	static int print = 0;
+	print++;
 	//printf("titus_controldrive()");
 	int strafe = s;
 	int turn = t;
@@ -95,25 +97,33 @@ void controldrive(int t, int f, int s)
 	weighted_rb /= weighted_max;
 	weighted_rf /= weighted_max;
 	
-	printf("%d %d %d %d \r\n",
-		encoderGet(ENC_LB),
-		encoderGet(ENC_LF),
-		encoderGet(ENC_RB),
-		encoderGet(ENC_RF)
-	);
-	printf("%f %f %f %f\r\n",
-		scaled_speed_lb,
-		scaled_speed_lf,
-		scaled_speed_rb,
-		scaled_speed_rf
-	);
-	printf("%f %f %f %f\r\n",
-		weighted_lb,
-		weighted_lf,
-		weighted_rb,
-		weighted_rf
-	);
-	
+	if(!(print%25))
+	{
+		printf("Power:      %16d %16d %16d %16d \r\n",
+			lb,
+			lf,
+			rb,
+			rf
+		);
+		printf("Raw enc:    %16d %16d %16d %16d \r\n",
+			encoderGet(ENC_LB),
+			encoderGet(ENC_LF),
+			encoderGet(ENC_RB),
+			encoderGet(ENC_RF)
+		);
+		printf("Scaled:     %16f %16f %16f %16f\r\n",
+			scaled_speed_lb,
+			scaled_speed_lf,
+			scaled_speed_rb,
+			scaled_speed_rf
+		);
+		printf("Scld/Pwr:   %16f %16f %16f %16f\r\n",
+			weighted_lb,
+			weighted_lf,
+			weighted_rb,
+			weighted_rf
+		);
+	}
 	
 	/*
 	simtank
@@ -152,6 +162,6 @@ void operatorControl() {
 	autonomous(); //TODO: remove this (too lazy to grab joysticks rn)
 	while (1) {
 		opcontrol();
-		delay(1000);
+		delay(20);
 	}
 }
