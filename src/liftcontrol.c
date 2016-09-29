@@ -25,15 +25,18 @@ void manage_lift()
 	static int 	timer 		= 0;
 	bool 		button_down = joystickGetDigital(1, 8, JOY_LEFT);
 	
+	if (timer == 12) //shutoff lift halfway through cycle 0.25s
+	{
+		set_lift(false);
+	}
+	
 	if (timer == 0)
 	{
 		if (button_down)
 		{
 			set_lift(true);
 			timer = 25;
-		}else{
-			set_lift(false);
-		}
+		}	
 	}else{
 		timer--;
 	}	
