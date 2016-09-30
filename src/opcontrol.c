@@ -97,33 +97,35 @@ void controldrive(int t, int f, int s)
 	weighted_rb /= weighted_max;
 	weighted_rf /= weighted_max;
 	
-	if(!(print%25))
-	{
-		printf("Power:      %16d %16d %16d %16d \r\n",
-			lb,
-			lf,
-			rb,
-			rf
-		);
-		printf("Raw enc:    %16d %16d %16d %16d \r\n",
-			encoderGet(ENC_LB),
-			encoderGet(ENC_LF),
-			encoderGet(ENC_RB),
-			encoderGet(ENC_RF)
-		);
-		printf("Scaled:     %16f %16f %16f %16f\r\n",
-			scaled_speed_lb,
-			scaled_speed_lf,
-			scaled_speed_rb,
-			scaled_speed_rf
-		);
-		printf("Scld/Pwr:   %16f %16f %16f %16f\r\n",
-			weighted_lb,
-			weighted_lf,
-			weighted_rb,
-			weighted_rf
-		);
-	}
+	int interval = 100;
+	if(!((print+0*interval/4)%interval))
+	printf("Power:\t\t%d\t%d\t%d\t%d\r\n",
+		lb,
+		lf,
+		rb,
+		rf
+	);
+	if(!((print+0*interval/4)%interval))
+	printf("Raw enc:\t%d\t%d\t%d\t%d\r\n",
+		encoderGet(ENC_LB),
+		encoderGet(ENC_LF),
+		encoderGet(ENC_RB),
+		encoderGet(ENC_RF)
+	);
+	if(!((print+0*interval/4)%interval))
+	printf("Scaled:\t%f\t%f\t%f\t%f\r\n",
+		scaled_speed_lb,
+		scaled_speed_lf,
+		scaled_speed_rb,
+		scaled_speed_rf
+	);
+	if(!((print+0*interval/4)%interval))
+	printf("Scld/Pwr:\t%f\t%f\t%f\t%f\r\n",
+		weighted_lb,
+		weighted_lf,
+		weighted_rb,
+		weighted_rf
+	);
 	
 	/*
 	simtank
