@@ -1,0 +1,53 @@
+Power:           0      0      0      0
+Raw enc:         0      0      0      0
+Scaled:     0.00   0.00   -0.00  -0.00
+Scld/Pwr:      NaN    NaN    NaN    NaN
+Power:           0      0      0      0
+Raw enc:         0      0      0      0
+Scaled:     0.00   0.00   -0.00  -0.00
+Scld/Pwr:      NaN    NaN    NaN    NaN
+Power:           0      0      0      0
+Raw enc:         0      0      0      0
+Scaled:     0.00   0.00   -0.00  -0.00
+Scld/Pwr:      NaN    NaN    NaN    NaN
+Power:           0      0      0      0
+Raw enc:         0      0      0      0
+Scaled:     0.00   0.00   -0.00  -0.00
+Scld/Pwr:      NaN    NaN    NaN    NaN
+Power:         122    122   -122   -122
+Raw enc:        16     21     -1    -19
+Scaled:     16.00   21.00   1.00   19.00
+Scld/Pwr:   0.06   0.05   1.00   0.05
+Power:         122    122   -122   -122
+Raw enc:        20     20    -20    -19
+Scaled:     20.00   20.00   20.00   19.00
+Scld/Pwr:   0.95   0.95   0.95   1.00
+Power:         122    122   -122   -122
+Raw enc:        21     20      0    -25
+Scaled:     21.00   20.00   -0.00  24.00
+Scld/Pwr:   0.95   1.00   -  NaN 0.83
+Power:         122    122   -122   -122
+Raw enc:        21     21    -21    -22
+Scaled:     21.00   21.00   21.00   22.00
+Scld/Pwr:   1.00   1.00   1.00   0.95
+Power:         122    122   -122   -122
+Raw enc:        22     20      2    -22
+Scaled:     22.00   20.00   -2.00  22.00
+Scld/Pwr:   0.91   1.00   -10.00  0.91
+Power:         122    122   -122   -122
+Raw enc:        21     18    -22    -21
+Scaled:     20.00   18.00   22.00   21.00
+Scld/Pwr:   0.90   1.00   0.82   0.86
+Power:         122    122   -122   -122
+Raw enc:        20     21     -1    -21
+Scaled:     20.00   21.00   1.00   21.00
+Scld/Pwr:   0.05   0.05   1.00   0.05
+Power:         122    122   -122   -122
+Raw enc:        20     21    -21    -21
+Scaled:     20.00   21.00   21.00   20.00
+Scld/Pwr:   1.00   0.95   0.95   1.00
+Power:          32     32    -32    -32
+Raw enc:        21     20    -12    -22
+Scaled:     20.00   20.00   12.00   22.00
+Scld/Pwr:   0.60   0.60   1.00   0.55
+
