@@ -35,7 +35,7 @@
 #include "main.h"
 #include "robot.h"
 #include "API.h"
-
+//#include "liftcontrol.h"
 /*
  * Runs pre-initialization code. This function will be started in kernel mode one time while the
  * VEX Cortex is starting up. As the scheduler is still paused, most API functions will fail.
@@ -67,4 +67,6 @@ void initialize() {
 	ENC_LF = encoderInit(ENC_LFT,ENC_LFB,FORWARD_lb);
 	ENC_RB = encoderInit(ENC_RBT,ENC_RBB,FORWARD_rf);
 	ENC_RF = encoderInit(ENC_RFT,ENC_RFB,FORWARD_rb);
+
+	pinMode(LIFT_PIN, OUTPUT);
 }

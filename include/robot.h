@@ -30,6 +30,8 @@
 #define ENC_RFT 7
 #define ENC_RFB 8
 
+#define LIFT_PIN 12
+
 void* ENC_LB;
 void* ENC_LF;
 void* ENC_RB;

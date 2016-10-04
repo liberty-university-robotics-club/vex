@@ -157,12 +157,12 @@ void driveoperation()
 void opcontrol()
 {
 	driveoperation();
-	//manage_lift();
-	static int once = 1;
+	manage_lift();
+	/*static int once = 1;
 	if (once){
 		digitalWrite(LIFT_PIN, true);
 		once = 0;
-	}
+	}*/
 }
 
 void operatorControl() {
