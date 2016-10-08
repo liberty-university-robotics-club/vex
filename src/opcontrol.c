@@ -165,19 +165,13 @@ void opcontrol()
 	}*/
 }
 
-void empty_thread(void *ignore){
-	while(1)
-	{
-		delay(100);
-	}
-}
 
 void operatorControl() {
 
 	autonomous(); //TODO: remove this (too lazy to grab joysticks rn)
 
-	//run task
-	taskCreate(empty_thread, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
+	//start lisp/UI task
+	taskCreate(lispmain, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
 
 	while (1) {
 		opcontrol();
