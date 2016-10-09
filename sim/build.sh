@@ -8,9 +8,11 @@ cp ../include/lispinit.h ./
 cp ../include/liftcontrol.h ./
 cp ../include/controlloop.h ./
 cp ../include/ir.h ./
+cp ../include/lisp.h ./
+
 echo Interactive simulation----------------------------------------------------
 cc -g -o isim ../src/*.c sim.c isim.c  -I ./
-echo Static testing simulation-------------------------------------------------
+#echo Static testing simulation-------------------------------------------------
 #cc -g -o testrobot ../src/opcontrol.c sim.c static.c -I ./
-echo Static path framework testing simulation----------------------------------
+#echo Static path framework testing simulation----------------------------------
 #cc -g -o testrobot ../src/opcontrol.c ../src/auto.c ../src/path.c sim.c pathtest.c -I ./

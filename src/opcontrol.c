@@ -4,9 +4,6 @@
 #include <math.h>
 #include "liftcontrol.h"
 #include "lisp.h"
-#include <string.h>
-#include <setjmp.h>
-#include <malloc.h>
 
 #define DONT_MOVE 0
 
@@ -175,18 +172,10 @@ void operatorControl() {
 	autonomous(); //TODO: remove this (too lazy to grab joysticks rn)
 
 	//start lisp/UI task
-	//taskCreate(lispmain, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
-	char *a="hello          ";
-	char *b="world";
-	strcat(a,b);
-	jmp_buf env;
-	setjmp(env);
-	char *c=calloc(sizeof(char), 20);
-	free(c);
+	taskCreate(lispmain, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
 
 	while (1) {
 		opcontrol();
 		delay(20);
-		longjmp(env, -1);
 	}
 }
