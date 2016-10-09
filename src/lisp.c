@@ -35,6 +35,31 @@ and turned off with the directive "!notrace".
    register-save structure template: jmp_buf is defined. This include will
    need to be constructed to conform to  any particular system. */
 
+//free never seems to be called so we can get away with something stupd like this:
+#define MAXALLOC 4000 //ehh
+void * swiley_calloc(size_t nmemb, size_t s)
+{
+	static int ccount=0;
+	int ret;
+	static char heap[MAXALLOC];
+	int end=ccount+(nmemb*s);
+
+	if(end>MAXALLOC){
+		printf("\n\r\n\rWARNING: OUTOF MEMORY!\n\r\n\r");
+		return NULL;
+	}
+	int i=0;
+	for(i=ccount;i<end;i++)
+		heap[i]=0;
+	ret=ccount;
+	ccount=end;
+	return heap+ccount;
+}
+void *calloc(size_t nmemb, size_t size)
+{
+	return swiley_calloc(nmemb,size);
+}
+
 #if !defined(NULL)
 #  define NULL 0L
 #endif

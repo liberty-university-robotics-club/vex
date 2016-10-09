@@ -1,52 +1,54 @@
-#define JOY_TURN 1
-#define JOY_FORWARD 2
-#define JOY_INTAKE 5
-#define JOY_AUTOTEST_G 8
-#define JOY_AUTOTEST_B JOY_LEFT
-#define JOY_INTAKE_B 7
-#define JOY_FLYWHEEL 6
-#define JOY_DEAD 20
-#define JOY_SCALE 2
+#ifndef robot_h
+#define robot_h
 
-//#define MO_CONVEYER1 1
-//#define MO_CONVEYER2 10
-#define MO_CONVEYER1 7
-//#define MO_CONVEYER2 8
-#define B_CONVEYER 5
-#define CONVEYER_SPEED 150
+// MOTOR PINS + CONSTANTS
 
-#define MO_INTAKE 6
+#define MLB 2
+#define MLF 3
+#define MRB 4
+#define MRF 5
 
-#define MO_LEFT1 2
-#define MO_LEFT2 4
-#define MO_RIGHT1 3
-#define MO_RIGHT2 5
+#define FORWARD_lb 1
+#define FORWARD_lf 1
+#define FORWARD_rb -1
+#define FORWARD_rf -1
 
-#define MO_FLY1 9
-#define MO_FLY2 10
-#define FLY_SPEED 255
+#define SIDEWAYS_lb -1
+#define SIDEWAYS_lf 1
+#define SIDEWAYS_rb -1
+#define SIDEWAYS_rf 1
 
-#define LS_LEFT 6
-#define LS_CENTER 7
-#define LS_RIGHT 8
 
-#define LS_B_L 0b10000000
-#define LS_B_C 0b01000000
-#define LS_B_R 0b00100000
+// SENSOR PINS + CONSTANTS
 
-#define AUTOSPEED 64
-#define MAX_SPEED 128
-#define BANK_VALUE 30
+#define ENC_LBT 1
+#define ENC_LBB 2
+#define ENC_LFT 3
+#define ENC_LFB 4
+#define ENC_RBT 5
+#define ENC_RBB 6
+#define ENC_RFT 7
+#define ENC_RFB 8
 
-#define S_FOLOW 1
-#define S_BLIND 2
-#define S_TL	3
-#define S_TR	4
-#define S_SEKL	5
+#define LIFT_PIN 12
 
-#define ENC_RIGHT_TOP 1
-#define ENC_RIGHT_BOT 2
+void* ENC_LB;
+void* ENC_LF;
+void* ENC_RB;
+void* ENC_RF;
 
-#define ENC_LEFT_TOP  3
-#define ENC_LEFT_BOT 4
-#define LCD_PORT uart1
+
+// CONTROLLER PINS + CONSTANTS
+
+#define JOY_FORWARD_T  2
+#define JOY_FORWARD_S  3
+#define JOY_TURN_T     1
+#define JOY_STRAFING_S 4
+
+// OTHER THRESHOLDS AND CONSTANTS
+
+#define JOY_DEAD_T 20
+#define SCALED_SPEED_CONVERSION 1.0
+
+
+#endif
