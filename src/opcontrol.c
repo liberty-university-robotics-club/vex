@@ -4,6 +4,7 @@
 #include <math.h>
 #include "liftcontrol.h"
 #include "lisp.h"
+#include "tank.h"
 
 #define DONT_MOVE 0
 
@@ -35,20 +36,6 @@ void controldrive(int t, int f, int s)
 	int rb;
 	int rf;
 	
-	//*
-	static float last_lb = 1;
-	static float last_lf = 1;
-	static float last_rb = 1;
-	static float last_rf = 1;
-	//*/
-	
-	/*
-	static float suggested_lb = 1.0;
-	static float suggested_lf = 1.0;
-	static float suggested_rb = 1.0;
-	static float suggested_rf = 1.0;
-	//*/
-	
 	//Motor power
 	//FORWARD_lf is 1 or -1 stating motor direction, forward is joystick magnitude
 	//likewise for sideways
@@ -73,31 +60,6 @@ void controldrive(int t, int f, int s)
 	rb+=turn;
 	rf+=turn;
 	
-	//Sensor data
-	float scaled_speed_lb = encoderGet(ENC_LB) * (SCALED_SPEED_CONVERSION) * (FORWARD_lb);
-	float scaled_speed_lf = encoderGet(ENC_LF) * (SCALED_SPEED_CONVERSION) * (FORWARD_lf);
-	float scaled_speed_rb = encoderGet(ENC_RB) * (SCALED_SPEED_CONVERSION) * (FORWARD_rb);
-	float scaled_speed_rf = encoderGet(ENC_RF) * (SCALED_SPEED_CONVERSION) * (FORWARD_rf);
-	
-	float weighted_lb = 1.0*last_lb/scaled_speed_lb;
-	float weighted_lf = 1.0*last_lf/scaled_speed_lf;
-	float weighted_rb = 1.0*last_rb/scaled_speed_rb;
-	float weighted_rf = 1.0*last_rf/scaled_speed_rf;
-	
-	float weighted_max = max(
-		max(
-			weighted_lb,
-			weighted_lf),max(
-			weighted_rb,
-			weighted_rf
-		)
-	);
-	
-	weighted_lb /= weighted_max;
-	weighted_lf /= weighted_max;
-	weighted_rb /= weighted_max;
-	weighted_rf /= weighted_max;
-	
 	int interval = 100;
 	if(!((print+0*interval/4)%interval))
 	printf("Power:\t\t%d\t%d\t%d\t%d\r\n",
@@ -113,22 +75,8 @@ void controldrive(int t, int f, int s)
 		encoderGet(ENC_RB),
 		encoderGet(ENC_RF)
 	);
-	if(!((print+0*interval/4)%interval))
-	printf("Scaled:\t%f\t%f\t%f\t%f\r\n",
-		scaled_speed_lb,
-		scaled_speed_lf,
-		scaled_speed_rb,
-		scaled_speed_rf
-	);
-	if(!((print+0*interval/4)%interval))
-	printf("Scld/Pwr:\t%f\t%f\t%f\t%f\r\n",
-		weighted_lb,
-		weighted_lf,
-		weighted_rb,
-		weighted_rf
-	);
 	
-	/*
+	//*
 	simtank
 	(	&ltank,
 		encoderGet(ENC_LB),
