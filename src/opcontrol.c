@@ -172,7 +172,7 @@ void operatorControl() {
 	autonomous(); //TODO: remove this (too lazy to grab joysticks rn)
 
 	//start lisp/UI task
-	taskCreate(lispmain, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
+	//taskCreate(lispmain, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
 
 	while (1) {
 		opcontrol();
