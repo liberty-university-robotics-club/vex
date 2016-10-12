@@ -5,6 +5,7 @@
 #include "liftcontrol.h"
 #include "lisp.h"
 #include "tank.h"
+#include "controlloop.h"
 
 #define DONT_MOVE 0
 
@@ -31,11 +32,6 @@ void controldrive(int t, int f, int s)
 	int turn = t;
 	int forward = f;
 	
-	int lb;
-	int lf;
-	int rb;
-	int rf;
-	
 	//Motor power
 	//FORWARD_lf is 1 or -1 stating motor direction, forward is joystick magnitude
 	//likewise for sideways
@@ -50,45 +46,50 @@ void controldrive(int t, int f, int s)
 	int sideways_rb = SIDEWAYS_rb * strafe;
 	int sideways_rf = SIDEWAYS_rf * strafe;
 	
-	lb = forward_lb + sideways_lb;
-	lf = forward_lf + sideways_lf;
-	rb = forward_rb + sideways_rb;
-	rf = forward_rf + sideways_rf;
-
-	lb+=turn;
-	lf+=turn;
-	rb+=turn;
-	rf+=turn;
+	int lb = forward_lb + sideways_lb + turn;
+	int lf = forward_lf + sideways_lf + turn;
+	int rb = forward_rb + sideways_rb + turn;
+	int rf = forward_rf + sideways_rf + turn;
+	
+	int enc_lb = encoderGet(ENC_LB);
+	int enc_lf = encoderGet(ENC_LF);
+	int enc_rb = encoderGet(ENC_RB);
+	int enc_rf = encoderGet(ENC_RF);
 	
 	int interval = 100;
 	if(!((print+0*interval/4)%interval))
-	printf("Power:\t\t%d\t%d\t%d\t%d\r\n",
+	printf("Power:\t\t%d\t%d\t%d\t%d\n\r",
 		lb,
 		lf,
 		rb,
 		rf
 	);
 	if(!((print+0*interval/4)%interval))
-	printf("Raw enc:\t%d\t%d\t%d\t%d\r\n",
-		encoderGet(ENC_LB),
-		encoderGet(ENC_LF),
-		encoderGet(ENC_RB),
-		encoderGet(ENC_RF)
+	printf("Raw enc:\t%d\t%d\t%d\t%d\n\r",
+		enc_lb,
+		enc_lf,
+		enc_rb,
+		enc_rf
 	);
 	
 	//*
 	simtank
 	(	&ltank,
-		encoderGet(ENC_LB),
-		encoderGet(ENC_LF),
-		encoderGet(ENC_RB),
-		encoderGet(ENC_RF)
+		enc_lb,
+		enc_lf,
+		enc_rb,
+		enc_rf
 	);//*/
 	
 	encoderReset(ENC_LB);
 	encoderReset(ENC_LF);
 	encoderReset(ENC_RB);
 	encoderReset(ENC_RF);
+	
+	lb = controlLoop(enc_lb, lb, NULL);
+	lf = controlLoop(enc_lf, lf, NULL);
+	rb = controlLoop(enc_rb, rb, NULL);
+	rf = controlLoop(enc_rf, rf, NULL);
 	
 	controlmotors(lb, lf, rb, rf);
 }
