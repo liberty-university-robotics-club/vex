@@ -81,15 +81,23 @@ void controldrive(int t, int f, int s)
 		enc_rf
 	);//*/
 	
-	encoderReset(ENC_LB);
-	encoderReset(ENC_LF);
-	encoderReset(ENC_RB);
-	encoderReset(ENC_RF);
-	
 	lb = controlLoop(enc_lb, lb, NULL);
 	lf = controlLoop(enc_lf, lf, NULL);
 	rb = controlLoop(enc_rb, rb, NULL);
 	rf = controlLoop(enc_rf, rf, NULL);
+	
+	if(!((print+0*interval/4)%interval))
+	printf("Control:\t%d\t%d\t%d\t%d\n\r",
+		lb,
+		lf,
+		rb,
+		rf
+	);
+	
+	encoderReset(ENC_LB);
+	encoderReset(ENC_LF);
+	encoderReset(ENC_RB);
+	encoderReset(ENC_RF);
 	
 	controlmotors(lb, lf, rb, rf);
 }
