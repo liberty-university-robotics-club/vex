@@ -81,6 +81,13 @@ void controldrive(int t, int f, int s)
 		enc_rf
 	);//*/
 	
+	encoderReset(ENC_LB);
+	encoderReset(ENC_LF);
+	encoderReset(ENC_RB);
+	encoderReset(ENC_RF);
+	
+	controlmotors(lb, lf, rb, rf);
+	
 	lb = controlLoop(enc_lb, lb, NULL);
 	lf = controlLoop(enc_lf, lf, NULL);
 	rb = controlLoop(enc_rb, rb, NULL);
@@ -93,13 +100,6 @@ void controldrive(int t, int f, int s)
 		rb,
 		rf
 	);
-	
-	encoderReset(ENC_LB);
-	encoderReset(ENC_LF);
-	encoderReset(ENC_RB);
-	encoderReset(ENC_RF);
-	
-	controlmotors(lb, lf, rb, rf);
 }
 
 void driveoperation()
