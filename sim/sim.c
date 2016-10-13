@@ -37,6 +37,49 @@ void delay(int t) {
 	sim_delay(t);
 	sim_housekeeping();
 }
+
+void delayMicroseconds(int t) {
+	//TODO: anything
+	
+	sim_delay(1);
+	sim_housekeeping();
+
+}
+
+void pinMode(unsigned char pin, unsigned char mode)
+{
+
+}
+
+bool digitalRead(unsigned char pin)
+{
+	return digital_pins[pin];
+}
+
+void digitalWrite(unsigned char pin, bool value)
+{
+	digital_pins[pin] = value;
+}
+
+void* encoderInit(unsigned char portTop, unsigned char portBottom, bool reverse)
+{
+	encoder enc = {0, reverse};
+	void* ptr = &enc;
+	return ptr;
+}
+
+int encoderGet(void* ptr)
+{
+	encoder* enc = ptr;
+	return enc->tick_count;
+}
+
+void encoderReset(void* ptr)
+{
+	encoder* enc = ptr;
+	enc->tick_count = 0;
+}
+
 struct params{ TaskCode t; void *p;};
 int taskjump(void *pa)
 {
