@@ -11,7 +11,7 @@ cp ../include/ir.h ./
 cp ../include/lisp.h ./
 
 echo Interactive simulation----------------------------------------------------
-cc -lm -g -o isim ../src/*.c sim.c isim.c  -I ./
+gcc -g -o isim ../src/*.c sim.c isim.c  -I ./ -lm
 #echo Static testing simulation-------------------------------------------------
 #cc -g -o testrobot ../src/opcontrol.c sim.c static.c -I ./
 #echo Static path framework testing simulation----------------------------------
