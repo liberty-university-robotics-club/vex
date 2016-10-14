@@ -19,14 +19,32 @@ void controlmotors(int lb, int lf, int rb, int rf)
 		motorSet(MRF,rf);
 	}
 }
-float max (float a, float b)
+//float max (float a, float b)
+//{
+//	return a>b?a:b;
+//}
+double cfmin(double a, double b, double c, double d)
 {
-	return a>b?a:b;
+	double min = fmin(fmin(fabs(a),fabs(b)),fmin(fabs(c),fabs(d)));
+	return min?1:min;
 }
 void controldrive(int t, int f, int s)
 {
 	static int print = 0;
 	print++;
+	/*
+	static state control_lb = { .speed = 0 };
+	static state control_lf = { .speed = 0 };
+	static state control_rb = { .speed = 0 };
+	static state control_rf = { .speed = 0 };
+	//*/
+	
+	static double last_pwr_lb = 100;
+	static double last_pwr_lf = 100;
+	static double last_pwr_rb = 100;
+	static double last_pwr_rf = 100;
+	
+	
 	//printf("titus_controldrive()");
 	int strafe = s;
 	int turn = t;
@@ -51,6 +69,11 @@ void controldrive(int t, int f, int s)
 	int rb = forward_rb + sideways_rb + turn;
 	int rf = forward_rf + sideways_rf + turn;
 	
+	int new_lb = lb;
+	int new_lf = lf;
+	int new_rb = rb;
+	int new_rf = rf;
+	
 	int enc_lb = encoderGet(ENC_LB);
 	int enc_lf = encoderGet(ENC_LF);
 	int enc_rb = encoderGet(ENC_RB);
@@ -58,7 +81,7 @@ void controldrive(int t, int f, int s)
 	
 	int interval = 100;
 	if(!((print+0*interval/4)%interval))
-	printf("Power:\t\t%d\t%d\t%d\t%d\n\r",
+	printf("\n\rPower:\t\t%d\t%d\t%d\t%d\n\r",
 		lb,
 		lf,
 		rb,
@@ -70,6 +93,31 @@ void controldrive(int t, int f, int s)
 		enc_lf,
 		enc_rb,
 		enc_rf
+	);
+	
+	double min = cfmin(
+		1.0*enc_lb/last_pwr_lb,
+		1.0*enc_lf/last_pwr_lf,
+		1.0*enc_rb/last_pwr_rb,
+		1.0*enc_rf/last_pwr_rf
+	);
+	
+	new_lb = min*last_pwr_lb/enc_lb*new_lb;
+	new_lf = min*last_pwr_lf/enc_lf*new_lf;
+	new_rb = min*last_pwr_rb/enc_rb*new_rb;
+	new_rf = min*last_pwr_rf/enc_rf*new_rf;
+	
+	last_pwr_lb = lb;
+	last_pwr_lf = lf;
+	last_pwr_rb = rb;
+	last_pwr_rf = rf;
+	
+	if(!((print+0*interval/4)%interval))
+	printf("Scaled Pwr:\t%d\t%d\t%d\t%d\n\r",
+		new_lb,
+		new_lf,
+		new_rb,
+		new_rf
 	);
 	
 	//*
@@ -86,12 +134,17 @@ void controldrive(int t, int f, int s)
 	encoderReset(ENC_RB);
 	encoderReset(ENC_RF);
 	
-	controlmotors(lb, lf, rb, rf);
-	
-	lb = controlLoop(enc_lb, lb, NULL);
-	lf = controlLoop(enc_lf, lf, NULL);
-	rb = controlLoop(enc_rb, rb, NULL);
-	rf = controlLoop(enc_rf, rf, NULL);
+	controlmotors(
+		new_lb,
+		new_lf,
+		new_rb,
+		new_rf
+	);
+	/*
+	lb = controlLoop(enc_lb, lb, &control_lb);
+	lf = controlLoop(enc_lf, lf, &control_lf);
+	rb = controlLoop(enc_rb, rb, &control_rb);
+	rf = controlLoop(enc_rf, rf, &control_rf);
 	
 	if(!((print+0*interval/4)%interval))
 	printf("Control:\t%d\t%d\t%d\t%d\n\r",
@@ -100,6 +153,7 @@ void controldrive(int t, int f, int s)
 		rb,
 		rf
 	);
+	//*/
 }
 
 void driveoperation()
@@ -115,14 +169,13 @@ void driveoperation()
 void opcontrol()
 {
 	driveoperation();
-	manage_lift();
+	//manage_lift();
 	/*static int once = 1;
 	if (once){
 		digitalWrite(LIFT_PIN, true);
 		once = 0;
 	}*/
 }
-
 
 void operatorControl() {
 

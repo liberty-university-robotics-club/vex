@@ -25,8 +25,8 @@
 #define ENC_LBB 2
 #define ENC_LFT 3
 #define ENC_LFB 4
-#define ENC_RBT 11
-#define ENC_RBB 12
+#define ENC_RBT 5
+#define ENC_RBB 6
 #define ENC_RFT 7
 #define ENC_RFB 8
 
