@@ -91,7 +91,7 @@ void b_driveto(tank *v,double x, double y, double r) {
 void drivetogoal(tank *v) {
 	//drive near center of map then use elijah line follow code + range sensor
 	//reset position to in front of goal
-	b_driveto(v,f_center_x,f_center_y,20);
+	//b_driveto(v,f_center_x,f_center_y,20);
 //	elf();
 }
 
