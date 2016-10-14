@@ -5,6 +5,7 @@
 #define AXIS 2
 #define BUTTON 1
 extern void operatorControl(void); //this is where the robot code you're testing goes
+extern void initialize(void);
 extern void sim_housekeeping(void); //this is where your test/ui code goes
 int sim_joyfd;
 int joy[11][2]; //larger then it neeeds to be
