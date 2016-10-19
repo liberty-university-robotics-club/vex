@@ -49,6 +49,6 @@ void* ENC_RF;
 
 #define JOY_DEAD_T 20
 #define SCALED_SPEED_CONVERSION 1.0
-
+#define MAGIC_NUMBER 20
 
 #endif

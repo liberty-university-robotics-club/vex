@@ -26,7 +26,7 @@ void controlmotors(int lb, int lf, int rb, int rf)
 double cfmin(double a, double b, double c, double d)
 {
 	double min = fmin(fmin(fabs(a),fabs(b)),fmin(fabs(c),fabs(d)));
-	return min?1:min;
+	return min?17:min;
 }
 void controldrive(int t, int f, int s)
 {
@@ -102,10 +102,10 @@ void controldrive(int t, int f, int s)
 		1.0*enc_rf/last_pwr_rf
 	);
 	
-	new_lb = min*last_pwr_lb/enc_lb*new_lb;
-	new_lf = min*last_pwr_lf/enc_lf*new_lf;
-	new_rb = min*last_pwr_rb/enc_rb*new_rb;
-	new_rf = min*last_pwr_rf/enc_rf*new_rf;
+	new_lb *= fabs(min*last_pwr_lb/enc_lb?MAGIC_NUMBER:enc_lb);
+	new_lf *= fabs(min*last_pwr_lf/enc_lf?MAGIC_NUMBER:enc_lf);
+	new_rb *= fabs(min*last_pwr_rb/enc_rb?MAGIC_NUMBER:enc_rb);
+	new_rf *= fabs(min*last_pwr_rf/enc_rf?MAGIC_NUMBER:enc_rf);
 	
 	last_pwr_lb = lb;
 	last_pwr_lf = lf;
