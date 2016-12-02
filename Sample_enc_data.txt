@@ -110,4 +110,49 @@ Scaled Pwr:     -127    -127    127     127
 
 
 
+Power:          20      20      -192    -192
+Raw enc:        9       -26     -21     -20
+Scaled Pwr:     400     400     -3840   -3840
+Control:        40      0       -105    -105
+
+Power:          20      20      -192    -192
+Raw enc:        13      -12     -21     -17
+Scaled Pwr:     400     400     -3840   -3840
+Control:        20      -20     -105    -105
+
+Power:          20      20      -192    -192
+Raw enc:        8       -24     -21     -20
+Scaled Pwr:     400     400     -3840   -3840
+Control:        40      0       -105    -105
+
+Power:          20      20      -192    -192
+Raw enc:        12      -7      -19     -20
+Scaled Pwr:     400     400     -3840   -3840
+Control:        20      -40     -105    -105
+
+Power:          20      20      -192    -192
+Raw enc:        14      -3      -20     -16
+Scaled Pwr:     400     400     -3840   -3840
+Control:        20      -105    -105    -105
+
+Power:          20      20      -192    -192
+Raw enc:        6       -13     -21     -22
+Scaled Pwr:     400     400     -3840   -3840
+Control:        60      -20     -105    -105
+
+Power:          20      20      -192    -192
+Raw enc:        15      19      -20     -21
+Scaled Pwr:     400     400     -3840   -3840
+Control:        20      20      -105    -105
+
+Power:          20      20      -192    -192
+Raw enc:        11      14      -21     -21
+Scaled Pwr:     400     400     -3840   -3840
+Control:        20      20      -105    -105
+
+Power:          20      20      -192    -192
+Raw enc:        8       -2      -20     -20
+Scaled Pwr:     400     400     -3840   -3840
+Control:        40      -105    -105    -105
+
 

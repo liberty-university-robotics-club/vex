@@ -1,7 +1,7 @@
+#include <math.h>
 #include "main.h"
 #include "robot.h"
 #include "API.h"
-#include <math.h>
 #include "liftcontrol.h"
 #include "lisp.h"
 #include "tank.h"
@@ -135,16 +135,21 @@ void controldrive(int t, int f, int s)
 	encoderReset(ENC_RF);
 	
 	controlmotors(
-		new_lb,
-		new_lf,
-		new_rb,
-		new_rf
+		elijah_controlLoop(enc_lb, lb, last_pwr_lb),//new_lb,
+		elijah_controlLoop(enc_lf, lf, last_pwr_lf),//new_lf,
+		elijah_controlLoop(enc_rb, rb, last_pwr_rb),//new_rb,
+		elijah_controlLoop(enc_rf, rf, last_pwr_rf) //new_rf
 	);
-	/*
-	lb = controlLoop(enc_lb, lb, &control_lb);
-	lf = controlLoop(enc_lf, lf, &control_lf);
-	rb = controlLoop(enc_rb, rb, &control_rb);
-	rf = controlLoop(enc_rf, rf, &control_rf);
+	//*
+	//lb = controlLoop(enc_lb, lb, &control_lb);
+	//lf = controlLoop(enc_lf, lf, &control_lf);
+	//rb = controlLoop(enc_rb, rb, &control_rb);
+	//rf = controlLoop(enc_rf, rf, &control_rf);
+	
+	lb = elijah_controlLoop(enc_lb, lb, last_pwr_lb);
+	lf = elijah_controlLoop(enc_lf, lf, last_pwr_lf);
+	rb = elijah_controlLoop(enc_rb, rb, last_pwr_rb);
+	rf = elijah_controlLoop(enc_rf, rf, last_pwr_rf);
 	
 	if(!((print+0*interval/4)%interval))
 	printf("Control:\t%d\t%d\t%d\t%d\n\r",
