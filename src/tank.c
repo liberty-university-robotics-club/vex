@@ -94,4 +94,16 @@ void drivetogoal(tank *v) {
 	//b_driveto(v,f_center_x,f_center_y,20);
 //	elf();
 }
+void base_station_update(tank *v, double r, double theta)
+{
+	double geom_theta = theta;//deal with angle conversion here
+	//transpose the position of the base station to convert to coordinate plane
+	double base_x = 0;
+	double base_y = 0;
+	
+	v->x=base_x+r*cos(geom_theta);
+	v->y=base_y+r*sin(geom_theta);
+	
+}
+
 
