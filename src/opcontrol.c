@@ -13,10 +13,10 @@ void controlmotors(int lb, int lf, int rb, int rf)
 {
 	if(!DONT_MOVE)
 	{
-		motorSet(MLB,lb);
-		motorSet(MLF,lf);
-		motorSet(MRB,rb);
-		motorSet(MRF,rf);
+		motorSet(MLB,lb/2);
+		motorSet(MLF,lf/2);
+		motorSet(MRB,rb/2);
+		motorSet(MRF,rf/2);
 	}
 }
 //float max (float a, float b)
@@ -28,7 +28,68 @@ double cfmin(double a, double b, double c, double d)
 	double min = fmin(fmin(fabs(a),fabs(b)),fmin(fabs(c),fabs(d)));
 	return min?1:min;
 }
+void controleddrive(int t, int f, int s)
+{
+	static int delprint=0;
+	(delprint++)%10 ? printf("controll!\n"):delprint;
+	static state *state_lb=NULL;
+	static state *state_lf=NULL;
+	static state *state_rb=NULL;
+	static state *state_rf=NULL;
+
+	int f_lb = FORWARD_lb * f;
+	int f_lf = FORWARD_lf * f;
+	int f_rb = FORWARD_rb * f;
+	int f_rf = FORWARD_rf * f;
+
+	int sideways_lb = SIDEWAYS_lb * s;
+	int sideways_lf = SIDEWAYS_lf * s;
+	int sideways_rb = SIDEWAYS_rb * s;
+	int sideways_rf = SIDEWAYS_rf * s;
+	
+	int lb = f_lb + sideways_lb + t;
+	int lf = f_lf + sideways_lf + t;
+	int rb = f_rb + sideways_rb + t;
+	int rf = f_rf + sideways_rf + t;
+
+	//deadreconning
+	int enc_lb = encoderGet(ENC_LB);
+	int enc_lf = encoderGet(ENC_LF);
+	int enc_rb = encoderGet(ENC_RB);
+	int enc_rf = encoderGet(ENC_RF);
+	simtank
+	(	&ltank,
+		enc_lb,
+		enc_lf,
+		enc_rb,
+		enc_rf
+	);
+	
+	lb=controlLoop(enc_lb,lb,state_lb);
+	lf=controlLoop(enc_lf,lf,state_lf);
+	rb=controlLoop(enc_rb,rb,state_rb);
+	rf=controlLoop(enc_rf,rf,state_rf);
+
+	
+	encoderReset(ENC_LB);
+	encoderReset(ENC_LF);
+	encoderReset(ENC_RB);
+	encoderReset(ENC_RF);
+	//lb=t;
+	
+	controlmotors(
+		lb,
+		lf,
+		rb,
+		rf
+	);
+}
+
 void controldrive(int t, int f, int s)
+{
+	controleddrive(t, f, s);
+}
+void controldriveold(int t, int f, int s)
 {
 	static int print = 0;
 	print++;
@@ -179,7 +240,7 @@ void opcontrol()
 
 void operatorControl() {
 
-	autonomous(); //TODO: remove this (too lazy to grab joysticks rn)
+	//autonomous(); //TODO: remove this (too lazy to grab joysticks rn)
 
 	//start lisp/UI task
 	//taskCreate(lispmain, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
