@@ -8,6 +8,9 @@
 #define MRB 4
 #define MRF 5
 
+#define MIR 6
+#define MIR_POW 20
+
 #define FORWARD_lb 1
 #define FORWARD_lf 1
 #define FORWARD_rb -1
@@ -29,6 +32,9 @@
 #define ENC_RBB 6
 #define ENC_RFT 7
 #define ENC_RFB 8
+
+#define ENC_LBT 9
+#define ENC_LBB 10
 
 #define LIFT_PIN 12
 
