@@ -67,6 +67,11 @@ void initialize() {
 	ENC_LF = encoderInit(ENC_LFT,ENC_LFB,FORWARD_lb);
 	ENC_RB = encoderInit(ENC_RBT,ENC_RBB,FORWARD_rf);
 	ENC_RF = encoderInit(ENC_RFT,ENC_RFB,FORWARD_rb);
-
+	
+	imeInitializeAll();
+	
+	pinMode(BTN_UP ,INPUT);
+	pinMode(BTN_DWN,INPUT);
+	
 	pinMode(LIFT_PIN, OUTPUT);
 }

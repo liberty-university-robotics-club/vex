@@ -11,6 +11,12 @@
 #define MIR 6
 #define MIR_POW 20
 
+#define MLI 7
+#define MLI_POW 100
+
+
+
+
 #define FORWARD_lb 1
 #define FORWARD_lf 1
 #define FORWARD_rb -1
@@ -24,17 +30,19 @@
 
 // SENSOR PINS + CONSTANTS
 
-#define ENC_LBT 1
-#define ENC_LBB 2
-#define ENC_LFT 3
-#define ENC_LFB 4
-#define ENC_RBT 5
-#define ENC_RBB 6
-#define ENC_RFT 7
-#define ENC_RFB 8
+#define ENC_LBT  1
+#define ENC_LBB  2
+#define ENC_LFT  3
+#define ENC_LFB  4
+#define ENC_RBT  5
+#define ENC_RBB  6
+#define ENC_RFT  7
+#define ENC_RFB  8
+#define BTN_UP   9
+#define BTN_DWN 10
 
-#define ENC_LBT 9
-#define ENC_LBB 10
+#define IME_IR 0
+
 
 #define LIFT_PIN 12
 
@@ -44,12 +52,16 @@ void* ENC_RB;
 void* ENC_RF;
 
 
+
 // CONTROLLER PINS + CONSTANTS
 
 #define JOY_FORWARD_T  2
 #define JOY_FORWARD_S  3
 #define JOY_TURN_T     1
 #define JOY_STRAFING_S 4
+
+#define JOY_LIFT_OP    5
+#define JOY_LIFT_AUTO  6
 
 // OTHER THRESHOLDS AND CONSTANTS
 

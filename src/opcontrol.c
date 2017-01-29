@@ -6,8 +6,7 @@
 #include "lisp.h"
 #include "tank.h"
 #include "controlloop.h"
-
-#define DONT_MOVE 0
+#include "opcontrol.h"
 
 void controlmotors(int lb, int lf, int rb, int rf)
 {
@@ -170,10 +169,56 @@ void driveoperation()
 
 	controldrive(joyturnT,joyforwardT+joyforwardS,joystrafingS);
 }
+bool isLiftUp()
+{
+	return !digitalRead(BTN_UP );//switch pressed is low => 0
+}
+bool isLiftDown()
+{
+	return !digitalRead(BTN_DWN);
+}
+void op_auto_lift()
+{
+	//first call:
+	static int lift_auto=0;
+	static int lift_pow=0;
+	
+	//every call:
+	lift_pow=0;
+	lift_pow += joystickGetDigital( 1 , JOY_LIFT_OP , JOY_UP   ) ? MLI_POW : 0 ;
+	lift_pow -= joystickGetDigital( 1 , JOY_LIFT_OP , JOY_DOWN ) ? MLI_POW : 0 ;
+	lift_pow += joystickGetDigital( 2 , JOY_LIFT_OP , JOY_UP   ) ? MLI_POW : 0 ;
+	lift_pow -= joystickGetDigital( 2 , JOY_LIFT_OP , JOY_DOWN ) ? MLI_POW : 0 ;
+	
+	if( joystickGetDigital( 1 , JOY_LIFT_AUTO , JOY_UP   )
+	 || joystickGetDigital( 2 , JOY_LIFT_AUTO , JOY_UP   )
+	 && !isLiftUp()
+	 &&	!lift_pow
+	){
+		lift_auto = MLI_POW;
+	}
+	if( joystickGetDigital( 1 , JOY_LIFT_AUTO , JOY_DOWN )
+	 || joystickGetDigital( 2 , JOY_LIFT_AUTO , JOY_DOWN )
+	 && !isLiftDown()
+	 &&	!lift_pow
+	){
+		lift_auto = -MLI_POW;
+	}
+	if(lift_pow)
+	{
+		lift_auto = 0;
+		motorSet(MLI,lift_pow);
+	}
+	else if(lift_auto)
+	{
+		motorSet(MLI,lift_auto);
+	}
+}
 
 void opcontrol()
 {
 	driveoperation();
+	op_auto_lift();
 	//manage_lift();
 	/*static int once = 1;
 	if (once){

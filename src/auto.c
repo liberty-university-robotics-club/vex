@@ -35,24 +35,31 @@ void pascal()//runs around SLAVE
 void goddard()//base MASTER
 {
 	controldrive(0,0,0);//stopped
-	int encoderOffset = encoderGet(ENC_IR);//starting position
+	int encoderOffset;
+	imeGet(IME_IR,&encoderOffset);//starting position
 	int enc=0;//deg
 	while(1)
 	{
 		controldrive(0,0,0);
-		enc=encoderGet(ENC_IR)-encoderOffset;
+		imeGet(IME_IR,&enc);
+		enc -= encoderOffset;
 		if(!DONT_MOVE)
 		{
 			motorSet(MIR,20);
 		}
 	}
 	//turn_on_beacon();
-	//send_theta();//goddard on left
+	//send_theta();//goddard on left, so values from 0-115 or so
 	
 	
 }
 void autonomous()
 {
-	
+	#ifdef ALEN
+	goddard();
+	#endif
+	#ifdef PASCAL
+	pascal();
+	#endif
 }
 
