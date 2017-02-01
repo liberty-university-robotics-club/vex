@@ -190,34 +190,29 @@ void op_auto_lift()
 	lift_pow += joystickGetDigital( 2 , JOY_LIFT_OP , JOY_UP   ) ? MLI_POW : 0 ;
 	lift_pow -= joystickGetDigital( 2 , JOY_LIFT_OP , JOY_DOWN ) ? MLI_POW : 0 ;
 	
+	if(!lift_pow&&lift_auto){lift_pow=lift_auto;}
+	else{lift_auto=0;}
+	
 	if( joystickGetDigital( 1 , JOY_LIFT_AUTO , JOY_UP   )
 	 || joystickGetDigital( 2 , JOY_LIFT_AUTO , JOY_UP   )
-	 && !isLiftUp()
-	 &&	!lift_pow
 	){
 		lift_auto = MLI_POW;
 	}
 	if( joystickGetDigital( 1 , JOY_LIFT_AUTO , JOY_DOWN )
 	 || joystickGetDigital( 2 , JOY_LIFT_AUTO , JOY_DOWN )
-	 && !isLiftDown()
-	 &&	!lift_pow
 	){
 		lift_auto = -MLI_POW;
 	}
-	if(lift_pow)
-	{
-		lift_auto = 0;
-		motorSet(MLI,lift_pow);
-	}
-	else if(lift_auto)
-	{
-		motorSet(MLI,lift_auto);
-	}
+	
+	if(lift_pow>0&&  isLiftUp()){lift_pow=0;lift_auto=0;}
+	if(lift_pow<0&&isLiftDown()){lift_pow=0;lift_auto=0;}
+	printf("motorSet(MLI,%d)\r\n",lift_pow);
+	motorSet(MLI,lift_pow);
 }
 
 void opcontrol()
 {
-	driveoperation();
+	//driveoperation();
 	op_auto_lift();
 	//manage_lift();
 	/*static int once = 1;
@@ -229,13 +224,13 @@ void opcontrol()
 
 void operatorControl() {
 
-	autonomous(); //TODO: remove this (too lazy to grab joysticks rn)
+	//autonomous(); //TODO: remove this (too lazy to grab joysticks rn)
 
 	//start lisp/UI task
 	//taskCreate(lispmain, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
 
 	while (1) {
 		opcontrol();
-		delay(20);
+		delay(250);
 	}
 }
