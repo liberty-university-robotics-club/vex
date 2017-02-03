@@ -68,7 +68,7 @@ void initialize() {
 	ENC_RB = encoderInit(ENC_RBT,ENC_RBB,FORWARD_rf);
 	ENC_RF = encoderInit(ENC_RFT,ENC_RFB,FORWARD_rb);
 	
-	imeInitializeAll();
+	//imeInitializeAll();//system hangs if no ime's to initialize
 	
 	pinMode(BTN_UP ,INPUT);
 	pinMode(BTN_DWN,INPUT);

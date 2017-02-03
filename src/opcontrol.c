@@ -206,7 +206,7 @@ void op_auto_lift()
 	
 	if(lift_pow>0&&  isLiftUp()){lift_pow=0;lift_auto=0;}
 	if(lift_pow<0&&isLiftDown()){lift_pow=0;lift_auto=0;}
-	printf("motorSet(MLI,%d)\r\n",lift_pow);
+	//printf("motorSet(MLI,%d)\r\n",lift_pow);
 	motorSet(MLI,lift_pow);
 }
 
@@ -231,6 +231,6 @@ void operatorControl() {
 
 	while (1) {
 		opcontrol();
-		delay(250);
+		delay(25);
 	}
 }
