@@ -62,16 +62,19 @@ void initializeIO() {
  */
 int imecount=0;
 void initialize() {
+	//system hangs if no ime's to initialize
 	//imecount=imeInitializeAll();
+	
+	// drive enc
 	ENC_LB = encoderInit(ENC_LBT,ENC_LBB,FORWARD_lf);
 	ENC_LF = encoderInit(ENC_LFT,ENC_LFB,FORWARD_lb);
 	ENC_RB = encoderInit(ENC_RBT,ENC_RBB,FORWARD_rf);
 	ENC_RF = encoderInit(ENC_RFT,ENC_RFB,FORWARD_rb);
 	
-	//imeInitializeAll();//system hangs if no ime's to initialize
-	
+	//lift enc
 	pinMode(BTN_UP ,INPUT);
 	pinMode(BTN_DWN,INPUT);
 	
+	// Stephen what is this?  LED?
 	pinMode(LIFT_PIN, OUTPUT);
 }

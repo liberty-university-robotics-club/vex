@@ -101,6 +101,7 @@ void base_station_update(tank *v, double r, double theta)
 	double base_x = 0;
 	double base_y = 0;
 	
+	//TODO: resonableness detection
 	v->x=base_x+r*cos(geom_theta);
 	v->y=base_y+r*sin(geom_theta);
 	

@@ -11,7 +11,4 @@ int controlLoop(int current, int target, state* st)
 	else
 		return target-dist/2;
 }
-//int abs (int x)
-//{
-//	return x>0?x:-x;
-//}
+

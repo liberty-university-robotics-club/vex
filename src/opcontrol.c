@@ -18,15 +18,7 @@ void controlmotors(int lb, int lf, int rb, int rf)
 		motorSet(MRF,rf/2);
 	}
 }
-//float max (float a, float b)
-//{
-//	return a>b?a:b;
-//}
-//double cfmin(double a, double b, double c, double d)
-//{
-//	double min = fmin(fmin(fabs(a),fabs(b)),fmin(fabs(c),fabs(d)));
-//	return min?17:min;
-//}
+
 void controldrive(int t, int f, int s)
 {
 	static int delprint=0;
@@ -92,14 +84,17 @@ void driveoperation()
 
 	controldrive(joyturnT,joyforwardT+joyforwardS,joystrafingS);
 }
+
 bool isLiftUp()
 {
 	return !digitalRead(BTN_UP );//switch pressed is low => 0
 }
+
 bool isLiftDown()
 {
-	return !digitalRead(BTN_DWN);
+	return !digitalRead(BTN_DWN);//switch pressed is low => 0
 }
+
 void op_auto_lift()
 {
 	//first call:
@@ -107,15 +102,18 @@ void op_auto_lift()
 	static int lift_pow=0;
 	
 	//every call:
+	// get op button input
 	lift_pow=0;
 	lift_pow += joystickGetDigital( 1 , JOY_LIFT_OP , JOY_UP   ) ? MLI_POW : 0 ;
 	lift_pow -= joystickGetDigital( 1 , JOY_LIFT_OP , JOY_DOWN ) ? MLI_POW : 0 ;
 	lift_pow += joystickGetDigital( 2 , JOY_LIFT_OP , JOY_UP   ) ? MLI_POW : 0 ;
 	lift_pow -= joystickGetDigital( 2 , JOY_LIFT_OP , JOY_DOWN ) ? MLI_POW : 0 ;
 	
+	// if op buttons pressed, cancel auto button records
 	if(!lift_pow&&lift_auto){lift_pow=lift_auto;}
 	else{lift_auto=0;}
 	
+	// if auto buttons pressed, then record state
 	if( joystickGetDigital( 1 , JOY_LIFT_AUTO , JOY_UP   )
 	 || joystickGetDigital( 2 , JOY_LIFT_AUTO , JOY_UP   )
 	){
@@ -127,9 +125,13 @@ void op_auto_lift()
 		lift_auto = -MLI_POW;
 	}
 	
+	// limit switches - don't stall motors if bottomed out
 	if(lift_pow>0&&  isLiftUp()){lift_pow=0;lift_auto=0;}
 	if(lift_pow<0&&isLiftDown()){lift_pow=0;lift_auto=0;}
-	//printf("motorSet(MLI,%d)\r\n",lift_pow);
+	
+	//TODO: Add timer
+	
+	// raw motor power
 	motorSet(MLI,lift_pow);
 }
 
