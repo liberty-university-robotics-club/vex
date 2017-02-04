@@ -65,6 +65,9 @@ void* ENC_RF;
 
 // OTHER THRESHOLDS AND CONSTANTS
 
+#define DELAY_ms 25
+#define LIFT_TIMEOUT_s 2.5 //float
+
 #define JOY_DEAD_T 40
 #define SCALED_SPEED_CONVERSION 1.0
 #define MAGIC_NUMBER 20

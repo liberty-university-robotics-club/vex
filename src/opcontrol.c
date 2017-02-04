@@ -95,50 +95,85 @@ bool isLiftDown()
 	return !digitalRead(BTN_DWN);//switch pressed is low => 0
 }
 
-void op_auto_lift()
+int op_auto_lift(bool op_mode, bool begin_auto, bool go_up)
 {
 	//first call:
 	static int lift_auto=0;
 	static int lift_pow=0;
+	static float timer=0;
 	
 	//every call:
-	// get op button input
 	lift_pow=0;
-	lift_pow += joystickGetDigital( 1 , JOY_LIFT_OP , JOY_UP   ) ? MLI_POW : 0 ;
-	lift_pow -= joystickGetDigital( 1 , JOY_LIFT_OP , JOY_DOWN ) ? MLI_POW : 0 ;
-	lift_pow += joystickGetDigital( 2 , JOY_LIFT_OP , JOY_UP   ) ? MLI_POW : 0 ;
-	lift_pow -= joystickGetDigital( 2 , JOY_LIFT_OP , JOY_DOWN ) ? MLI_POW : 0 ;
-	
-	// if op buttons pressed, cancel auto button records
-	if(!lift_pow&&lift_auto){lift_pow=lift_auto;}
-	else{lift_auto=0;}
-	
-	// if auto buttons pressed, then record state
-	if( joystickGetDigital( 1 , JOY_LIFT_AUTO , JOY_UP   )
-	 || joystickGetDigital( 2 , JOY_LIFT_AUTO , JOY_UP   )
-	){
-		lift_auto = MLI_POW;
+	if(op_mode)
+	{
+		// get op button input
+		lift_pow += joystickGetDigital( 1 , JOY_LIFT_OP , JOY_UP   ) ? MLI_POW : 0 ;
+		lift_pow -= joystickGetDigital( 1 , JOY_LIFT_OP , JOY_DOWN ) ? MLI_POW : 0 ;
+		lift_pow += joystickGetDigital( 2 , JOY_LIFT_OP , JOY_UP   ) ? MLI_POW : 0 ;
+		lift_pow -= joystickGetDigital( 2 , JOY_LIFT_OP , JOY_DOWN ) ? MLI_POW : 0 ;
+		
+		// if op buttons pressed, cancel auto button records
+		if(!lift_pow&&lift_auto){lift_pow=lift_auto;}
+		else{lift_auto=0;}
+		
+		// if auto buttons pressed, then record state
+		if( joystickGetDigital( 1 , JOY_LIFT_AUTO , JOY_UP   )
+		 || joystickGetDigital( 2 , JOY_LIFT_AUTO , JOY_UP   )
+		){
+			lift_auto = MLI_POW;
+		}
+		if( joystickGetDigital( 1 , JOY_LIFT_AUTO , JOY_DOWN )
+		 || joystickGetDigital( 2 , JOY_LIFT_AUTO , JOY_DOWN )
+		){
+			lift_auto = -MLI_POW;
+		}
 	}
-	if( joystickGetDigital( 1 , JOY_LIFT_AUTO , JOY_DOWN )
-	 || joystickGetDigital( 2 , JOY_LIFT_AUTO , JOY_DOWN )
-	){
-		lift_auto = -MLI_POW;
+	else //autonomous mode code
+	{
+		if (begin_auto)
+		{
+			lift_auto=go_up?MLI_POW:-MLI_POW;
+		}
 	}
 	
 	// limit switches - don't stall motors if bottomed out
 	if(lift_pow>0&&  isLiftUp()){lift_pow=0;lift_auto=0;}
 	if(lift_pow<0&&isLiftDown()){lift_pow=0;lift_auto=0;}
 	
-	//TODO: Add timer
+	// Timeout - it shouldn't take that long to raise/lower!
+	if(lift_pow){timer+=.001*DELAY_ms;}
+	else{timer=0;}
+	if(timer > LIFT_TIMEOUT_s){timer=0;lift_pow=0;lift_auto=0;}
 	
 	// raw motor power
 	motorSet(MLI,lift_pow);
+	return lift_pow;
+}
+
+int auto_lift(bool begin_auto, bool go_up)//generalized version of the two following functions:
+{
+	return op_auto_lift(true, begin_auto, go_up);
+}
+
+void start_auto_lift(bool go_up)// to be called once to start lift
+{
+	op_auto_lift(true, true, go_up);
+}
+
+bool continue_auto_lift()//returns 0 when motor is stopped //to be called to constantly update lift and eventually trigger timeout
+{
+	return op_auto_lift(true, false, false);
+}
+
+void op_lift()
+{
+	op_auto_lift(false, false, false);
 }
 
 void opcontrol()
 {
 	driveoperation();
-	op_auto_lift();
+	op_lift();
 }
 
 void operatorControl() {
@@ -150,6 +185,6 @@ void operatorControl() {
 
 	while (1) {
 		opcontrol();
-		delay(25);
+		delay(DELAY_ms);
 	}
 }
