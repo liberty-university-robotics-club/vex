@@ -22,7 +22,7 @@ void controlmotors(int lb, int lf, int rb, int rf)
 void controldrive(int t, int f, int s)
 {
 	static int delprint=0;
-	(delprint++)%10 ? printf("controll!\r\n"):delprint;
+	(delprint++)%10 ? /*printf("controll!\r\n")*/:delprint;
 	static state *state_lb=NULL;
 	static state *state_lf=NULL;
 	static state *state_rb=NULL;
