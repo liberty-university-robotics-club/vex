@@ -14,6 +14,12 @@
 #define MLI 7
 #define MLI_POW 100
 
+#define GODDARD
+#ifdef GODDARD
+#define HOIST1 11
+#define HOIST2 12
+#endif
+
 
 
 
@@ -44,6 +50,7 @@
 #define IME_IR 0
 
 
+
 #define LIFT_PIN 12
 
 void* ENC_LB;
@@ -63,10 +70,13 @@ void* ENC_RF;
 #define JOY_LIFT_OP    5
 #define JOY_LIFT_AUTO  6
 
+#define JOY_HOIST      7
+
 // OTHER THRESHOLDS AND CONSTANTS
 
 #define DELAY_ms 25
 #define LIFT_TIMEOUT_s 2.5 //float
+#define HOIST_PERIOD_s 1 //float
 
 #define JOY_DEAD_T 40
 #define SCALED_SPEED_CONVERSION 1.0

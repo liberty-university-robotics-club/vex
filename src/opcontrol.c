@@ -164,6 +164,32 @@ int op_auto_lift(bool auto_mode, bool begin_auto, bool go_up)
 	return lift_pow;
 }
 
+void op_hoist()
+{
+	#define GODDARD
+	#ifdef GODDARD
+	static float timer=0;
+	int hoist_pow = 0;
+	// get op button input
+	hoist_pow += joystickGetDigital( 1 , JOY_HOIST , JOY_UP   ) ? 1 : 0 ;
+	hoist_pow -= joystickGetDigital( 1 , JOY_HOIST , JOY_DOWN ) ? 1 : 0 ;
+	hoist_pow += joystickGetDigital( 2 , JOY_HOIST , JOY_UP   ) ? 1 : 0 ;
+	hoist_pow -= joystickGetDigital( 2 , JOY_HOIST , JOY_DOWN ) ? 1 : 0 ;
+	
+	//keep track of time
+	if(hoist_pow){timer+=.001*DELAY_ms;}
+	else{timer=0;}
+	//set pistons based on time
+	digitalWrite(HOIST1,(!(0.0*HOIST_PERIOD_s < timer && timer < .30*HOIST_PERIOD_s)));
+	digitalWrite(HOIST2,(!(.15*HOIST_PERIOD_s < timer && timer < .75*HOIST_PERIOD_s)));
+	if(timer>=HOIST_PERIOD_s)
+	{
+		//printf("It has been %f secs.\r\n",timer);
+		timer=0;
+	}
+	#endif
+}
+
 int auto_lift(bool begin_auto, bool go_up)//generalized version of the two following functions:
 {
 	return op_auto_lift(true, begin_auto, go_up);
@@ -198,6 +224,7 @@ void opcontrol()
 {
 	op_drive();
 	op_lift();
+	op_hoist();
 }
 
 void operatorControl() {
