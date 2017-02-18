@@ -180,8 +180,8 @@ void op_hoist()
 	if(hoist_pow){timer+=.001*DELAY_ms;}
 	else{timer=0;}
 	//set pistons based on time
-	digitalWrite(HOIST1,(!(0.0*HOIST_PERIOD_s < timer && timer < .30*HOIST_PERIOD_s)));
-	digitalWrite(HOIST2,(!(.15*HOIST_PERIOD_s < timer && timer < .75*HOIST_PERIOD_s)));
+	digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .30*HOIST_PERIOD_s)));
+	digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.15*HOIST_PERIOD_s < timer && timer < .75*HOIST_PERIOD_s)));
 	if(timer>=HOIST_PERIOD_s)
 	{
 		//printf("It has been %f secs.\r\n",timer);
