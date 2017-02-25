@@ -180,8 +180,12 @@ void op_hoist()
 	if(hoist_pow){timer+=.001*DELAY_ms;}
 	else{timer=0;}
 	//set pistons based on time
-	digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .30*HOIST_PERIOD_s)));
-	digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.15*HOIST_PERIOD_s < timer && timer < .75*HOIST_PERIOD_s)));
+	//digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .30*HOIST_PERIOD_s)));
+	//digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.15*HOIST_PERIOD_s < timer && timer < .75*HOIST_PERIOD_s)));
+	//digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .50*HOIST_PERIOD_s)));
+	//digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.25*HOIST_PERIOD_s < timer && timer < .75*HOIST_PERIOD_s)));
+	digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .50*HOIST_PERIOD_s)));
+	digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.50*HOIST_PERIOD_s < timer && timer < 1.0*HOIST_PERIOD_s)));
 	if(timer>=HOIST_PERIOD_s)
 	{
 		//printf("It has been %f secs.\r\n",timer);
@@ -189,6 +193,23 @@ void op_hoist()
 	}
 	#endif
 }
+
+
+void op_claw()
+{
+	#define PASCAL
+	#ifdef PASCAL
+	//static float timer=0;
+	int claw_pow = 0;
+	// get op button input
+	claw_pow += joystickGetDigital( 1 , JOY_HOIST , JOY_UP   ) ? MCLAW_POW : 0 ;
+	claw_pow -= joystickGetDigital( 1 , JOY_HOIST , JOY_DOWN ) ? MCLAW_POW : 0 ;
+	claw_pow += joystickGetDigital( 2 , JOY_HOIST , JOY_UP   ) ? MCLAW_POW : 0 ;
+	claw_pow -= joystickGetDigital( 2 , JOY_HOIST , JOY_DOWN ) ? MCLAW_POW : 0 ;
+	motorSet(MCLAW,claw_pow);
+	#endif
+}
+
 
 int auto_lift(bool begin_auto, bool go_up)//generalized version of the two following functions:
 {
@@ -224,6 +245,7 @@ void opcontrol()
 {
 	op_drive();
 	op_lift();
+	op_claw();
 	op_hoist();
 }
 

@@ -20,6 +20,13 @@
 #define HOIST2 12
 #endif
 
+#define PASCAL
+#ifdef PASCAL
+#define MCLAW 8
+#define MCLAW_POW 127
+#endif
+
+
 
 
 
@@ -76,7 +83,8 @@ void* ENC_RF;
 
 #define DELAY_ms 25
 #define LIFT_TIMEOUT_s 2.5 //float
-#define HOIST_PERIOD_s .5 //float
+#define HOIST_PERIOD_s .25 //float
+
 
 #define JOY_DEAD_T 40
 #define SCALED_SPEED_CONVERSION 1.0
