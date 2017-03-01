@@ -75,14 +75,16 @@ void* ENC_RF;
 #define JOY_STRAFING_S 4
 
 #define JOY_LIFT_OP    5
-#define JOY_LIFT_AUTO  6
+#define JOY_CLAW       6
+//#define JOY_LIFT_AUTO  7
+#define JOY_HOIST      8
 
-#define JOY_HOIST      7
 
 // OTHER THRESHOLDS AND CONSTANTS
 
 #define DELAY_ms 25
 #define LIFT_TIMEOUT_s 2.5 //float
+#define CLAW_TIMEOUT_s 3.5 //float
 #define HOIST_PERIOD_s .25 //float
 
 
