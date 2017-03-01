@@ -61,6 +61,21 @@ double headingto(tank v, double x, double y) {//return heading to target from cu
 			/distanceto(v,x,y)
 		   );
 }
+double drivetox(double x, double t, double m, double s)
+{
+	if(fabs(x-t)>m)
+		return (x-t/fabs(x-t))*s;
+	else
+		return 0;
+}
+#define POS_MARGIN 2
+void newdriveto(int axis, double t, double s,  tank v)
+{
+	double xs,ys;
+	for(xs=0,ys=0;axis?xs:ys; xs=drivetox(v.x, t,POS_MARGIN,s), ys=drivetox(v.y, t,POS_MARGIN,s))
+		controldrive(axis?xs:0,axis?0:ys);
+
+}
 void printpos(tank *v) {
 //	printf("POSITION: x:%f\t y:%f\t HEAD: %f\t tdist: %f\t thead:%f\t ",v->x,v->y,v->h,distanceto(*v,x,y),headingto(*v,x,y));
 	printf("POSITION: x:%f\t y:%f\t HEAD: %f\t ",v->x,v->y,v->h);

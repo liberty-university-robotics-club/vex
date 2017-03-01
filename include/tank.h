@@ -16,3 +16,5 @@ void b_driveto(tank *v, double x, double y, double r);
 void drivetogoal(tank *v);
 void rotate(tank *v, double dh);
 void base_station_update(tank *v, double r, double theta);
+void newdriveto(int,double,double,tank);
+

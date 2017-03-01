@@ -20,17 +20,14 @@ void alen_auto(void *t){
 		taskDelay(300);
 	}
 }
-#endif
+extern void pascalphase1(void)
 void pascal()//runs around SLAVE
 {
-#ifdef ALEN
-#pragma message ("building auto for Alen")
 	printf("Start Alen auto....");
 	taskCreate(ir_task,TASK_STACK_D,NULL,IR_PRIORITY);
 	taskCreate(alen_auto,TASK_STACK_D,NULL,MAIN_PRIORITY);
 	while(1)
 		delay(100);
-#endif
 }
 void goddard()//base MASTER
 {
