@@ -1,32 +1,46 @@
 #ifndef robot_h
 #define robot_h
 
+#define GODDARD
+//#define PASCAL
+
+// CONTROLLER PINS + CONSTANTS
+
+#define JOY_FORWARD_T  2
+#define JOY_FORWARD_S  3
+#define JOY_TURN_T     1
+#define JOY_STRAFING_S 4
+
+#define JOY_LIFT_OP    5
+#define JOY_CLAW       6
+//#define JOY_LIFT_AUTO  7
+#define JOY_HOIST      8
+
+
 // MOTOR PINS + CONSTANTS
 
-#define MLB 2
-#define MLF 3
-#define MRB 4
-#define MRF 5
+#define MLB 2			//
+#define MLF 3			//
+#define MRB 4			//
+#define MRF 5			//
 
-#define MIR 6
+#define MIR 6			//
 #define MIR_POW 20
 
-#define MLI 7
-#define MLI_POW 100
+#define MLI 7			//
+#define MLI_POW 127
 
-#define GODDARD
-#ifdef GODDARD
-#define HOIST1 11
-#define HOIST2 12
-#endif
-
-#define PASCAL
 #ifdef PASCAL
-#define MCLAW 8
+#define MCLAW 8			//
 #define MCLAW_POW 127
 #endif
 
-
+#ifdef GODDARD
+#define MHOIST 8		//
+#define MHOOK 9			//
+#define HOIST_POW 127
+#define HOOK_POW 127
+#endif
 
 
 
@@ -66,26 +80,12 @@ void* ENC_RB;
 void* ENC_RF;
 
 
-
-// CONTROLLER PINS + CONSTANTS
-
-#define JOY_FORWARD_T  2
-#define JOY_FORWARD_S  3
-#define JOY_TURN_T     1
-#define JOY_STRAFING_S 4
-
-#define JOY_LIFT_OP    5
-#define JOY_CLAW       6
-//#define JOY_LIFT_AUTO  7
-#define JOY_HOIST      8
-
-
 // OTHER THRESHOLDS AND CONSTANTS
 
 #define DELAY_ms 25
 #define LIFT_TIMEOUT_s 2.5 //float
 #define CLAW_TIMEOUT_s 3.5 //float
-#define HOIST_PERIOD_s .25 //float
+//#define HOIST_PERIOD_s .25 //float
 
 
 #define JOY_DEAD_T 40

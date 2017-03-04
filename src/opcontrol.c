@@ -189,37 +189,51 @@ void op_lift()
 //----------------------------------------------------------------------
 void op_hoist()
 {
-	#define GODDARD
 	#ifdef GODDARD
-	static float timer=0;
+	//static float timer=0;
 	int hoist_pow = 0;
 	// get op button input
-	hoist_pow += joystickGetDigital( 1 , JOY_HOIST , JOY_UP   ) ? 1 : 0 ;
-	hoist_pow -= joystickGetDigital( 1 , JOY_HOIST , JOY_DOWN ) ? 1 : 0 ;
-	hoist_pow += joystickGetDigital( 2 , JOY_HOIST , JOY_UP   ) ? 1 : 0 ;
-	hoist_pow -= joystickGetDigital( 2 , JOY_HOIST , JOY_DOWN ) ? 1 : 0 ;
+	hoist_pow += joystickGetDigital( 1 , JOY_HOIST , JOY_UP   ) ? HOIST_POW : 0 ;
+	hoist_pow -= joystickGetDigital( 1 , JOY_HOIST , JOY_DOWN ) ? HOIST_POW : 0 ;
+	hoist_pow += joystickGetDigital( 2 , JOY_HOIST , JOY_UP   ) ? HOIST_POW : 0 ;
+	hoist_pow -= joystickGetDigital( 2 , JOY_HOIST , JOY_DOWN ) ? HOIST_POW : 0 ;
 	
-	//keep track of time
-	if(hoist_pow){timer+=.001*DELAY_ms;}
-	else{timer=0;}
-	//set pistons based on time
-	//digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .30*HOIST_PERIOD_s)));
-	//digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.15*HOIST_PERIOD_s < timer && timer < .75*HOIST_PERIOD_s)));
+	motorSet(MHOIST,hoist_pow);
+	#endif
+	//
+	////keep track of time
+	//if(hoist_pow){timer+=.001*DELAY_ms;}
+	//else{timer=0;}
+	////set pistons based on time
+	////digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .30*HOIST_PERIOD_s)));
+	////digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.15*HOIST_PERIOD_s < timer && timer < .75*HOIST_PERIOD_s)));
+	////digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .50*HOIST_PERIOD_s)));
+	////digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.25*HOIST_PERIOD_s < timer && timer < .75*HOIST_PERIOD_s)));
 	//digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .50*HOIST_PERIOD_s)));
-	//digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.25*HOIST_PERIOD_s < timer && timer < .75*HOIST_PERIOD_s)));
-	digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .50*HOIST_PERIOD_s)));
-	digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.50*HOIST_PERIOD_s < timer && timer < 1.0*HOIST_PERIOD_s)));
-	if(timer>=HOIST_PERIOD_s)
-	{
-		//printf("It has been %f secs.\r\n",timer);
-		timer=0;
-	}
+	//digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.50*HOIST_PERIOD_s < timer && timer < 1.0*HOIST_PERIOD_s)));
+	//if(timer>=HOIST_PERIOD_s)
+	//{
+	//	//printf("It has been %f secs.\r\n",timer);
+	//	timer=0;
+	//}
+}
+
+void op_hook()
+{
+	#ifdef GODDARD
+	int hook_pow = 0;
+	// get op button input
+	hook_pow += joystickGetDigital( 1 , JOY_HOIST , JOY_RIGHT) ? HOOK_POW : 0 ;
+	hook_pow -= joystickGetDigital( 1 , JOY_HOIST , JOY_LEFT ) ? HOOK_POW : 0 ;
+	hook_pow += joystickGetDigital( 2 , JOY_HOIST , JOY_RIGHT) ? HOOK_POW : 0 ;
+	hook_pow -= joystickGetDigital( 2 , JOY_HOIST , JOY_LEFT ) ? HOOK_POW : 0 ;
+	
+	motorSet(MHOOK,hook_pow);
 	#endif
 }
 //----------------------------------------------------------------------
-void op_auto_claw(bool auto_mode, bool begin_auto, bool clench)
+int op_auto_claw(bool auto_mode, bool begin_auto, bool clench)
 {
-	#define PASCAL
 	#ifdef PASCAL
 	
 	/////////////////////////////////////////////
@@ -270,7 +284,7 @@ void op_auto_claw(bool auto_mode, bool begin_auto, bool clench)
 	{
 		if (begin_auto)
 		{
-			claw_auto=go_up?MCLAW_POW:-MCLAW_POW;
+			claw_auto=clench?MCLAW_POW:-MCLAW_POW;
 		}
 	}
 	
@@ -289,6 +303,7 @@ void op_auto_claw(bool auto_mode, bool begin_auto, bool clench)
 	return claw_pow;
 	
 	#endif
+	return 0;
 }
 /////////////////////////////
 int auto_claw(bool begin_auto, bool clench)//generalized version of the two following functions:
@@ -328,6 +343,7 @@ void opcontrol()
 	op_lift();
 	op_claw();
 	op_hoist();
+	op_hook();
 }
 
 void operatorControl() {

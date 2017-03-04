@@ -71,12 +71,6 @@ void initialize() {
 	pinMode(BTN_UP ,INPUT);
 	pinMode(BTN_DWN,INPUT);
 	
-	//hoist
-	#define GODDARD
-	#ifdef GODDARD
-	pinMode(HOIST1, OUTPUT);
-	pinMode(HOIST2, OUTPUT);
-	#endif
 	
 	// Stephen what is this?  LED?
 	pinMode(LIFT_PIN, OUTPUT);
