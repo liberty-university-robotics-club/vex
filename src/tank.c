@@ -96,7 +96,7 @@ void drivetogoal(tank *v) {
 }
 void base_station_update(tank *v, double r, double theta)
 {
-	double geom_theta = theta;//deal with angle conversion here
+	double geom_theta = -theta;//deal with angle conversion here
 	//transpose the position of the base station to convert to coordinate plane
 	double base_x = 0;
 	double base_y = 0;

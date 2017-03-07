@@ -7,7 +7,8 @@
 #define MAIN_PRIORITY TASK_PRIORITY_HIGHEST-5
 
 int imecount=0;
-#ifdef GODDARD
+
+#ifdef PASCAL
 void ir_task (void * t) {
 	printf("Start Alen IR...."); //TODO: atomic?
 	while(1){
@@ -24,7 +25,7 @@ void alen_auto(void *t){
 #endif
 void pascal()//runs around SLAVE
 {
-#ifdef GODDARD
+#ifdef PASCAL
 #pragma message ("building auto for Alen")
 	printf("Start Alen auto....");
 	taskCreate(ir_task,TASK_STACK_D,NULL,IR_PRIORITY);
@@ -41,11 +42,12 @@ int ir_rotate(int power, int ratio_ticks)
 	imeGet(0, &position);
 	if(tick < ratio_ticks)
 	{
-		motorSet(MIR,power);
+		//motorSet(MIR,power);
 	}
 	else if(tick<1000)
 	{
-		motorSet(MIR,0);
+		//motorSet(MIR,0);
+		power=0;
 	}
 	else
 	{
@@ -54,31 +56,57 @@ int ir_rotate(int power, int ratio_ticks)
 		printf("imecount = %d\r\n",imecount);
 	}
 	tick++;
-	return 0;
+	
+	motorSet(MIR,power);
+	return power;
 }
 void goddard()//base MASTER
 {
+	#ifdef GODDARD
 	
 	controldrive(0,0,0);//stopped
 	int encoderOffset;
 	imeGet(0,&encoderOffset);//starting position
-	int enc=0;//deg
+	int enc=0;//centirad
+	int power=0;
+	int direction = 1;
 	while(1)
 	{
-		controldrive(0,0,0);
-		imeGet(0,&enc);
+		//controldrive(0,0,0);
+		imeGet(0,&enc);// Experimentally, encoder value of 155 is 90 deg // unit is centirads?
 		enc -= encoderOffset;
-		if(!DONT_MOVE)
+		
+		//Check position to control angular position
+		if (enc>=200)//200 = 2 radians
 		{
-			ir_rotate(20,50);//2nd number out of 1000
-		} //155 is 90 deg
+			direction = -1;
+			//printf("enc = %d	direction = %d\r\n",enc, direction);
+		}
+		else if(enc<=0)
+		{
+			direction = 1;
+			//printf("enc = %d	direction = %d\r\n",enc, direction);
+		}
+		power = ir_rotate(MIR_POW*direction,50);//2nd argument is per 1000
+		
+		//send byte if stationary or delay if moving
+		if (power)
+		{
+			delay(DELAY_ms);
+		}
+		else
+		{
+			//delay(DELAY_ms);
+			//turn_on_beacon();
+			//send_theta();//goddard on left, so values from 0-115 or so
+			//turn off beacon?
+		}
+		
 	}
-	//turn_on_beacon();
-	//send_theta();//goddard on left, so values from 0-115 or so
 	
 	
+	#endif
 }
-#define GODDARD
 void autonomous()
 {
 	//system hangs if no ime's to initialize
