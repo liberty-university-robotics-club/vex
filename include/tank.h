@@ -16,5 +16,11 @@ void b_driveto(tank *v, double x, double y, double r);
 void drivetogoal(tank *v);
 void rotate(tank *v, double dh);
 void base_station_update(tank *v, double r, double theta);
-void newdriveto(int,double,double,tank);
+void newdriveto(int,double,double,tank*);
+#define EAST 0
+#define NORTH 1
+#define WEST 2
+#define SOUTH 3
+void face(tank *,int dir);
 
+void lift_block(bool);

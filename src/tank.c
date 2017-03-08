@@ -7,6 +7,7 @@
 #include <API.h>
 #include <main.h>
 #endif
+#include <opcontrol.h>
 double f_tile_len=20;
 #define f_center_x f_tile_len
 #define f_center_y 2*f_tile_len
@@ -69,11 +70,11 @@ double drivetox(double x, double t, double m, double s)
 		return 0;
 }
 #define POS_MARGIN 2
-void newdriveto(int axis, double t, double s,  tank v)
+void newdriveto(int axis, double t, double s,  tank *v)
 {
 	double xs,ys;
-	for(xs=0,ys=0;axis?xs:ys; xs=drivetox(v.x, t,POS_MARGIN,s), ys=drivetox(v.y, t,POS_MARGIN,s))
-		controldrive(axis?xs:0,axis?0:ys);
+	for(xs=0,ys=0;axis?xs:ys; xs=drivetox(v->x, t,POS_MARGIN,s), ys=drivetox(v->y, t,POS_MARGIN,s))
+		controldrive(axis?xs:0,axis?0:ys,0);
 
 }
 void printpos(tank *v) {
@@ -120,6 +121,19 @@ void base_station_update(tank *v, double r, double theta)
 	v->x=base_x+r*cos(geom_theta);
 	v->y=base_y+r*sin(geom_theta);
 	
+}
+
+void face(tank *v,int dir)
+{
+	int angle=0;
+	switch(dir%4){
+		case EAST: angle=0;break;
+		case NORTH: angle=PI;break;
+		case WEST: angle=2*PI;break;
+		case SOUTH: angle=(2/3.)*PI;break;
+	}
+	//TODO:block on IR
+	for(;v->h !=angle;controldrive(0,20,0));
 }
 
 

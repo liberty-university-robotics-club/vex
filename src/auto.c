@@ -6,7 +6,6 @@
 #define IR_PRIORITY TASK_PRIORITY_HIGHEST-2
 #define MAIN_PRIORITY TASK_PRIORITY_HIGHEST-5
 
-#ifdef ALEN
 void ir_task (void * t) {
 	printf("Start Alen IR...."); //TODO: atomic?
 	while(1){
@@ -14,20 +13,20 @@ void ir_task (void * t) {
 		taskDelay(10);
 	}
 }
-void alen_auto(void *t){
-	while(1){
-		printf("Alen main loop\n\r");
-		taskDelay(300);
-	}
+void lift_block(bool dir)
+{
+	start_auto_lift(dir);
+	while(continue_auto_lift())delay(300);
 }
-extern void pascalphase1(void)
+extern void pascalphase1(void);
+extern void pascalphase2(void);
 void pascal()//runs around SLAVE
 {
-	printf("Start Alen auto....");
 	taskCreate(ir_task,TASK_STACK_D,NULL,IR_PRIORITY);
-	taskCreate(alen_auto,TASK_STACK_D,NULL,MAIN_PRIORITY);
-	while(1)
-		delay(100);
+	pascalphase1();
+//	taskCreate(alen_auto,TASK_STACK_D,NULL,MAIN_PRIORITY);
+//	while(1)
+//		delay(100);
 }
 void goddard()//base MASTER
 {
@@ -52,11 +51,7 @@ void goddard()//base MASTER
 }
 void autonomous()
 {
-	#ifdef ALEN
 	goddard();
-	#endif
-	#ifdef PASCAL
 	pascal();
-	#endif
 }
 
