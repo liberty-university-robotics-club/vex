@@ -96,12 +96,9 @@ void goddard()//base MASTER
 		}
 		else
 		{
-			//delay(DELAY_ms);
-			//turn_on_beacon();
-			//send_theta();//goddard on left, so values from 0-115 or so
-			//turn off beacon?
+			//transmit_byte(enc%314);
+			transmitob(ID_THETA,enc%314);
 		}
-		
 	}
 	
 	

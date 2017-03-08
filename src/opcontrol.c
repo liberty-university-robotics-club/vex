@@ -298,6 +298,8 @@ int op_auto_claw(bool auto_mode, bool begin_auto, bool clench)
 	else{timer=0;}
 	if(timer > CLAW_TIMEOUT_s){timer=0;claw_pow=0;claw_auto=0;}
 	
+	claw_pow*=-1;
+	
 	// raw motor power
 	motorSet(MCLAW,claw_pow);
 	return claw_pow;

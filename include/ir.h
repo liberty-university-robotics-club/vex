@@ -13,10 +13,12 @@
 //recive
 unsigned int recive_byte(void);
 unsigned int rx_ec(void);
+int recive_ob(unsigned int *id, unsigned int *ob);
 
 //transmit
 void transmit_byte(unsigned int);
 void tx_ec(unsigned int);
+void transmitob(unsigned int id, unsigned int val);
 //check
 unsigned int checkgen(unsigned int, unsigned int);
 //interface to main auto code
