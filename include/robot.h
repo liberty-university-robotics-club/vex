@@ -13,6 +13,7 @@
 
 #define JOY_LIFT_OP    5
 #define JOY_CLAW       6
+#define JOY_LIFT_SLOW 7
 //#define JOY_LIFT_AUTO  7
 #define JOY_HOIST      8
 
@@ -29,6 +30,7 @@
 
 #define MLI 7			//
 #define MLI_POW 127
+#define MLI_SLOW 60
 
 #ifdef PASCAL
 #define MCLAW 8			//

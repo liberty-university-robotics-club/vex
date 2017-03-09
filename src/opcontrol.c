@@ -126,6 +126,9 @@ int op_auto_lift(bool auto_mode, bool begin_auto, bool go_up)
 		lift_pow += joystickGetDigital( 2 , JOY_LIFT_OP , JOY_UP   ) ? MLI_POW : 0 ;
 		lift_pow -= joystickGetDigital( 2 , JOY_LIFT_OP , JOY_DOWN ) ? MLI_POW : 0 ;
 		
+		lift_pow -= joystickGetDigital( 1 , JOY_LIFT_SLOW , JOY_DOWN ) ? MLI_SLOW : 0 ;
+		lift_pow -= joystickGetDigital( 2 , JOY_LIFT_SLOW , JOY_DOWN ) ? MLI_SLOW : 0 ;
+		
 		// if op buttons pressed, cancel auto button records
 		if(!lift_pow&&lift_auto){lift_pow=lift_auto;}
 		else{lift_auto=0;}
@@ -162,7 +165,8 @@ int op_auto_lift(bool auto_mode, bool begin_auto, bool go_up)
 	if(timer > LIFT_TIMEOUT_s){timer=0;lift_pow=0;lift_auto=0;}
 	
 	// raw motor power
-	motorSet(MLI,lift_pow);
+	motorSet(MLI,-lift_pow);
+	motorSet(MIR,lift_pow);
 	return lift_pow;
 }
 
@@ -223,12 +227,12 @@ void op_hook()
 	#ifdef GODDARD
 	int hook_pow = 0;
 	// get op button input
-	hook_pow += joystickGetDigital( 1 , JOY_HOIST , JOY_RIGHT) ? HOOK_POW : 0 ;
-	hook_pow -= joystickGetDigital( 1 , JOY_HOIST , JOY_LEFT ) ? HOOK_POW : 0 ;
-	hook_pow += joystickGetDigital( 2 , JOY_HOIST , JOY_RIGHT) ? HOOK_POW : 0 ;
-	hook_pow -= joystickGetDigital( 2 , JOY_HOIST , JOY_LEFT ) ? HOOK_POW : 0 ;
+	hook_pow += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? HOOK_POW : 0 ;
+	hook_pow -= joystickGetDigital( 1 , JOY_CLAW , JOY_DOWN ) ? HOOK_POW : 0 ;
+	hook_pow += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? HOOK_POW : 0 ;
+	hook_pow -= joystickGetDigital( 2 , JOY_CLAW , JOY_DOWN ) ? HOOK_POW : 0 ;
 	
-	motorSet(MHOOK,hook_pow);
+	motorSet(MHOOK,-hook_pow);
 	#endif
 }
 //----------------------------------------------------------------------
@@ -345,7 +349,7 @@ void opcontrol()
 	op_lift();
 	op_claw();
 	op_hoist();
-	op_hook();
+	op_hook();//fork lift
 }
 
 void operatorControl() {
