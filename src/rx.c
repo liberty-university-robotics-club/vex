@@ -2,7 +2,6 @@
 #include "../include/API.h"
 int recive_bit();
 unsigned int recive_byte();
-int recive_ob(unsigned int *,unsigned int *);
 unsigned int recive_n(int);
 
 

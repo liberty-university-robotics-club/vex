@@ -7,6 +7,8 @@
 #include <API.h>
 #include <main.h>
 #endif
+#include <opcontrol.h>
+#include <ir.h>
 double f_tile_len=20;
 #define f_center_x f_tile_len
 #define f_center_y 2*f_tile_len
@@ -61,6 +63,30 @@ double headingto(tank v, double x, double y) {//return heading to target from cu
 			/distanceto(v,x,y)
 		   );
 }
+double drivetox(double x, double t, double m, double s)
+{
+	if(fabs(x-t)>m)
+		return (x-t/fabs(x-t))*s;
+	else
+		return 0;
+}
+void orienteddrive(double x, double y, double h)
+{
+	controldrive(0,x*cos(h)+y*sin(h),y*cos(h)+x*sin(h));
+}
+#define POS_MARGIN 2
+void newdriveto(int axis, double t, double s,  tank *v)
+{
+	double xs;
+	double *x=axis ? &(v->x) : &(v->y);
+	while(fabs(*x-t)>0.5){
+		xs=s*(*x-t)/fabs(*x-t);
+		orienteddrive(axis?xs:0,axis?0:xs,v->h);
+		printf("driving to:%f at %f %f\n\r",t,v->x,v->y);
+		delay(200);
+	}
+
+}
 void printpos(tank *v) {
 //	printf("POSITION: x:%f\t y:%f\t HEAD: %f\t tdist: %f\t thead:%f\t ",v->x,v->y,v->h,distanceto(*v,x,y),headingto(*v,x,y));
 	printf("POSITION: x:%f\t y:%f\t HEAD: %f\t ",v->x,v->y,v->h);
@@ -105,6 +131,41 @@ void base_station_update(tank *v, double r, double theta)
 	v->x=base_x+r*cos(geom_theta);
 	v->y=base_y+r*sin(geom_theta);
 	
+}
+void constrain(tank *v,double val,int var)
+{
+	double cr=sqrt(pow(v->x,2)+pow(v->y,2));
+	double ct=atan2(v->x,v->y);
+	if(var){
+		if(cr>val)
+			cr=val;
+	}else {
+		if(abs(ct-val)>0.5)
+			ct=val;
+	}
+	v->x=cos(ct)*cr;
+	v->y=sin(ct)*cr;
+}
+
+void face(tank *v,int dir)
+{
+	int angle=0;
+	switch(dir%4){
+		case EAST: angle=0;break;
+		case NORTH: angle=PI;break;
+		case WEST: angle=2*PI;break;
+		case SOUTH: angle=(2/3.)*PI;break;
+	}
+	if(gotflag)//IR is working (we know because wev gotten a packet
+	{
+		gotflag=0;
+		while(!gotflag){
+			controldrive(20,0,0);
+		}
+	}
+	v->h=0;//eh
+	//TODO:block on IR
+	for(;abs(v->h -angle)>0.5;controldrive(20,0,0))printf("face %f %f\n\r",angle,v->h);
 }
 
 

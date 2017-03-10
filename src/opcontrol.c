@@ -22,7 +22,7 @@ void controlmotors(int lb, int lf, int rb, int rf)
 void controldrive(int t, int f, int s)
 {
 	static int delprint=0;
-	(delprint++)%10 ? /*printf("controll!\r\n")*/:delprint;
+	//(delprint++)%10 ? printf("controll!\n"):delprint;
 	static state *state_lb=NULL;
 	static state *state_lf=NULL;
 	static state *state_rb=NULL;
@@ -48,6 +48,9 @@ void controldrive(int t, int f, int s)
 	int enc_lf = encoderGet(ENC_LF);
 	int enc_rb = encoderGet(ENC_RB);
 	int enc_rf = encoderGet(ENC_RF);
+	//(delprint++)%10 ? 
+	//	printf(" %d %d %d %d \n\r",enc_lb,enc_lf,enc_rb,enc_rf)
+	//:delprint;
 	simtank
 	(	&ltank,
 		enc_lb,
@@ -363,12 +366,15 @@ void opcontrol()
 
 void operatorControl() {
 
-	//autonomous(); //TODO: remove this (too lazy to grab joysticks rn)
+	autonomous(); //TODO: remove this (too lazy to grab joysticks rn)
+//	lift_block(0);
+	//newdriveto(0,2,30,&ltank);
 
 	//start lisp/UI task
 	//taskCreate(lispmain, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
 
 	while (1) {
+		printf("opcontrol\n\r");
 		opcontrol();
 		delay(DELAY_ms);
 	}
