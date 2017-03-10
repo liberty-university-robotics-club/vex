@@ -60,11 +60,7 @@ void initializeIO() {
  * will not start. An autonomous mode selection menu like the pre_auton() in other environments
  * can be implemented in this task if desired.
  */
-int imecount=0;
 void initialize() {
-	//system hangs if no ime's to initialize
-	//imecount=imeInitializeAll();
-	
 	// drive enc
 	ENC_LB = encoderInit(ENC_LBT,ENC_LBB,FORWARD_lf);
 	ENC_LF = encoderInit(ENC_LFT,ENC_LFB,FORWARD_lb);
@@ -74,6 +70,7 @@ void initialize() {
 	//lift enc
 	pinMode(BTN_UP ,INPUT);
 	pinMode(BTN_DWN,INPUT);
+	
 	
 	// Stephen what is this?  LED?
 	pinMode(LIFT_PIN, OUTPUT);
