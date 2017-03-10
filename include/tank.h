@@ -17,6 +17,7 @@ void drivetogoal(tank *v);
 void rotate(tank *v, double dh);
 void base_station_update(tank *v, double r, double theta);
 void newdriveto(int,double,double,tank*);
+void constrain(tank *,double,int);
 #define EAST 0
 #define NORTH 1
 #define WEST 2

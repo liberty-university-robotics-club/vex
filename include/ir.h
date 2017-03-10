@@ -23,6 +23,8 @@ unsigned int checkgen(unsigned int, unsigned int);
 //interface to main auto code
 void slave_loop(void);
 void master_loop(void);
+int recive_ob(unsigned int *, unsigned int *);
+void transmit_ob(unsigned int , unsigned int );
 
 int gotflag;
 

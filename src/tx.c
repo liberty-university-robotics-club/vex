@@ -7,9 +7,9 @@ void transmit_cycles(int cycles, int send_signal)
 	//send the cycles
 	for(i=0;i<cycles;i++)
 	{
-    if(send_signal)digitalWrite(ir_pin, HIGH);
+    if(send_signal)digitalWrite(tx_pin, HIGH);
 		delayMicroseconds(13);
-		digitalWrite(ir_pin, LOW);
+		digitalWrite(tx_pin, LOW);
 		delayMicroseconds(13);
 	}
 	//wait ten cycles before transmitting
@@ -38,7 +38,7 @@ void transmit_n(int n, unsigned int *data)
 		}
 	}
 }
-void transmitob(unsigned int id, unsigned int val)
+void transmit_ob(unsigned int id, unsigned int val)
 {
 	unsigned int check=checkgen(id,val);
 	transmit_cycles(CYCLES_HEADER, true);

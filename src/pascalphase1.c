@@ -1,6 +1,7 @@
 
 #define MSPEED 64
 #include <tank.h>
+#include <API.h>
 //not opcontrol
 
 void pascalphase1(void)
@@ -14,6 +15,7 @@ void pascalphase2(void)
 {
 	while(1)
 	{
+		printf("phase2\n\r");
 		face(&ltank,EAST);
 		lift_block(0);
 		newdriveto(0,0,MSPEED,&ltank);//X0
