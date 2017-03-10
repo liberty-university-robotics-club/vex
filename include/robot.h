@@ -30,10 +30,11 @@
 
 #define MLI 7			//
 #define MLI_POW 127
-#define MLI_SLOW 60
+#define MLI_SLOW 50
 
 #ifdef PASCAL
 #define MCLAW 8			//
+#define MLI2 9			//
 #define MCLAW_POW 127
 #endif
 
