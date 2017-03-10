@@ -1,5 +1,6 @@
 #ifndef ir_h
 #define ir_h
+int tx_pin; //user changes this to send on different blasters
 #define RX_PIN 2
 #define CYCLE_LEN 13
 #define CYCLES_MULTIPLE  23
@@ -22,4 +23,11 @@ unsigned int checkgen(unsigned int, unsigned int);
 //interface to main auto code
 void slave_loop(void);
 void master_loop(void);
+
+int gotflag;
+
+//object ids 0-7
+#define IR_ID_R 0
+#define IR_ID_T 1
+
 #endif

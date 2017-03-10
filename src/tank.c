@@ -69,12 +69,16 @@ double drivetox(double x, double t, double m, double s)
 	else
 		return 0;
 }
+void orienteddrive(double x, double y, double h)
+{
+	controldrive(x*cos(h)+y*sin(h),y*cos(h)+x*sin(h),0);//TODO: total crap rethink
+}
 #define POS_MARGIN 2
 void newdriveto(int axis, double t, double s,  tank *v)
 {
 	double xs,ys;
 	for(xs=0,ys=0;axis?xs:ys; xs=drivetox(v->x, t,POS_MARGIN,s), ys=drivetox(v->y, t,POS_MARGIN,s))
-		controldrive(axis?xs:0,axis?0:ys,0);
+		orienteddrive(axis?xs:0,axis?0:ys,v->h);
 
 }
 void printpos(tank *v) {
@@ -122,6 +126,20 @@ void base_station_update(tank *v, double r, double theta)
 	v->y=base_y+r*sin(geom_theta);
 	
 }
+void constrain(tank *v,double val,int var)
+{
+	double cr=sqrt(v->x^2+v->y^2);
+	double ct=atan2(x,y);
+	if(var){
+		if(cr>val)
+			cr=val;
+	}else {
+		if(abs(ct-val)>0.5)
+			ct=val;
+	}
+	v->x=cos(ct)*cr;
+	v->y=sin(ct)*cr;
+}
 
 void face(tank *v,int dir)
 {
@@ -132,6 +150,14 @@ void face(tank *v,int dir)
 		case WEST: angle=2*PI;break;
 		case SOUTH: angle=(2/3.)*PI;break;
 	}
+	if(gotflag)//IR is working (we know because wev gotten a packet
+	{
+		gotflag=0;
+		while(!gotflag){
+			controldrive(0,20,0);
+		}
+	}
+	tank->h=0;//eh
 	//TODO:block on IR
 	for(;v->h !=angle;controldrive(0,20,0));
 }

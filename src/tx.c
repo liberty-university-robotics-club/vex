@@ -7,9 +7,9 @@ void transmit_cycles(int cycles, int send_signal)
 	//send the cycles
 	for(i=0;i<cycles;i++)
 	{
-    if(send_signal)digitalWrite(13, HIGH);
+    if(send_signal)digitalWrite(ir_pin, HIGH);
 		delayMicroseconds(13);
-		digitalWrite(13, LOW);
+		digitalWrite(ir_pin, LOW);
 		delayMicroseconds(13);
 	}
 	//wait ten cycles before transmitting

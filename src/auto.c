@@ -9,8 +9,19 @@
 void ir_task (void * t) {
 	printf("Start Alen IR...."); //TODO: atomic?
 	while(1){
-		slave_loop(); //TODO: user interupts
-		taskDelay(10);
+		int id;
+		int val;
+		if(recive_ob(&id,&val)){
+			gotflag=1;//allows detecting carrier to get angular position
+			printf("Got packet %d %d\n");
+			switch(id){
+				case IR_ID_R:constrain(&ltank,val,0);break;
+				case IR_ID_T:constrain(&ltank,val,1);break;
+				default:printf("Bad packet\n");
+			}
+			
+		}
+		task_delay(200);
 	}
 }
 void lift_block(bool dir)
@@ -28,6 +39,17 @@ void pascal()//runs around SLAVE
 //	while(1)
 //		delay(100);
 }
+void blastfield(void)
+{
+	ir_pin=IRT_1;
+	transmitob(IRID_T,IRT_1_T);
+	ir_pin=IRR_1;
+	transmitob(IRID_T,IRR_1_R);
+	ir_pin=IRR_2;
+	transmitob(IRID_T,IRR_2_R);
+	ir_pin=IRR_3;
+	transmitob(IRID_T,IRR_3_R);
+}
 void goddard()//base MASTER
 {
 	controldrive(0,0,0);//stopped
@@ -36,13 +58,14 @@ void goddard()//base MASTER
 	int enc=0;//deg
 	while(1)
 	{
-		controldrive(0,0,0);
+		/*controldrive(0,0,0);
 		imeGet(IME_IR,&enc);
 		enc -= encoderOffset;
 		if(!DONT_MOVE)
 		{
 			motorSet(MIR,20);
-		}
+		}*/
+		blastfield();
 	}
 	//turn_on_beacon();
 	//send_theta();//goddard on left, so values from 0-115 or so
