@@ -172,9 +172,9 @@ int op_auto_lift(bool auto_mode, bool begin_auto, bool go_up)
 	motorSet(MLI,-lift_pow);
 	#endif
 	#ifdef PASCAL
-	motorSet(MIR,-lift_pow);
-	motorSet(MLI,lift_pow);
-	motorSet(MLI2,lift_pow);
+	motorSet(MIR,lift_pow);
+	motorSet(MLI,-lift_pow);
+	motorSet(MLI2,-lift_pow);
 	#endif
 	return lift_pow;
 }

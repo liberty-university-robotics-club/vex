@@ -1,8 +1,8 @@
 #ifndef robot_h
 #define robot_h
 
-#define GODDARD
-//#define PASCAL
+//#define GODDARD
+#define PASCAL
 
 // CONTROLLER PINS + CONSTANTS
 
