@@ -25,3 +25,4 @@ void constrain(tank *,double,int);
 void face(tank *,int dir);
 
 void lift_block(bool);
+void claw_block(bool);

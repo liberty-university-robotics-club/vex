@@ -33,5 +33,6 @@ int gotflag;
 //object ids 0-7
 #define IR_ID_R 0
 #define IR_ID_T 1
+#define IR_ID_NOP 3
 
 #endif

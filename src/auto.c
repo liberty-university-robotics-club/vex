@@ -31,8 +31,13 @@ void ir_task (void * t) {
 #endif
 void lift_block(bool dir)
 {
-	start_auto_lift(1);
+	start_auto_lift(dir);
 	while(continue_auto_lift()){delay(300);printf("lifting\n\r");}
+}
+void claw_block(bool dir)
+{
+	start_auto_claw(dir);
+	while(continue_auto_claw()){delay(300);printf("lifting\n\r");}
 }
 extern void pascalphase1(void);
 extern void pascalphase2(void);
@@ -50,7 +55,7 @@ void pascal()//runs around SLAVE
 #endif
 void blastfield(void)
 {
-	tx_pin=IRT_1;
+	/*tx_pin=IRT_1;
 	transmit_ob(IR_ID_T,IRT_1_T);
 		taskDelay(200);
 	tx_pin=IRR_1;
@@ -61,6 +66,10 @@ void blastfield(void)
 		taskDelay(200);
 	tx_pin=IRR_3;
 	transmit_ob(IR_ID_R,IRR_3_R);
+		taskDelay(200);
+	*/
+	tx_pin=IRR_3;
+	transmit_ob(IR_ID_NOP,IRR_3_R);
 		taskDelay(200);
 }
 
