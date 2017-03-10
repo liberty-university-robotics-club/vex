@@ -111,7 +111,7 @@ void autonomous()
 	imecount=imeInitializeAll();
 	
 	#ifdef GODDARD
-	goddard();
+	//goddard();
 	#endif
 	#ifdef PASCAL
 	pascal();

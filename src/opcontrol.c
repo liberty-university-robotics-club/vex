@@ -126,7 +126,9 @@ int op_auto_lift(bool auto_mode, bool begin_auto, bool go_up)
 		lift_pow += joystickGetDigital( 2 , JOY_LIFT_OP , JOY_UP   ) ? MLI_POW : 0 ;
 		lift_pow -= joystickGetDigital( 2 , JOY_LIFT_OP , JOY_DOWN ) ? MLI_POW : 0 ;
 		
+		lift_pow += joystickGetDigital( 1 , JOY_LIFT_SLOW , JOY_UP   ) ? MLI_SLOW : 0 ;
 		lift_pow -= joystickGetDigital( 1 , JOY_LIFT_SLOW , JOY_DOWN ) ? MLI_SLOW : 0 ;
+		lift_pow += joystickGetDigital( 2 , JOY_LIFT_SLOW , JOY_UP   ) ? MLI_SLOW : 0 ;
 		lift_pow -= joystickGetDigital( 2 , JOY_LIFT_SLOW , JOY_DOWN ) ? MLI_SLOW : 0 ;
 		
 		// if op buttons pressed, cancel auto button records
@@ -165,8 +167,15 @@ int op_auto_lift(bool auto_mode, bool begin_auto, bool go_up)
 	if(timer > LIFT_TIMEOUT_s){timer=0;lift_pow=0;lift_auto=0;}
 	
 	// raw motor power
-	motorSet(MLI,-lift_pow);
+	#ifdef GODDARD
 	motorSet(MIR,lift_pow);
+	motorSet(MLI,-lift_pow);
+	#endif
+	#ifdef PASCAL
+	motorSet(MIR,-lift_pow);
+	motorSet(MLI,lift_pow);
+	motorSet(MLI2,lift_pow);
+	#endif
 	return lift_pow;
 }
 
