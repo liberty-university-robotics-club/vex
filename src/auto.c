@@ -2,6 +2,7 @@
 #include "robot.h"
 #include "ir.h"
 #include "opcontrol.h"
+#include "tank.h"
 #define TASK_STACK_D 70 
 #define IR_PRIORITY TASK_PRIORITY_HIGHEST-2
 #define MAIN_PRIORITY TASK_PRIORITY_HIGHEST-5
@@ -12,27 +13,73 @@ int imecount=0;
 void ir_task (void * t) {
 	printf("Start Alen IR...."); //TODO: atomic?
 	while(1){
-		slave_loop(); //TODO: user interupts
-		taskDelay(10);
-	}
-}
-void alen_auto(void *t){
-	while(1){
-		printf("Alen main loop\n\r");
-		taskDelay(300);
+		unsigned int id;
+		unsigned int val;
+		if(recive_ob(&id,&val)){
+			gotflag=1;//allows detecting carrier to get angular position
+			printf("Got packet %d %d\n",id,val);
+			switch(id){
+				case IR_ID_R:constrain(&ltank,val,0);break;
+				case IR_ID_T:constrain(&ltank,val,1);break;
+				default:printf("Bad packet\n");
+			}
+			
+		}
+		taskDelay(200);
 	}
 }
 #endif
+void lift_block(bool dir)
+{
+	start_auto_lift(dir);
+	while(continue_auto_lift()){delay(300);printf("lifting\n\r");}
+}
+void claw_block(bool dir)
+{
+	start_auto_claw(dir);
+	while(continue_auto_claw()){delay(300);printf("lifting\n\r");}
+}
+extern void pascalphase1(void);
+extern void pascalphase2(void);
+#ifdef PASCAL
 void pascal()//runs around SLAVE
 {
-#ifdef PASCAL
-#pragma message ("building auto for Alen")
 	printf("Start Alen auto....");
 	taskCreate(ir_task,TASK_STACK_D,NULL,IR_PRIORITY);
-	taskCreate(alen_auto,TASK_STACK_D,NULL,MAIN_PRIORITY);
+	//pascalphase1();
+	//pascalphase2();
+//	taskCreate(alen_auto,TASK_STACK_D,NULL,MAIN_PRIORITY);
 	while(1)
 		delay(100);
+}
 #endif
+void blastfield(void)
+{
+	/*tx_pin=IRT_1;
+	transmit_ob(IR_ID_T,IRT_1_T);
+		taskDelay(200);
+	tx_pin=IRR_1;
+	transmit_ob(IR_ID_R,IRR_1_R);
+		taskDelay(200);
+	tx_pin=IRR_2;
+	transmit_ob(IR_ID_R,IRR_2_R);
+		taskDelay(200);
+	tx_pin=IRR_3;
+	transmit_ob(IR_ID_R,IRR_3_R);
+		taskDelay(200);
+	*/
+	tx_pin=IRR_3;
+	transmit_ob(IR_ID_NOP,IRR_3_R);
+		taskDelay(200);
+	tx_pin=IRR_2;
+	transmit_ob(IR_ID_NOP,IRR_3_R);
+		taskDelay(200);
+	tx_pin=IRR_1;
+	transmit_ob(IR_ID_NOP,IRR_3_R);
+		taskDelay(200);
+	tx_pin=IRT_1;
+	transmit_ob(IR_ID_NOP,IRR_3_R);
+		taskDelay(200);
 }
 
 int ir_rotate(int power, int ratio_ticks)
@@ -60,20 +107,18 @@ int ir_rotate(int power, int ratio_ticks)
 	motorSet(MIR,power);
 	return power;
 }
+#ifdef GODDARD
 void goddard()//base MASTER
 {
-	#ifdef GODDARD
 	
 	controldrive(0,0,0);//stopped
 	int encoderOffset;
-	imeGet(0,&encoderOffset);//starting position
-	int enc=0;//centirad
-	int power=0;
-	int direction = 1;
+	//int enc=0;//deg
 	while(1)
 	{
-		//controldrive(0,0,0);
-		imeGet(0,&enc);// Experimentally, encoder value of 155 is 90 deg // unit is centirads?
+		/*controldrive(0,0,0);
+		imeGet(IME_IR,&enc);
+//>>>>>>> swiley-fail
 		enc -= encoderOffset;
 		
 		//Check position to control angular position
@@ -96,14 +141,19 @@ void goddard()//base MASTER
 		}
 		else
 		{
+//<<<<<<< HEAD
 			//transmit_byte(enc%314);
 			transmitob(ID_THETA,enc%314);
 		}
+//=======
+			motorSet(MIR,20);
+		}*/
+		blastfield();
 	}
 	
 	
-	#endif
 }
+//<<<<<<< HEAD
 
 #define BLOCKTIME 500
 #define TICKTIME 100
@@ -141,5 +191,16 @@ void autonomous()
 	#ifdef PASCAL
 	//pascal();
 	#endif
+//=======
+#endif
+void autonomous()
+{
+#ifdef PASCAL
+	pascal();
+#endif
+#ifdef GODDARD
+	goddard();
+#endif
+//>>>>>>> 37e7ebb0b98417cd39299a83a23ccb31f6a7f179
 }
 
