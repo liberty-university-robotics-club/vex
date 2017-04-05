@@ -2,11 +2,7 @@
 #define robot_h
 
 //#define GODDARD
-<<<<<<< HEAD
 #define PASCAL
-=======
-//#define PASCAL
->>>>>>> 37e7ebb0b98417cd39299a83a23ccb31f6a7f179
 
 // CONTROLLER PINS + CONSTANTS
 
@@ -79,19 +75,7 @@
 
 
 
-//mater GPIO
 #define LIFT_PIN 12
-#define IRT_1 1
-#define IRR_1 2
-#define IRR_2 3
-#define IRR_3 4
-
-//IR LED angles and powers
-
-#define IRT_1_T (3.14159/4)
-#define IRR_1_R 5
-#define IRR_2_R 2
-#define IRR_3_R 1
 
 void* ENC_LB;
 void* ENC_LF;
