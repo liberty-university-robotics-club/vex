@@ -131,40 +131,40 @@ int op_auto_lift(bool auto_mode, bool begin_auto, bool go_up)
 		lift_pow += joystickGetDigital( 2 , JOY_LIFT_SLOW , JOY_UP   ) ? MLI_SLOW : 0 ;
 		lift_pow -= joystickGetDigital( 2 , JOY_LIFT_SLOW , JOY_DOWN ) ? MLI_SLOW : 0 ;
 		
-		// if op buttons pressed, cancel auto button records
-		if(!lift_pow&&lift_auto){lift_pow=lift_auto;}
-		else{lift_auto=0;}
+	//	// if op buttons pressed, cancel auto button records
+	//	if(!lift_pow&&lift_auto){lift_pow=lift_auto;}
+	//	else{lift_auto=0;}
 		
 		#ifdef JOY_LIFT_AUTO
 		// if auto buttons pressed, then record state
-		if( joystickGetDigital( 1 , JOY_LIFT_AUTO , JOY_UP   )
-		 || joystickGetDigital( 2 , JOY_LIFT_AUTO , JOY_UP   )
-		){
-			lift_auto = MLI_POW;
-		}
-		if( joystickGetDigital( 1 , JOY_LIFT_AUTO , JOY_DOWN )
-		 || joystickGetDigital( 2 , JOY_LIFT_AUTO , JOY_DOWN )
-		){
-			lift_auto = -MLI_POW;
-		}
+	//	if( joystickGetDigital( 1 , JOY_LIFT_AUTO , JOY_UP   )
+	//	 || joystickGetDigital( 2 , JOY_LIFT_AUTO , JOY_UP   )
+	//	){
+	//		lift_auto = MLI_POW;
+	//	}
+	//	if( joystickGetDigital( 1 , JOY_LIFT_AUTO , JOY_DOWN )
+	//	 || joystickGetDigital( 2 , JOY_LIFT_AUTO , JOY_DOWN )
+	//	){
+	//		lift_auto = -MLI_POW;
+	//	}
 		#endif
 	}
-	else //autonomous mode code
-	{
-		if (begin_auto)
-		{
-			lift_auto=go_up?MLI_POW:-MLI_POW;
-		}
-	}
-	
-	// limit switches - don't stall motors if bottomed out
-	if(lift_pow>0&&  isLiftUp()){lift_pow=0;lift_auto=0;}
-	if(lift_pow<0&&isLiftDown()){lift_pow=0;lift_auto=0;}
-	
-	// Timeout - it shouldn't take that long to raise/lower!
-	if(lift_pow){timer+=.001*DELAY_ms;}
-	else{timer=0;}
-	if(timer > LIFT_TIMEOUT_s){timer=0;lift_pow=0;lift_auto=0;}
+	//else //autonomous mode code
+	//{
+	//	if (begin_auto)
+	//	{
+	//		lift_auto=go_up?MLI_POW:-MLI_POW;
+	//	}
+	//}
+	//
+	//// limit switches - don't stall motors if bottomed out
+	//if(lift_pow>0&&  isLiftUp()){lift_pow=0;lift_auto=0;}
+	//if(lift_pow<0&&isLiftDown()){lift_pow=0;lift_auto=0;}
+	//
+	//// Timeout - it shouldn't take that long to raise/lower!
+	//if(lift_pow){timer+=.001*DELAY_ms;}
+	//else{timer=0;}
+	//if(timer > LIFT_TIMEOUT_s){timer=0;lift_pow=0;lift_auto=0;}
 	
 	// raw motor power
 	#ifdef GODDARD
@@ -172,8 +172,8 @@ int op_auto_lift(bool auto_mode, bool begin_auto, bool go_up)
 	motorSet(MLI,-lift_pow);
 	#endif
 	#ifdef PASCAL
-	motorSet(MIR,lift_pow);
-	motorSet(MLI,-lift_pow);
+	motorSet(MIR,-lift_pow);
+	motorSet(MLI,lift_pow);
 	motorSet(MLI2,-lift_pow);
 	#endif
 	return lift_pow;

@@ -104,17 +104,42 @@ void goddard()//base MASTER
 	
 	#endif
 }
+
+#define BLOCKTIME 500
+#define TICKTIME 100
+
+void lift_block(bool dir)
+{
+	start_auto_lift(dir);
+	while(continue_auto_lift()){delay(DELAY_ms);printf("lifting\n\r");}
+}
+
+
+
+void godardsauto(void)
+{
+	int i;
+	lift_block(1);
+	for(i=0;i<BLOCKTIME;i=i+TICKTIME)
+	{
+		controldrive(0,50,0);
+		delay(TICKTIME);
+	}
+}
 void autonomous()
 {
 	//system hangs if no ime's to initialize
-	printf("imecount = %d\r\n",imecount);
-	imecount=imeInitializeAll();
+	//printf("imecount = %d\r\n",imecount);
+	//imecount=imeInitializeAll();
+	
+	godardsauto();
+	
 	
 	#ifdef GODDARD
 	//goddard();
 	#endif
 	#ifdef PASCAL
-	pascal();
+	//pascal();
 	#endif
 }
 
