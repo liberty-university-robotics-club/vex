@@ -68,18 +68,18 @@ void blastfield(void)
 	transmit_ob(IR_ID_R,IRR_3_R);
 		taskDelay(200);
 	*/
-	tx_pin=IRR_3;
-	transmit_ob(IR_ID_NOP,IRR_3_R);
-		taskDelay(200);
-	tx_pin=IRR_2;
-	transmit_ob(IR_ID_NOP,IRR_3_R);
-		taskDelay(200);
-	tx_pin=IRR_1;
-	transmit_ob(IR_ID_NOP,IRR_3_R);
-		taskDelay(200);
-	tx_pin=IRT_1;
-	transmit_ob(IR_ID_NOP,IRR_3_R);
-		taskDelay(200);
+//	tx_pin=IRR_3;
+//	transmit_ob(IR_ID_NOP,IRR_3_R);
+//		taskDelay(200);
+//	tx_pin=IRR_2;
+//	transmit_ob(IR_ID_NOP,IRR_3_R);
+//		taskDelay(200);
+//	tx_pin=IRR_1;
+//	transmit_ob(IR_ID_NOP,IRR_3_R);
+//		taskDelay(200);
+//	tx_pin=IRT_1;
+//	transmit_ob(IR_ID_NOP,IRR_3_R);
+//		taskDelay(200);
 }
 
 int ir_rotate(int power, int ratio_ticks)
