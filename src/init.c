@@ -68,8 +68,10 @@ void initialize() {
 	ENC_RF = encoderInit(ENC_RFT,ENC_RFB,FORWARD_rb);
 	
 	//lift enc
-	pinMode(BTN_UP ,INPUT);
-	pinMode(BTN_DWN,INPUT);
+//	pinMode(BTN_UP ,INPUT);
+//	pinMode(BTN_DWN,INPUT);
+	ushandle =ultrasonicInit(US_PING,US_ECHO);
+	//ushandle =ultrasonicInit(US_ECHO,US_PING);
 	
 	
 	// Stephen what is this?  LED?

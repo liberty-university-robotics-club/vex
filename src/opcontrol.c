@@ -101,12 +101,14 @@ void op_drive()
 //----------------------------------------------------------------------
 bool isLiftUp()
 {
-	return !digitalRead(BTN_UP );//switch pressed is low => 0
+	//return !digitalRead(BTN_UP );//switch pressed is low => 0
+	return 0;
 }
 
 bool isLiftDown()
 {
-	return !digitalRead(BTN_DWN);//switch pressed is low => 0
+	//return !digitalRead(BTN_DWN);//switch pressed is low => 0
+	return 1;
 }
 
 int op_auto_lift(bool auto_mode, bool begin_auto, bool go_up)
@@ -371,5 +373,6 @@ void operatorControl() {
 	while (1) {
 		opcontrol();
 		delay(DELAY_ms);
+		printf("US %d\r\n",ultrasonicGet(ushandle));
 	}
 }

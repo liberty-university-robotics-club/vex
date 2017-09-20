@@ -1,5 +1,6 @@
 #ifndef robot_h
 #define robot_h
+#include <API.h>
 
 //#define GODDARD
 #define PASCAL
@@ -68,11 +69,15 @@
 #define ENC_RBB  6
 #define ENC_RFT  7
 #define ENC_RFB  8
-#define BTN_UP   9
-#define BTN_DWN 10
+//#define BTN_UP   9
+//#define BTN_DWN 10
 
 #define IME_IR 0
 
+//ultrasonic
+#define US_PING 9
+#define US_ECHO 10
+Ultrasonic ushandle;
 
 
 #define LIFT_PIN 12
@@ -97,4 +102,8 @@ void* ENC_RF;
 
 #define ID_THETA 0
 
+//AUTO 
+
+#define AUTO_SPEED 64
+#define AUTO_TURN AUT_SPEED
 #endif
