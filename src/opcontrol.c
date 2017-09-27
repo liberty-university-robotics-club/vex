@@ -8,6 +8,8 @@
 #include "controlloop.h"
 #include "opcontrol.h"
 
+Ultrasonic US;
+
 void controlmotors(int lb, int lf, int rb, int rf)
 {
 	if(!DONT_MOVE)
@@ -99,6 +101,7 @@ void op_drive()
 	op_auto_drive(false);// add arguments
 }
 //----------------------------------------------------------------------
+/*
 bool isLiftUp()
 {
 	return !digitalRead(BTN_UP );//switch pressed is low => 0
@@ -351,23 +354,70 @@ void drop_object()//assume lift is at top
 	
 	
 }
+//*/
+
+void test_auto_find_cone()
+{
+	int switchflag = 1;
+	int mode = 0;
+	static int visibility_state = 0;//0 is not acquired, 1 is acquired
+	static int missed = 0;//time of consecutive ultrasonic drops
+	mode += joystickGetDigital( 1 , JOY_LIFT_OP , JOY_UP   ) ? 1 : 0 ;
+	mode -= joystickGetDigital( 1 , JOY_LIFT_OP , JOY_DOWN ) ? 1 : 0 ;
+	mode += joystickGetDigital( 2 , JOY_LIFT_OP , JOY_UP   ) ? 1 : 0 ;
+	mode -= joystickGetDigital( 2 , JOY_LIFT_OP , JOY_DOWN ) ? 1 : 0 ;
+	
+	if(!mode)return;
+	
+	mode=mode/abs(mode);
+	int dist = ultrasonicGet(US);
+	if (dist<50 && dist>0)
+	{
+		missed = 0;
+		visibility_state = 1;
+	}
+	else
+	{
+		missed+=DELAY_ms;
+		if (missed==5*DELAY_ms)
+		{
+			visibility_state = 0;
+			switchflag = mode*switchflag;
+		}
+	}
+	if(visibility_state == 1)
+	{
+		//drive straight
+		controldrive(0,MCLAW_POW,0);
+	}
+	else
+	{
+		//turn
+		controldrive(mode*switchflag*MCLAW_POW,0,0);
+	}
+}
 
 void opcontrol()
 {
 	op_drive();
-	op_lift();
-	op_claw();
-	op_hoist();
-	op_hook();//fork lift
+	test_auto_find_cone();
+	//op_lift();
+	//op_claw();
+	//op_hoist();
+	//op_hook();//fork lift
 }
 
+void inittest()//TODO: remove this lazy
+{
+	US = ultrasonicInit(US_portEcho, US_portPing);//robot.h
+}
 void operatorControl() {
 
 	//autonomous(); //TODO: remove this (too lazy to grab joysticks rn)
 
 	//start lisp/UI task
 	//taskCreate(lispmain, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
-
+	inittest(); //TODO: remove this lazy
 	while (1) {
 		opcontrol();
 		delay(DELAY_ms);
