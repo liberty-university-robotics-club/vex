@@ -73,8 +73,11 @@
 
 #define IME_IR 0
 
-#define US_portPing 9
-#define US_portEcho 10
+#define US_portPing 10
+#define US_portEcho 9
+#define TARGET_POW 64
+#define TARGET_DIST 20
+
 
 #define LIFT_PIN 12
 

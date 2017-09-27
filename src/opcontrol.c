@@ -24,7 +24,7 @@ void controlmotors(int lb, int lf, int rb, int rf)
 void controldrive(int t, int f, int s)
 {
 	static int delprint=0;
-	(delprint++)%10 ? /*printf("controll!\r\n")*/:delprint;
+	(delprint++)%10 ? printf("%d\r\n",ultrasonicGet(US)):delprint;
 	static state *state_lb=NULL;
 	static state *state_lf=NULL;
 	static state *state_rb=NULL;
@@ -358,7 +358,7 @@ void drop_object()//assume lift is at top
 
 void test_auto_find_cone()
 {
-	int switchflag = 1;
+	static int switchflag = 1;
 	int mode = 0;
 	static int visibility_state = 0;//0 is not acquired, 1 is acquired
 	static int missed = 0;//time of consecutive ultrasonic drops
@@ -371,29 +371,42 @@ void test_auto_find_cone()
 	
 	mode=mode/abs(mode);
 	int dist = ultrasonicGet(US);
+	
 	if (dist<50 && dist>0)
 	{
 		missed = 0;
+		if(visibility_state == 0)
+		{
+			switchflag = mode*switchflag;
+		}
 		visibility_state = 1;
 	}
 	else
 	{
 		missed+=DELAY_ms;
-		if (missed==5*DELAY_ms)
+		if(missed==5*DELAY_ms)
 		{
 			visibility_state = 0;
-			switchflag = mode*switchflag;
 		}
 	}
 	if(visibility_state == 1)
 	{
-		//drive straight
-		controldrive(0,MCLAW_POW,0);
+		if(dist<TARGET_DIST)
+		{
+			controldrive(0,0,0);// enter positioning code (strafe?)
+		}
+		else
+		{
+			//drive straight
+			controldrive(0,TARGET_POW,0);
+		}
 	}
 	else
 	{
 		//turn
-		controldrive(mode*switchflag*MCLAW_POW,0,0);
+		controldrive(switchflag*TARGET_POW,0,0);
+		//strafe (probably should use this for positioning)
+		//controldrive(0,0,switchflag*TARGET_POW);
 	}
 }
 
