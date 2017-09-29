@@ -76,7 +76,9 @@
 #define US_portPing 10
 #define US_portEcho 9
 #define TARGET_POW 64
+#define POS_POW 50
 #define TARGET_DIST 20
+#define FAR_DIST 100
 
 
 #define LIFT_PIN 12
