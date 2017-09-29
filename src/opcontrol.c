@@ -24,7 +24,7 @@ void controlmotors(int lb, int lf, int rb, int rf)
 void controldrive(int t, int f, int s)
 {
 	static int delprint=0;
-	(delprint++)%10 ? printf("%d\r\n",ultrasonicGet(US)):delprint;
+	(delprint++)%10 ? delprint: (delprint=1,printf("%d\r\n",ultrasonicGet(US)));
 	static state *state_lb=NULL;
 	static state *state_lf=NULL;
 	static state *state_rb=NULL;
@@ -358,62 +358,155 @@ void drop_object()//assume lift is at top
 
 void test_auto_find_cone()
 {
-	static int switchflag = 1;
-	int mode = 0;
-	static int visibility_state = 0;//0 is not acquired, 1 is acquired
-	static int missed = 0;//time of consecutive ultrasonic drops
-	mode += joystickGetDigital( 1 , JOY_LIFT_OP , JOY_UP   ) ? 1 : 0 ;
-	mode -= joystickGetDigital( 1 , JOY_LIFT_OP , JOY_DOWN ) ? 1 : 0 ;
-	mode += joystickGetDigital( 2 , JOY_LIFT_OP , JOY_UP   ) ? 1 : 0 ;
-	mode -= joystickGetDigital( 2 , JOY_LIFT_OP , JOY_DOWN ) ? 1 : 0 ;
+	int button = 0;// Only if button is pressed
+	button += joystickGetDigital( 1 , JOY_LIFT_OP , JOY_UP   ) ? 1 : 0 ;
+	button -= joystickGetDigital( 1 , JOY_LIFT_OP , JOY_DOWN ) ? 1 : 0 ;
+	button += joystickGetDigital( 2 , JOY_LIFT_OP , JOY_UP   ) ? 1 : 0 ;
+	button -= joystickGetDigital( 2 , JOY_LIFT_OP , JOY_DOWN ) ? 1 : 0 ;
+	if(!button)return;
 	
-	if(!mode)return;
-	
-	mode=mode/abs(mode);
+	static int switchflag = 1;// 
+	static int state = 0;// 0 is finding cone
+	static int substate = 0;
+	static int visibility_state = 0;// 0 is not acquired, 1 is acquired
+	static int missed = 0;// time of consecutive ultrasonic drops
+	static int width_timer = 0;
 	int dist = ultrasonicGet(US);
 	
-	if (dist<50 && dist>0)
+	if (state == 0)
 	{
-		missed = 0;
-		if(visibility_state == 0)
+		if (dist<FAR_DIST && dist>0)
 		{
-			switchflag = mode*switchflag;
-		}
-		visibility_state = 1;
-	}
-	else
-	{
-		missed+=DELAY_ms;
-		if(missed==5*DELAY_ms)
-		{
-			visibility_state = 0;
-		}
-	}
-	if(visibility_state == 1)
-	{
-		if(dist<TARGET_DIST)
-		{
-			controldrive(0,0,0);// enter positioning code (strafe?)
+			missed = 0;
+			if(visibility_state == 0)
+			{
+				switchflag = -switchflag;
+			}
+			visibility_state = 1;
 		}
 		else
 		{
-			//drive straight
-			controldrive(0,TARGET_POW,0);
+			missed+=DELAY_ms;
+			if(missed==5*DELAY_ms)
+			{
+				visibility_state = 0;
+			}
+		}
+		if(visibility_state == 1)
+		{
+			if(dist<TARGET_DIST)
+			{
+				controldrive(0,0,0);
+				//state = 1;// enter positioning code (strafe)
+			}
+			else
+			{
+				// drive straight
+				controldrive(0,TARGET_POW,0);
+			}
+		}
+		else
+		{
+			// turn
+			controldrive(switchflag*TARGET_POW,0,0);
 		}
 	}
-	else
+	else if (state == 1)
 	{
-		//turn
-		controldrive(switchflag*TARGET_POW,0,0);
-		//strafe (probably should use this for positioning)
-		//controldrive(0,0,switchflag*TARGET_POW);
+		// strafe (probably should use this for positioning)
+		// controldrive(0,0,POS_POW);
+		
+		//set substate
+		if(substate == 0)
+		{
+			if (dist<TARGET_DIST && dist>0)
+			{
+				missed = 0;
+				if(visibility_state == 0)
+				{
+					switch(substate)
+					{
+						case 0:
+							break;
+						case 1:
+							width_timer = 0;
+							break;
+						case 2:
+							width_timer /= 2.0;
+							break;
+						default:
+							printf("Error: 1 code\r\n");
+					}
+					substate++;
+				}
+				visibility_state = 1;
+			}
+			else
+			{
+				missed+=DELAY_ms;
+				if(missed==20*DELAY_ms)
+				{
+					visibility_state = 0;
+				}
+			}
+		}
+		
+		//use substate to determine behavior
+		switch(substate)
+		{
+			case 0:
+				controldrive(0,0,POS_POW);
+				break;
+			case 1:
+				width_timer += DELAY_ms;
+				controldrive(0,0,-POS_POW);
+				break;
+			case 2:
+				
+				controldrive(0,0,POS_POW);
+				break;
+			default:
+				printf("Error: 2 code\r\n");
+		}
+		
+		
+		if(visibility_state == 1)
+		{
+			if(dist<TARGET_DIST)
+			{
+				state = 1;// enter positioning code (strafe)
+			}
+			else
+			{
+				// drive straight
+				controldrive(0,TARGET_POW,0);
+			}
+		}
+		else
+		{
+			// turn
+			controldrive(switchflag*TARGET_POW,0,0);
+		}
+		
 	}
+	
+	
+}
+void quick_claw()
+{
+	int claw_pow = 0;
+	claw_pow += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? MCLAW_POW : 0 ;
+	claw_pow -= joystickGetDigital( 1 , JOY_CLAW , JOY_DOWN ) ? MCLAW_POW : 0 ;
+	claw_pow += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? MCLAW_POW : 0 ;
+	claw_pow -= joystickGetDigital( 2 , JOY_CLAW , JOY_DOWN ) ? MCLAW_POW : 0 ;
+	motorSet(MCLAW,-claw_pow);
 }
 
 void opcontrol()
 {
 	op_drive();
 	test_auto_find_cone();
+	quick_claw();
 	//op_lift();
 	//op_claw();
 	//op_hoist();
