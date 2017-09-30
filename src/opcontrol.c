@@ -355,27 +355,50 @@ void drop_object()//assume lift is at top
 	
 }
 //*/
+int waited(int ms)// true if done, false if still waiting.
+{
+	static int timer = -1;
+	if (timer==-1 || ms==-1) // -1 ms means reset timer
+	{
+		timer=ms;
+	}
+	else if (timer>0)
+	{
+		timer-=DELAY_ms;
+	}
+	return !(timer>0);
+}
 
 void test_auto_find_cone()
 {
-	int button = 0;// Only if button is pressed
+	static int switchflag = 1; // initial direction 1 or -1
+	static int state = 0; // 0 is finding cone, 1 is positioning on cone
+	static int substate = 0; // depends on state
+	static int visibility_state = 0; // 0 is not acquired, 1 is acquired
+	static int missed = 0; // time of consecutive ultrasonic drops
+	static int width_timer = 0; // keep track of time between edges of cone
+	static int last_dist = 0; //helps find the closest cone instead of chasing after multiple cones at once
+	
+	int button = 0; // Only if button is pressed
 	button += joystickGetDigital( 1 , JOY_LIFT_OP , JOY_UP   ) ? 1 : 0 ;
 	button -= joystickGetDigital( 1 , JOY_LIFT_OP , JOY_DOWN ) ? 1 : 0 ;
 	button += joystickGetDigital( 2 , JOY_LIFT_OP , JOY_UP   ) ? 1 : 0 ;
 	button -= joystickGetDigital( 2 , JOY_LIFT_OP , JOY_DOWN ) ? 1 : 0 ;
-	if(!button)return;
+	if(!button) // reset and exit
+	{
+		state = 0;
+		substate = 0;
+		visibility_state = 0;
+		missed = 0;
+		width_timer = 0;
+		last_dist = 0;
+		return;
+	}
 	
-	static int switchflag = 1;// 
-	static int state = 0;// 0 is finding cone
-	static int substate = 0;
-	static int visibility_state = 0;// 0 is not acquired, 1 is acquired
-	static int missed = 0;// time of consecutive ultrasonic drops
-	static int width_timer = 0;
-	static int last_dist = 0;
+	int dist = ultrasonicGet(US); // current dist to cone
+	switchflag = button/abs(button);
 	
-	int dist = ultrasonicGet(US);
-	
-	if (state == 0)
+	if (state == 0) // find cone
 	{
 		if (dist<FAR_DIST && dist>0 && dist < last_dist+CONE_DELTA )
 		{
@@ -398,50 +421,54 @@ void test_auto_find_cone()
 		{
 			if(dist<TARGET_DIST)
 			{
-				controldrive(0,0,0);
-				state = 1;// enter positioning code (strafe)
+				if (waited(40*DELAY_ms)) // 1 sec
+				{
+					state = 1;// enter positioning code (strafe)
+					printf("Entered state: %d.%d\r\n",state,substate);
+				}
+				else
+				{
+					controldrive(0,0,0);
+				}
 			}
 			else
 			{
-				// drive straight
-				controldrive(0,TARGET_POW,0);
+				controldrive(0,TARGET_POW,0);// drive straight
 			}
 		}
 		else
 		{
-			// turn
-			controldrive(switchflag*TARGET_POW,0,0);
+			controldrive(switchflag*TARGET_POW,0,0);// turn
 		}
 	}
-	else if (state == 1)
+	else if (state == 1) // strafe to middle of cone
 	{
-		// strafe (probably should use this for positioning)
-		// controldrive(0,0,POS_POW);
-		
-		//set substate
-		if(substate == 0)
+		if(substate == 0) // strafe to right edge
 		{
+			controldrive(0,0,POS_POW);
 			if (dist<TARGET_DIST && dist>0)
 			{
 				missed = 0;
-				if(visibility_state == 0)
+				visibility_state = 1;
+			}
+			else
+			{
+				missed+=DELAY_ms;
+				if(missed==20*DELAY_ms) //1/2 sec
 				{
-					switch(substate)
-					{
-						case 0:
-							break;
-						case 1:
-							width_timer = 0;
-							break;
-						case 2:
-							width_timer /= 2.0;
-							break;
-						default:
-							state=0;
-							printf("Error: 1 code\r\n");
-					}
-					substate++;
+					substate = 1;
+					printf("Entered state: %d.%d\r\n",state,substate);
+					visibility_state = 0;
+					width_timer = 0;
 				}
+			}
+		}
+		else if (substate == 1) // strafe to left edge
+		{
+			controldrive(0,0,-POS_POW);
+			if ( ( dist<TARGET_DIST && dist>0 ) || width_timer<10)
+			{
+				missed = 0;
 				visibility_state = 1;
 			}
 			else
@@ -449,52 +476,41 @@ void test_auto_find_cone()
 				missed+=DELAY_ms;
 				if(missed==20*DELAY_ms)
 				{
+					substate = 2;
+					printf("Entered state: %d.%d\r\n",state,substate);
 					visibility_state = 0;
+					width_timer /= 2.0;
+					waited(-1);
 				}
 			}
 		}
-		
-		//use substate to determine behavior
-		switch(substate)
+		else if (substate == 2) // strafe to middle
 		{
-			case 0:
-				controldrive(0,0,POS_POW);
-				break;
-			case 1:
-				width_timer += DELAY_ms;
-				controldrive(0,0,-POS_POW);
-				break;
-			case 2:
-				printf("subState: 2 code\r\n");
-				if (width_timer-=DELAY_ms<0)substate++;
-				controldrive(0,0,POS_POW);
-				break;
-			case 3:
-				state=0;
-			default:
-				printf("Error: 2 code\r\n");
+			controldrive(0,0,POS_POW);
+			if (waited(width_timer))
+			{
+				substate = 3;
+				printf("Entered state: %d.%d\r\n",state,substate);
+			}
 		}
-		
-		
-		//if(visibility_state == 1)
-		//{
-		//	if(dist<TARGET_DIST)
-		//	{
-		//		state = 1;// enter positioning code (strafe)
-		//	}
-		//	else
-		//	{
-		//		// drive straight
-		//		controldrive(0,TARGET_POW,0);
-		//	}
-		//}
-		//else
-		//{
-		//	// turn
-		//	controldrive(switchflag*TARGET_POW,0,0);
-		//}
-		
+		else if (substate == 3)
+		{
+			if (waited(40*DELAY_ms))
+			{
+				state = 2;
+				printf("Entered state: %d.%d\r\n",state,substate);
+			}
+			else
+			{
+				controldrive(0,0,0);
+			}
+		}
 	}
+	else if (state == 2) // run claw
+	{
+		controldrive(0,0,0);
+	}
+	
 	
 	
 }
