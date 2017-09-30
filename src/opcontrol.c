@@ -533,7 +533,7 @@ void test_auto_find_cone()
 		else if (substate == 1) // close claw
 		{
 			// close claw code here
-			substate == 2;
+			substate = 2;
 		}
 		else if (substate == 2) // arm going up
 		{
