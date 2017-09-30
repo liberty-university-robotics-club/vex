@@ -371,11 +371,13 @@ void test_auto_find_cone()
 	static int visibility_state = 0;// 0 is not acquired, 1 is acquired
 	static int missed = 0;// time of consecutive ultrasonic drops
 	static int width_timer = 0;
+	static int last_dist = 0;
+	
 	int dist = ultrasonicGet(US);
 	
 	if (state == 0)
 	{
-		if (dist<FAR_DIST && dist>0)
+		if (dist<FAR_DIST && dist>0 && dist < last_dist+CONE_DELTA )
 		{
 			missed = 0;
 			if(visibility_state == 0)
@@ -397,7 +399,7 @@ void test_auto_find_cone()
 			if(dist<TARGET_DIST)
 			{
 				controldrive(0,0,0);
-				//state = 1;// enter positioning code (strafe)
+				state = 1;// enter positioning code (strafe)
 			}
 			else
 			{
@@ -435,6 +437,7 @@ void test_auto_find_cone()
 							width_timer /= 2.0;
 							break;
 						default:
+							state=0;
 							printf("Error: 1 code\r\n");
 					}
 					substate++;
@@ -462,31 +465,34 @@ void test_auto_find_cone()
 				controldrive(0,0,-POS_POW);
 				break;
 			case 2:
-				
+				printf("subState: 2 code\r\n");
+				if (width_timer-=DELAY_ms<0)substate++;
 				controldrive(0,0,POS_POW);
 				break;
+			case 3:
+				state=0;
 			default:
 				printf("Error: 2 code\r\n");
 		}
 		
 		
-		if(visibility_state == 1)
-		{
-			if(dist<TARGET_DIST)
-			{
-				state = 1;// enter positioning code (strafe)
-			}
-			else
-			{
-				// drive straight
-				controldrive(0,TARGET_POW,0);
-			}
-		}
-		else
-		{
-			// turn
-			controldrive(switchflag*TARGET_POW,0,0);
-		}
+		//if(visibility_state == 1)
+		//{
+		//	if(dist<TARGET_DIST)
+		//	{
+		//		state = 1;// enter positioning code (strafe)
+		//	}
+		//	else
+		//	{
+		//		// drive straight
+		//		controldrive(0,TARGET_POW,0);
+		//	}
+		//}
+		//else
+		//{
+		//	// turn
+		//	controldrive(switchflag*TARGET_POW,0,0);
+		//}
 		
 	}
 	
