@@ -441,6 +441,12 @@ void test_auto_find_cone()
 			controldrive(switchflag*TARGET_POW,0,0);// turn
 		}
 	}
+	/* maybe add back-up distancing state here?  Might be difficult, esp 
+	 * if we lose the cone when backing up.  Also, would we want to put 
+	 * this code after the strafe step?  Or, we could simply make 
+	 * zeroing in on the cone more repeatable, such as slowing down when 
+	 * we get close, etc.
+	 */
 	else if (state == 1) // strafe to middle of cone
 	{
 		if(substate == 0) // strafe to right edge
@@ -491,6 +497,7 @@ void test_auto_find_cone()
 			{
 				substate = 3;
 				printf("Entered state: %d.%d\r\n",state,substate);
+				waited(-1);
 			}
 		}
 		else if (substate == 3)
@@ -498,7 +505,9 @@ void test_auto_find_cone()
 			if (waited(40*DELAY_ms))
 			{
 				state = 2;
+				substate = 0;
 				printf("Entered state: %d.%d\r\n",state,substate);
+				waited(-1);
 			}
 			else
 			{
@@ -509,12 +518,42 @@ void test_auto_find_cone()
 	else if (state == 2) // run claw
 	{
 		controldrive(0,0,0);
+		if (substate == 0) // arm going down
+		{
+			if (waited(5*DELAY_ms))// TODO: tweak
+			{
+				substate = 1;
+				waited(-1);
+			}
+			else
+			{
+				motorSet(MCLAW,MCLAW_POW);
+			}
+		}
+		else if (substate == 1) // close claw
+		{
+			// close claw code here
+			substate == 2;
+		}
+		else if (substate == 2) // arm going up
+		{
+			
+			if (waited(5*DELAY_ms))// TODO: tweak
+			{
+				substate = 3;
+				waited(-1);
+			}
+			else
+			{
+				motorSet(MCLAW,-MCLAW_POW);
+			}
+		}
 	}
 	
 	
 	
 }
-void quick_claw()
+void quick_claw_arm()
 {
 	int claw_pow = 0;
 	claw_pow += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? MCLAW_POW : 0 ;
@@ -528,7 +567,7 @@ void opcontrol()
 {
 	op_drive();
 	test_auto_find_cone();
-	quick_claw();
+	quick_claw_arm();
 	//op_lift();
 	//op_claw();
 	//op_hoist();
