@@ -358,7 +358,7 @@ void drop_object()//assume lift is at top
 int waited(int ms)// true if done, false if still waiting.
 {
 	static int timer = -1;
-	if (timer==-1 || ms==-1) // -1 ms means reset timer
+	if ( timer==-1 || ms==-1 ) // -1 ms means reset timer
 	{
 		timer=ms;
 	}
@@ -366,6 +366,7 @@ int waited(int ms)// true if done, false if still waiting.
 	{
 		timer-=DELAY_ms;
 	}
+	printf("Timer: %d\r\n",timer);
 	return !(timer>0);
 }
 
@@ -377,7 +378,8 @@ void test_auto_find_cone()
 	static int visibility_state = 0; // 0 is not acquired, 1 is acquired
 	static int missed = 0; // time of consecutive ultrasonic drops
 	static int width_timer = 0; // keep track of time between edges of cone
-	static int last_dist = 0; //helps find the closest cone instead of chasing after multiple cones at once
+	static int last_dist = FAR_DIST+CONE_DELTA; //helps find the closest cone instead of chasing after multiple cones at once
+	static int last_button = 0;
 	
 	int button = 0; // Only if button is pressed
 	button += joystickGetDigital( 1 , JOY_LIFT_OP , JOY_UP   ) ? 1 : 0 ;
@@ -391,16 +393,19 @@ void test_auto_find_cone()
 		visibility_state = 0;
 		missed = 0;
 		width_timer = 0;
-		last_dist = 0;
+		last_dist = FAR_DIST+CONE_DELTA;
+		last_button = 0;
 		return;
 	}
 	
 	int dist = ultrasonicGet(US); // current dist to cone
-	switchflag = button/abs(button);
+	if (last_button==0)switchflag = button/abs(button);
 	
 	if (state == 0) // find cone
 	{
-		if (dist<FAR_DIST && dist>0 && dist < last_dist+CONE_DELTA )
+		if (dist<FAR_DIST+CONE_DELTA && dist>0 
+		 && dist < last_dist+CONE_DELTA
+		)
 		{
 			missed = 0;
 			if(visibility_state == 0)
@@ -408,6 +413,7 @@ void test_auto_find_cone()
 				switchflag = -switchflag;
 			}
 			visibility_state = 1;
+			last_dist = dist;
 		}
 		else
 		{
@@ -433,7 +439,7 @@ void test_auto_find_cone()
 			}
 			else
 			{
-				controldrive(0,TARGET_POW,0);// drive straight
+				controldrive(0,TARGET_POW-(FAR_DIST-dist)/3,0);// drive straight
 			}
 		}
 		else
@@ -449,7 +455,7 @@ void test_auto_find_cone()
 	 */
 	else if (state == 1) // strafe to middle of cone
 	{
-		if(substate == 0) // strafe to right edge
+		if(substate == 0) // 1.0 strafe to right edge
 		{
 			controldrive(0,0,POS_POW);
 			if (dist<TARGET_DIST && dist>0)
@@ -460,7 +466,7 @@ void test_auto_find_cone()
 			else
 			{
 				missed+=DELAY_ms;
-				if(missed==20*DELAY_ms) //1/2 sec
+				if(missed==CONE_DELTA*DELAY_ms) //1/2 sec
 				{
 					substate = 1;
 					printf("Entered state: %d.%d\r\n",state,substate);
@@ -469,10 +475,10 @@ void test_auto_find_cone()
 				}
 			}
 		}
-		else if (substate == 1) // strafe to left edge
+		else if (substate == 1) // 1.1 strafe to left edge
 		{
 			controldrive(0,0,-POS_POW);
-			if ( ( dist<TARGET_DIST && dist>0 ) || width_timer<10)
+			if ( ( dist<TARGET_DIST && dist>0 ) || width_timer<30)
 			{
 				missed = 0;
 				visibility_state = 1;
@@ -480,7 +486,7 @@ void test_auto_find_cone()
 			else
 			{
 				missed+=DELAY_ms;
-				if(missed==20*DELAY_ms)
+				if(missed==CONE_DELTA*DELAY_ms)
 				{
 					substate = 2;
 					printf("Entered state: %d.%d\r\n",state,substate);
@@ -489,20 +495,21 @@ void test_auto_find_cone()
 					waited(-1);
 				}
 			}
+			width_timer++;
 		}
-		else if (substate == 2) // strafe to middle
+		else if (substate == 2) // 1.2 strafe to middle
 		{
 			controldrive(0,0,POS_POW);
-			if (waited(width_timer))
+			if (waited(width_timer*DELAY_ms))
 			{
 				substate = 3;
 				printf("Entered state: %d.%d\r\n",state,substate);
 				waited(-1);
 			}
 		}
-		else if (substate == 3)
+		else if (substate == 3) // 1.3 back up proper distance
 		{
-			if (waited(40*DELAY_ms))
+			if (waited(10*DELAY_ms))
 			{
 				state = 2;
 				substate = 0;
@@ -511,16 +518,18 @@ void test_auto_find_cone()
 			}
 			else
 			{
-				controldrive(0,0,0);
+				//controldrive(0,0,0);
+				controldrive(0,-POS_POW,0);
+				//motorSet(MCLAW,MCLAW_POW);
 			}
 		}
 	}
-	else if (state == 2) // run claw
+	else if (state == 2) // 2.0 run claw
 	{
 		controldrive(0,0,0);
 		if (substate == 0) // arm going down
 		{
-			if (waited(5*DELAY_ms))// TODO: tweak
+			if (waited(LIFT_TIMER*DELAY_ms))// TODO: tweak
 			{
 				substate = 1;
 				waited(-1);
@@ -538,7 +547,7 @@ void test_auto_find_cone()
 		else if (substate == 2) // arm going up
 		{
 			
-			if (waited(5*DELAY_ms))// TODO: tweak
+			if (waited(LIFT_TIMER*DELAY_ms))// TODO: tweak
 			{
 				substate = 3;
 				waited(-1);
@@ -549,7 +558,7 @@ void test_auto_find_cone()
 			}
 		}
 	}
-	
+	last_button=button;
 	
 	
 }
@@ -566,8 +575,8 @@ void quick_claw_arm()
 void opcontrol()
 {
 	op_drive();
-	test_auto_find_cone();
 	quick_claw_arm();
+	test_auto_find_cone();
 	//op_lift();
 	//op_claw();
 	//op_hoist();

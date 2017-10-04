@@ -77,10 +77,11 @@
 #define US_portEcho 9
 
 #define TARGET_POW 64
-#define POS_POW 50
+#define POS_POW 64
 #define TARGET_DIST 20
-#define CONE_DELTA 5
+#define CONE_DELTA 10
 #define FAR_DIST 100
+#define LIFT_TIMER 20
 
 
 #define LIFT_PIN 12
