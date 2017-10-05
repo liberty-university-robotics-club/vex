@@ -82,9 +82,10 @@
 #define CONE_DELTA 10
 #define FAR_DIST 100
 #define LIFT_TIMER 20
+#define CLAW_TIMER 20
+#define CLAW_JOY 8
 
-
-#define LIFT_PIN 12
+#define CLAW_PIN 12
 
 void* ENC_LB;
 void* ENC_LF;

@@ -366,7 +366,7 @@ int waited(int ms)// true if done, false if still waiting.
 	{
 		timer-=DELAY_ms;
 	}
-	printf("Timer: %d\r\n",timer);
+	//printf("Timer: %d\r\n",timer);
 	return !(timer>0);
 }
 
@@ -542,14 +542,31 @@ void test_auto_find_cone()
 		else if (substate == 1) // close claw
 		{
 			// close claw code here
+			
+			digitalWrite(CLAW_PIN, 1);
 			substate = 2;
 		}
-		else if (substate == 2) // arm going up
+		else if (substate == 2) // Closing claw
 		{
 			
-			if (waited(LIFT_TIMER*DELAY_ms))// TODO: tweak
+			if (waited(CLAW_TIMER*DELAY_ms))
 			{
 				substate = 3;
+				digitalWrite(CLAW_PIN, 1);
+				waited(-1);
+			}
+			else
+			{
+				digitalWrite(CLAW_PIN, 1);
+			}
+		}
+		else if (substate == 3) // arm going up
+		{
+			
+			if (waited(LIFT_TIMER*DELAY_ms))
+			{
+				substate = 4;
+				digitalWrite(CLAW_PIN, 0);// 0 open, 1 closed
 				waited(-1);
 			}
 			else
@@ -565,10 +582,18 @@ void test_auto_find_cone()
 void quick_claw_arm()
 {
 	int claw_pow = 0;
+	int claw_bool = 0;
 	claw_pow += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? MCLAW_POW : 0 ;
 	claw_pow -= joystickGetDigital( 1 , JOY_CLAW , JOY_DOWN ) ? MCLAW_POW : 0 ;
 	claw_pow += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? MCLAW_POW : 0 ;
 	claw_pow -= joystickGetDigital( 2 , JOY_CLAW , JOY_DOWN ) ? MCLAW_POW : 0 ;
+	
+	claw_bool += joystickGetDigital( 1 , CLAW_JOY , JOY_UP   ) ? 1 : 0 ;
+	claw_bool += joystickGetDigital( 2 , CLAW_JOY , JOY_UP   ) ? 1 : 0 ;
+	
+	//printf("asdf: %d\r\n",claw_bool);
+	
+	digitalWrite(CLAW_PIN, claw_bool);
 	motorSet(MCLAW,-claw_pow);
 }
 
