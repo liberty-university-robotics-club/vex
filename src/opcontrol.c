@@ -542,7 +542,7 @@ void test_auto_find_cone()
 		else if (substate == 1) // close claw
 		{
 			// close claw code here
-			
+			motorSet(MCLAW,MCLAW_POW);
 			digitalWrite(CLAW_PIN, 1);
 			substate = 2;
 		}
@@ -552,6 +552,7 @@ void test_auto_find_cone()
 			if (waited(CLAW_TIMER*DELAY_ms))
 			{
 				substate = 3;
+				motorSet(MCLAW,MCLAW_POW);
 				digitalWrite(CLAW_PIN, 1);
 				waited(-1);
 			}
@@ -581,6 +582,7 @@ void test_auto_find_cone()
 }
 void quick_claw_arm()
 {
+	static int last_claw_bool = 10;
 	int claw_pow = 0;
 	int claw_bool = 0;
 	claw_pow += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? MCLAW_POW : 0 ;
@@ -592,8 +594,11 @@ void quick_claw_arm()
 	claw_bool += joystickGetDigital( 2 , CLAW_JOY , JOY_UP   ) ? 1 : 0 ;
 	
 	//printf("asdf: %d\r\n",claw_bool);
-	
-	digitalWrite(CLAW_PIN, claw_bool);
+	if (last_claw_bool != claw_bool || last_claw_bool==10)
+	{
+		digitalWrite(CLAW_PIN, claw_bool);
+	}
+	last_claw_bool = claw_bool;
 	motorSet(MCLAW,-claw_pow);
 }
 
