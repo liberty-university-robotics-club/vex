@@ -425,7 +425,7 @@ void test_auto_find_cone()
 		}
 		if(visibility_state == 1)
 		{
-			if(dist<TARGET_DIST)
+			if(dist<TARGET_DIST && dist > 0)// changed this
 			{
 				if (waited(40*DELAY_ms)) // 1 sec
 				{
@@ -457,7 +457,8 @@ void test_auto_find_cone()
 	{
 		if(substate == 0) // 1.0 strafe to right edge
 		{
-			controldrive(0,0,POS_POW);
+			controldrive(0,0,POS_POW);//strafe
+			//controldrive(POS_POW,0,0);//turn
 			if (dist<TARGET_DIST && dist>0)
 			{
 				missed = 0;
@@ -477,7 +478,8 @@ void test_auto_find_cone()
 		}
 		else if (substate == 1) // 1.1 strafe to left edge
 		{
-			controldrive(0,0,-POS_POW);
+			controldrive(0,0,-POS_POW);//strafe
+			//controldrive(-POS_POW,0,0);//turn
 			if ( ( dist<TARGET_DIST && dist>0 ) || width_timer<30)
 			{
 				missed = 0;
@@ -499,7 +501,8 @@ void test_auto_find_cone()
 		}
 		else if (substate == 2) // 1.2 strafe to middle
 		{
-			controldrive(0,0,POS_POW);
+			controldrive(0,0,POS_POW);//strafe
+			//controldrive(POS_POW,0,0);//turn
 			if (waited(width_timer*DELAY_ms))
 			{
 				substate = 3;
@@ -518,9 +521,9 @@ void test_auto_find_cone()
 			}
 			else
 			{
-				//controldrive(0,0,0);
+						//controldrive(0,0,0);
 				controldrive(0,-POS_POW,0);
-				//motorSet(MCLAW,MCLAW_POW);
+						//motorSet(MCLAW,MCLAW_POW);
 			}
 		}
 	}
@@ -566,14 +569,23 @@ void test_auto_find_cone()
 			
 			if (waited(LIFT_TIMER*DELAY_ms))
 			{
-				substate = 4;
-				digitalWrite(CLAW_PIN, 0);// 0 open, 1 closed
+				state = 3;
+				substate = 0;
+				//digitalWrite(CLAW_PIN, 0);// 0 open, 1 closed
 				waited(-1);
 			}
 			else
 			{
 				motorSet(MCLAW,-MCLAW_POW);
 			}
+		}
+	}
+	else if (state == 3) // 3.0 run claw
+	{
+		
+		if (substate == 0) // arm staying up
+		{
+			motorSet(MCLAW,-MCLAW_POW);
 		}
 	}
 	last_button=button;
