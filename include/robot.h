@@ -1,6 +1,9 @@
 #ifndef robot_h
 #define robot_h
 
+//Includes
+#include "API.h"
+
 //#define GODDARD
 #define PASCAL
 
@@ -45,7 +48,9 @@
 #define HOOK_POW 127
 #endif
 
-
+// Ultrasonic Sensors
+Ultrasonic ult1;
+Ultrasonic ult2;
 
 #define FORWARD_lb 1
 #define FORWARD_lf 1
