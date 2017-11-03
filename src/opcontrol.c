@@ -571,6 +571,7 @@ void test_auto_find_cone()
 			{
 				state = 3;
 				substate = 0;
+				last_dist = FAR_DIST+CONE_DELTA; // reset find
 				//digitalWrite(CLAW_PIN, 0);// 0 open, 1 closed
 				waited(-1);
 			}
@@ -580,18 +581,64 @@ void test_auto_find_cone()
 			}
 		}
 	}
-	else if (state == 3) // 3.0 run claw
+	
+	
+	//------------------------------------------------------------------
+	else if (state == 3) // 3.0 find Base
 	{
+		motorSet(MCLAW,-MCLAW_POW); // arm staying up
 		
-		if (substate == 0) // arm staying up
+		if (dist<FAR_DIST+CONE_DELTA && dist>0 
+		 && dist < last_dist+CONE_DELTA
+		)
 		{
-			motorSet(MCLAW,-MCLAW_POW);
+			missed = 0;
+			if(visibility_state == 0)
+			{
+				switchflag = -switchflag;
+			}
+			visibility_state = 1;
+			last_dist = dist;
+		}
+		else
+		{
+			missed+=DELAY_ms;
+			if(missed==5*DELAY_ms)
+			{
+				visibility_state = 0;
+			}
+		}
+		if(visibility_state == 1)
+		{
+			if(dist<TARGET_DIST && dist > 0)// changed this
+			{
+				if (waited(40*DELAY_ms)) // 1 sec
+				{
+					state = 4;// enter placing code
+					printf("Entered state: %d.%d\r\n",state,substate);
+				}
+				else
+				{
+					controldrive(0,0,0);
+				}
+			}
+			else
+			{
+				controldrive(0,TARGET_POW-(FAR_DIST-dist)/3,0);// drive straight
+			}
+		}
+		else
+		{
+			controldrive(switchflag*TARGET_POW,0,0);// turn
 		}
 	}
+	
+	
+	
 	last_button=button;
 	
-	
 }
+
 void quick_claw_arm()
 {
 	static int last_claw_bool = 10;
