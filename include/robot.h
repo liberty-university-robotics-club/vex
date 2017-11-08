@@ -81,6 +81,7 @@
 #define TARGET_DIST 20
 #define CONE_DELTA 10
 #define FAR_DIST 100
+#define SORTA_CLOSE 50
 #define LIFT_TIMER 20
 #define CLAW_TIMER 20
 #define CLAW_JOY 8
