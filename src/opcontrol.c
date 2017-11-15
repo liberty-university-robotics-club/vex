@@ -355,6 +355,16 @@ void drop_object()//assume lift is at top
 	
 }
 //*/
+
+void open_claw()
+{
+	digitalWrite(CLAW_PIN, 0);//open claw
+}
+void close_claw()
+{
+	digitalWrite(CLAW_PIN, 1);//close claw
+}
+
 int waited(int ms)// true if done, false if still waiting.
 {
 	static int timer = -1;
@@ -561,6 +571,7 @@ void test_auto_find_cone()
 			// close claw code here
 			motorSet(MCLAW,MCLAW_POW);
 			digitalWrite(CLAW_PIN, 1);
+			//close_claw();
 			substate = 2;
 		}
 		else if (substate == 2) // Closing claw
@@ -571,11 +582,13 @@ void test_auto_find_cone()
 				substate = 3;
 				motorSet(MCLAW,MCLAW_POW);
 				digitalWrite(CLAW_PIN, 1);
+				//close_claw();
 				waited(-1);
 			}
 			else
 			{
 				digitalWrite(CLAW_PIN, 1);
+				//close_claw();
 			}
 		}
 		else if (substate == 3) // arm going up
@@ -689,10 +702,12 @@ void straigt_forward_auto_score_cone()
 	if (state == 0)
 	{
 		//digitalWrite(CLAW_PIN, 1);//close claw
+		//close_claw();
 		motorSet(MCLAW,-MCLAW_POW); // arm staying up
 		
 		if (waited2(1000) && (waited(4000) || (dist < SORTA_CLOSE && dist > 0) ))
 		{
+			close_claw();
 			state = 1;
 			waited(-1);
 			waited2(-1);
@@ -705,6 +720,7 @@ void straigt_forward_auto_score_cone()
 	else if (state == 1) // 3.0 find Base
 	{
 		//digitalWrite(CLAW_PIN, 1);//close claw
+		//close_claw();
 		motorSet(MCLAW,-MCLAW_POW); // arm staying up
 		
 		if (dist<FAR_DIST+CONE_DELTA && dist>0 
@@ -761,13 +777,13 @@ void straigt_forward_auto_score_cone()
 		else
 		{
 			state = 3;
-			digitalWrite(CLAW_PIN, 0);//open claw
+			open_claw();
 			waited(-1);
 		}
 	}
 	else if (state == 3)
 	{
-		digitalWrite(CLAW_PIN, 0);//open claw
+		open_claw();
 	}
 	
 	last_button=button;
