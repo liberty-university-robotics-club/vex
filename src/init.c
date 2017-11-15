@@ -73,5 +73,5 @@ void initialize() {
 	
 	
 	// Stephen what is this?  LED?
-	pinMode(LIFT_PIN, OUTPUT);
+	pinMode(CLAW_PIN, OUTPUT);
 }

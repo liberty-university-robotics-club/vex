@@ -78,9 +78,20 @@ Ultrasonic ult2;
 
 #define IME_IR 0
 
+#define US_portPing 10
+#define US_portEcho 9
 
+#define TARGET_POW 64
+#define POS_POW 64
+#define TARGET_DIST 20
+#define CONE_DELTA 10
+#define FAR_DIST 100
+#define SORTA_CLOSE 50
+#define LIFT_TIMER 20
+#define CLAW_TIMER 20
+#define CLAW_JOY 8
 
-#define LIFT_PIN 12
+#define CLAW_PIN 12
 
 void* ENC_LB;
 void* ENC_LF;
