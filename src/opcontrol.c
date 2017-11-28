@@ -359,10 +359,12 @@ void drop_object()//assume lift is at top
 void open_claw()
 {
 	digitalWrite(CLAW_PIN, 0);//open claw
+	printf("Open_claw");
 }
 void close_claw()
 {
 	digitalWrite(CLAW_PIN, 1);//close claw
+	printf("Close_claw");
 }
 
 int waited(int ms)// true if done, false if still waiting.
@@ -697,9 +699,12 @@ void straigt_forward_auto_score_cone()
 	int dist = ultrasonicGet(US); // current dist to cone
 	if (last_button==0)switchflag = button/abs(button);
 	// close claw: digitalWrite(CLAW_PIN, 1); //open is 0
-	
-	
 	if (state == 0)
+	{
+		close_claw();
+		state = 1;
+	}
+	else if (state == 1)
 	{
 		//digitalWrite(CLAW_PIN, 1);//close claw
 		//close_claw();
@@ -707,8 +712,7 @@ void straigt_forward_auto_score_cone()
 		
 		if (waited2(1000) && (waited(4000) || (dist < SORTA_CLOSE && dist > 0) ))
 		{
-			close_claw();
-			state = 1;
+			state = 2;
 			waited(-1);
 			waited2(-1);
 		}
@@ -717,7 +721,7 @@ void straigt_forward_auto_score_cone()
 			controldrive(0,TARGET_POW,0);// drive straight
 		}
 	}
-	else if (state == 1) // 3.0 find Base
+	else if (state == 2) // 3.0 find Base
 	{
 		//digitalWrite(CLAW_PIN, 1);//close claw
 		//close_claw();
@@ -749,7 +753,8 @@ void straigt_forward_auto_score_cone()
 			{
 				if (waited(40*DELAY_ms)) // 1 sec
 				{
-					state = 2;// enter placing code
+					waited(-1);
+					state = 3;// enter placing code
 					//arm down
 					printf("Entered state: %d.%d\r\n",state,substate);
 				}
@@ -768,22 +773,22 @@ void straigt_forward_auto_score_cone()
 			controldrive(switchflag*TARGET_POW/2,0,0);// turn
 		}
 	}
-	else if (state == 2) // 2.0 score
+	else if (state == 3) // 2.0 score
 	{
 		if (waited(500))
 		{
-			motorSet(MCLAW,MCLAW_POW); // arm down
+			waited(-1);
+			state = 4;
+			open_claw();
 		}
 		else
 		{
-			state = 3;
-			open_claw();
-			waited(-1);
+			motorSet(MCLAW,MCLAW_POW); // arm down
 		}
 	}
-	else if (state == 3)
+	else if (state == 4)
 	{
-		open_claw();
+		//open_claw();
 	}
 	
 	last_button=button;
