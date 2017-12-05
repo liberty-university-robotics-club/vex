@@ -812,7 +812,7 @@ void stateful_claw_arm()
 	
 	
 	
-	static int last_claw_bool = 10;
+	static int last_claw_bool = 0;
 	int claw_bool = 0;
 	int claw_state = 0;
 	claw_state += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
@@ -837,7 +837,11 @@ void stateful_claw_arm()
 	//printf("asdf: %d\r\n",claw_bool);
 	if (last_claw_bool != claw_bool || last_claw_bool==10)
 	{
-		if(claw_bool==1)
+		if(claw_bool==10)
+		{
+			close_claw();//default
+		}
+		else if(claw_bool==1)
 		{
 			close_claw();
 		}
