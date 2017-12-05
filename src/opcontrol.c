@@ -1,14 +1,15 @@
 #include <math.h>
 #include "main.h"
 #include "robot.h"
+#ifndef API_H_
+#include "API.h"
+#endif
 #include "API.h"
 #include "liftcontrol.h"
 #include "lisp.h"
 #include "tank.h"
 #include "controlloop.h"
 #include "opcontrol.h"
-
-Ultrasonic US;
 
 void controlmotors(int lb, int lf, int rb, int rf)
 {
@@ -124,10 +125,10 @@ int op_auto_lift(bool auto_mode, bool begin_auto, bool go_up)
 	if(!auto_mode)//if in operator mode:
 	{
 		// get op button input
-		lift_pow += joystickGetDigital( 1 , JOY_LIFT_OP , JOY_UP   ) ? MLI_POW : 0 ;
-		lift_pow -= joystickGetDigital( 1 , JOY_LIFT_OP , JOY_DOWN ) ? MLI_POW : 0 ;
-		lift_pow += joystickGetDigital( 2 , JOY_LIFT_OP , JOY_UP   ) ? MLI_POW : 0 ;
-		lift_pow -= joystickGetDigital( 2 , JOY_LIFT_OP , JOY_DOWN ) ? MLI_POW : 0 ;
+		lift_pow += joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_UP   ) ? MLI_POW : 0 ;
+		lift_pow -= joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_DOWN ) ? MLI_POW : 0 ;
+		lift_pow += joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_UP   ) ? MLI_POW : 0 ;
+		lift_pow -= joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_DOWN ) ? MLI_POW : 0 ;
 		
 		lift_pow += joystickGetDigital( 1 , JOY_LIFT_SLOW , JOY_UP   ) ? MLI_SLOW : 0 ;
 		lift_pow -= joystickGetDigital( 1 , JOY_LIFT_SLOW , JOY_DOWN ) ? MLI_SLOW : 0 ;
@@ -409,10 +410,10 @@ void test_auto_find_cone()
 	static int last_button = 0;
 	
 	int button = 0; // Only if button is pressed
-	button += joystickGetDigital( 1 , JOY_LIFT_OP , JOY_UP   ) ? 1 : 0 ;
-	button -= joystickGetDigital( 1 , JOY_LIFT_OP , JOY_DOWN ) ? 1 : 0 ;
-	button += joystickGetDigital( 2 , JOY_LIFT_OP , JOY_UP   ) ? 1 : 0 ;
-	button -= joystickGetDigital( 2 , JOY_LIFT_OP , JOY_DOWN ) ? 1 : 0 ;
+	button += joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_UP   ) ? 1 : 0 ;
+	button -= joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_DOWN ) ? 1 : 0 ;
+	button += joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_UP   ) ? 1 : 0 ;
+	button -= joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_DOWN ) ? 1 : 0 ;
 	if(!button) // reset and exit
 	{
 		state = 0;
@@ -680,10 +681,10 @@ void straigt_forward_auto_score_cone()
 	static int last_button = 0;
 	
 	int button = 0; // Only if button is pressed
-	button += joystickGetDigital( 1 , JOY_LIFT_OP , JOY_UP   ) ? 1 : 0 ;
-	button -= joystickGetDigital( 1 , JOY_LIFT_OP , JOY_DOWN ) ? 1 : 0 ;
-	button += joystickGetDigital( 2 , JOY_LIFT_OP , JOY_UP   ) ? 1 : 0 ;
-	button -= joystickGetDigital( 2 , JOY_LIFT_OP , JOY_DOWN ) ? 1 : 0 ;
+	button += joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_UP   ) ? 1 : 0 ;
+	button -= joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_DOWN ) ? 1 : 0 ;
+	button += joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_UP   ) ? 1 : 0 ;
+	button -= joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_DOWN ) ? 1 : 0 ;
 	if(!button) // reset and exit
 	{
 		state = 0;
@@ -799,7 +800,6 @@ void straigt_forward_auto_score_cone()
 
 void stateful_claw_arm()
 {
-	static int last_claw_bool = 10;
 	int lift_pow = 0;
 	lift_pow += joystickGetDigital( 1 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
 	lift_pow -= joystickGetDigital( 1 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
@@ -812,14 +812,28 @@ void stateful_claw_arm()
 	
 	
 	
+	static int last_claw_bool = 10;
 	int claw_bool = 0;
-	claw_bool += joystickGetDigital( 1 , CLAW_JOY , JOY_UP   ) ? 1 : 0 ;
-	claw_bool += joystickGetDigital( 2 , CLAW_JOY , JOY_UP   ) ? 1 : 0 ;
+	int claw_state = 0;
+	claw_state += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
+	claw_state += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
+	
+	claw_state -= joystickGetDigital( 1 , JOY_CLAW , JOY_DOWN ) ? 1 : 0 ;
+	claw_state -= joystickGetDigital( 2 , JOY_CLAW , JOY_DOWN ) ? 1 : 0 ;
+	
+	if (claw_state > 0)
+	{
+		claw_bool = 1;//up - close
+	}
+	else if (claw_state < 0)
+	{
+		claw_bool = 0;//down - open
+	}
 	
 	//printf("asdf: %d\r\n",claw_bool);
 	if (last_claw_bool != claw_bool || last_claw_bool==10)
 	{
-		digitalWrite(CLAW_PIN, claw_bool);
+		claw_bool?close_claw():open_claw();
 	}
 	last_claw_bool = claw_bool;
 }
@@ -834,8 +848,8 @@ void stateful_claw_arm()
 //	lift_pow += joystickGetDigital( 2 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
 //	lift_pow -= joystickGetDigital( 2 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
 //	
-//	claw_bool += joystickGetDigital( 1 , CLAW_JOY , JOY_UP   ) ? 1 : 0 ;
-//	claw_bool += joystickGetDigital( 2 , CLAW_JOY , JOY_UP   ) ? 1 : 0 ;
+//	claw_bool += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
+//	claw_bool += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
 //	
 //	//printf("asdf: %d\r\n",claw_bool);
 //	if (last_claw_bool != claw_bool || last_claw_bool==10)
@@ -860,7 +874,6 @@ void opcontrol()
 
 void inittest()//TODO: remove this lazy
 {
-	US = ultrasonicInit(US_portEcho, US_portPing);//robot.h
 }
 void operatorControl() {
 

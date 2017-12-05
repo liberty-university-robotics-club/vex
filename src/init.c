@@ -67,11 +67,7 @@ void initialize() {
 	ENC_RB = encoderInit(ENC_RBT,ENC_RBB,FORWARD_rf);
 	ENC_RF = encoderInit(ENC_RFT,ENC_RFB,FORWARD_rb);
 	
-	//lift enc
-	pinMode(BTN_UP ,INPUT);
-	pinMode(BTN_DWN,INPUT);
-	
-	
-	// Stephen what is this?  LED?
+	US = ultrasonicInit(US_portEcho, US_portPing);//robot.h
+	// Claw Solenoid
 	pinMode(CLAW_PIN, OUTPUT);
 }

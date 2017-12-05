@@ -1,6 +1,8 @@
 #ifndef robot_h
 #define robot_h
-
+#ifndef API_H_
+#include "API.h"
+#endif
 //#define GODDARD
 #define IMP
 
@@ -11,8 +13,9 @@
 #define JOY_TURN_T     1
 #define JOY_STRAFING_S 4
 
-#define JOY_LIFT_OP    5
-#define JOY_LIFT       6
+#define JOY_LIFT       5
+#define JOY_CLAW       6
+#define JOY_AUTO_TEST  8
 
 
 // MOTOR PINS + CONSTANTS
@@ -28,13 +31,7 @@
 #endif
 
 #ifdef GODDARD
-#define MHOIST 8		//
-#define MHOOK 9			//
-#define HOIST_POW 127
-#define HOOK_POW 127
 #endif
-
-
 
 #define FORWARD_lb 1
 #define FORWARD_lf 1
@@ -57,10 +54,9 @@
 #define ENC_RBB  6
 #define ENC_RFT  7
 #define ENC_RFB  8
-#define BTN_UP   9
-#define BTN_DWN 10
+#define CLAW_PIN 12
 
-#define IME_IR 0
+//#define IME_IR 0
 
 #define US_portPing 10
 #define US_portEcho 9
@@ -73,14 +69,14 @@
 #define SORTA_CLOSE 50
 #define LIFT_TIMER 20
 #define CLAW_TIMER 20
-#define CLAW_JOY 8
 
-#define CLAW_PIN 12
 
 void* ENC_LB;
 void* ENC_LF;
 void* ENC_RB;
 void* ENC_RF;
+
+Ultrasonic US;
 
 
 // OTHER THRESHOLDS AND CONSTANTS
