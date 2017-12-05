@@ -15,7 +15,8 @@
 
 #define JOY_LIFT       5
 #define JOY_CLAW       6
-#define JOY_AUTO_TEST  8
+#define JOY_AUTO_TEST  7
+#define JOY_OP_AUTO    8
 
 
 // MOTOR PINS + CONSTANTS

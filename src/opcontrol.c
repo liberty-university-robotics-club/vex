@@ -829,11 +829,22 @@ void stateful_claw_arm()
 	{
 		claw_bool = 0;//down - open
 	}
+	else
+	{
+		claw_bool = last_claw_bool;// don't change
+	}
 	
 	//printf("asdf: %d\r\n",claw_bool);
 	if (last_claw_bool != claw_bool || last_claw_bool==10)
 	{
-		claw_bool?close_claw():open_claw();
+		if(claw_bool==1)
+		{
+			close_claw();
+		}
+		else
+		{
+			open_claw();
+		}
 	}
 	last_claw_bool = claw_bool;
 }
