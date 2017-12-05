@@ -239,10 +239,10 @@ void op_hook()
 	#ifdef GODDARD
 	int hook_pow = 0;
 	// get op button input
-	hook_pow += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? HOOK_POW : 0 ;
-	hook_pow -= joystickGetDigital( 1 , JOY_CLAW , JOY_DOWN ) ? HOOK_POW : 0 ;
-	hook_pow += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? HOOK_POW : 0 ;
-	hook_pow -= joystickGetDigital( 2 , JOY_CLAW , JOY_DOWN ) ? HOOK_POW : 0 ;
+	hook_pow += joystickGetDigital( 1 , JOY_LIFT , JOY_UP   ) ? HOOK_POW : 0 ;
+	hook_pow -= joystickGetDigital( 1 , JOY_LIFT , JOY_DOWN ) ? HOOK_POW : 0 ;
+	hook_pow += joystickGetDigital( 2 , JOY_LIFT , JOY_UP   ) ? HOOK_POW : 0 ;
+	hook_pow -= joystickGetDigital( 2 , JOY_LIFT , JOY_DOWN ) ? HOOK_POW : 0 ;
 	
 	motorSet(MHOOK,-hook_pow);
 	#endif
@@ -260,19 +260,19 @@ int op_auto_claw(bool auto_mode, bool begin_auto, bool clench)
 	//if (!auto_mode)
 	//{
 	//	// get op button input
-	//	claw_pow += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? MCLAW_POW : 0 ;
-	//	claw_pow -= joystickGetDigital( 1 , JOY_CLAW , JOY_DOWN ) ? MCLAW_POW : 0 ;
-	//	claw_pow += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? MCLAW_POW : 0 ;
-	//	claw_pow -= joystickGetDigital( 2 , JOY_CLAW , JOY_DOWN ) ? MCLAW_POW : 0 ;
+	//	claw_pow += joystickGetDigital( 1 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
+	//	claw_pow -= joystickGetDigital( 1 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
+	//	claw_pow += joystickGetDigital( 2 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
+	//	claw_pow -= joystickGetDigital( 2 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
 	//}
 	//else // if (auto_mode)
 	//{
 	//	//if (begin_auto)
 	//	//{
-	//	//	claw_auto=clench?MCLAW_POW:-MCLAW_POW;
+	//	//	claw_auto=clench?MLIFT_POW:-MLIFT_POW;
 	//	//}
 	//}
-	//motorSet(MCLAW,claw_pow);
+	//motorSet(MLIFT,claw_pow);
 	/////////////////////////////////////////////
 	
 	
@@ -286,10 +286,10 @@ int op_auto_claw(bool auto_mode, bool begin_auto, bool clench)
 	if(!auto_mode)//if in operator mode:
 	{
 		// get op button input
-		claw_pow += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? MCLAW_POW : 0 ;
-		claw_pow -= joystickGetDigital( 1 , JOY_CLAW , JOY_DOWN ) ? MCLAW_POW : 0 ;
-		claw_pow += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? MCLAW_POW : 0 ;
-		claw_pow -= joystickGetDigital( 2 , JOY_CLAW , JOY_DOWN ) ? MCLAW_POW : 0 ;
+		claw_pow += joystickGetDigital( 1 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
+		claw_pow -= joystickGetDigital( 1 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
+		claw_pow += joystickGetDigital( 2 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
+		claw_pow -= joystickGetDigital( 2 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
 		
 		// if op buttons pressed, cancel auto button records
 		if(!claw_pow&&claw_auto){claw_pow=claw_auto;}
@@ -300,7 +300,7 @@ int op_auto_claw(bool auto_mode, bool begin_auto, bool clench)
 	{
 		if (begin_auto)
 		{
-			claw_auto=clench?MCLAW_POW:-MCLAW_POW;
+			claw_auto=clench?MLIFT_POW:-MLIFT_POW;
 		}
 	}
 	
@@ -317,7 +317,7 @@ int op_auto_claw(bool auto_mode, bool begin_auto, bool clench)
 	claw_pow*=-1;
 	
 	// raw motor power
-	motorSet(MCLAW,claw_pow);
+	motorSet(MLIFT,claw_pow);
 	return claw_pow;
 	
 	#endif
@@ -549,7 +549,7 @@ void test_auto_find_cone()
 			{
 						//controldrive(0,0,0);
 				controldrive(0,-POS_POW,0);
-						//motorSet(MCLAW,MCLAW_POW);
+						//motorSet(MLIFT,MLIFT_POW);
 			}
 		}
 	}
@@ -565,13 +565,13 @@ void test_auto_find_cone()
 			}
 			else
 			{
-				motorSet(MCLAW,MCLAW_POW);
+				motorSet(MLIFT,MLIFT_POW);
 			}
 		}
 		else if (substate == 1) // close claw
 		{
 			// close claw code here
-			motorSet(MCLAW,MCLAW_POW);
+			motorSet(MLIFT,MLIFT_POW);
 			digitalWrite(CLAW_PIN, 1);
 			//close_claw();
 			substate = 2;
@@ -582,7 +582,7 @@ void test_auto_find_cone()
 			if (waited(CLAW_TIMER*DELAY_ms))
 			{
 				substate = 3;
-				motorSet(MCLAW,MCLAW_POW);
+				motorSet(MLIFT,MLIFT_POW);
 				digitalWrite(CLAW_PIN, 1);
 				//close_claw();
 				waited(-1);
@@ -606,7 +606,7 @@ void test_auto_find_cone()
 			}
 			else
 			{
-				motorSet(MCLAW,-MCLAW_POW);
+				motorSet(MLIFT,-MLIFT_POW);
 			}
 		}
 	}
@@ -615,7 +615,7 @@ void test_auto_find_cone()
 	//------------------------------------------------------------------
 	else if (state == 3) // 3.0 find Base
 	{
-		motorSet(MCLAW,-MCLAW_POW); // arm staying up
+		motorSet(MLIFT,-MLIFT_POW); // arm staying up
 		
 		if (dist<FAR_DIST+CONE_DELTA && dist>0 
 		// && dist < last_dist+CONE_DELTA // <--- find closest object; goal is not
@@ -708,7 +708,7 @@ void straigt_forward_auto_score_cone()
 	{
 		//digitalWrite(CLAW_PIN, 1);//close claw
 		//close_claw();
-		motorSet(MCLAW,-MCLAW_POW); // arm staying up
+		motorSet(MLIFT,-MLIFT_POW); // arm staying up
 		
 		if (waited2(1000) && (waited(4000) || (dist < SORTA_CLOSE && dist > 0) ))
 		{
@@ -725,7 +725,7 @@ void straigt_forward_auto_score_cone()
 	{
 		//digitalWrite(CLAW_PIN, 1);//close claw
 		//close_claw();
-		motorSet(MCLAW,-MCLAW_POW); // arm staying up
+		motorSet(MLIFT,-MLIFT_POW); // arm staying up
 		
 		if (dist<FAR_DIST+CONE_DELTA && dist>0 
 		// && dist < last_dist+CONE_DELTA // <--- find closest object; goal is not closest
@@ -783,7 +783,7 @@ void straigt_forward_auto_score_cone()
 		}
 		else
 		{
-			motorSet(MCLAW,MCLAW_POW); // arm down
+			motorSet(MLIFT,MLIFT_POW); // arm down
 		}
 	}
 	else if (state == 4)
@@ -797,16 +797,22 @@ void straigt_forward_auto_score_cone()
 
 
 
-void quick_claw_arm()
+void stateful_claw_arm()
 {
 	static int last_claw_bool = 10;
-	int claw_pow = 0;
-	int claw_bool = 0;
-	claw_pow += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? MCLAW_POW : 0 ;
-	claw_pow -= joystickGetDigital( 1 , JOY_CLAW , JOY_DOWN ) ? MCLAW_POW : 0 ;
-	claw_pow += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? MCLAW_POW : 0 ;
-	claw_pow -= joystickGetDigital( 2 , JOY_CLAW , JOY_DOWN ) ? MCLAW_POW : 0 ;
+	int lift_pow = 0;
+	lift_pow += joystickGetDigital( 1 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
+	lift_pow -= joystickGetDigital( 1 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
+	lift_pow += joystickGetDigital( 2 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
+	lift_pow -= joystickGetDigital( 2 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
 	
+	motorSet(MLIFT,-lift_pow);
+	
+	
+	
+	
+	
+	int claw_bool = 0;
 	claw_bool += joystickGetDigital( 1 , CLAW_JOY , JOY_UP   ) ? 1 : 0 ;
 	claw_bool += joystickGetDigital( 2 , CLAW_JOY , JOY_UP   ) ? 1 : 0 ;
 	
@@ -816,13 +822,34 @@ void quick_claw_arm()
 		digitalWrite(CLAW_PIN, claw_bool);
 	}
 	last_claw_bool = claw_bool;
-	motorSet(MCLAW,-claw_pow);
 }
+
+//void quick_claw_arm()
+//{
+//	static int last_claw_bool = 10;
+//	int lift_pow = 0;
+//	int claw_bool = 0;
+//	lift_pow += joystickGetDigital( 1 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
+//	lift_pow -= joystickGetDigital( 1 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
+//	lift_pow += joystickGetDigital( 2 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
+//	lift_pow -= joystickGetDigital( 2 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
+//	
+//	claw_bool += joystickGetDigital( 1 , CLAW_JOY , JOY_UP   ) ? 1 : 0 ;
+//	claw_bool += joystickGetDigital( 2 , CLAW_JOY , JOY_UP   ) ? 1 : 0 ;
+//	
+//	//printf("asdf: %d\r\n",claw_bool);
+//	if (last_claw_bool != claw_bool || last_claw_bool==10)
+//	{
+//		digitalWrite(CLAW_PIN, claw_bool);
+//	}
+//	last_claw_bool = claw_bool;
+//	motorSet(MLIFT,-lift_pow);
+//}
 
 void opcontrol()
 {
 	op_drive();
-	quick_claw_arm();
+	stateful_claw_arm();
 	//test_auto_find_cone();
 	straigt_forward_auto_score_cone();
 	//op_lift();

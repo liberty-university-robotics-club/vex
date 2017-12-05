@@ -2,7 +2,7 @@
 #define robot_h
 
 //#define GODDARD
-#define PASCAL
+#define IMP
 
 // CONTROLLER PINS + CONSTANTS
 
@@ -12,10 +12,7 @@
 #define JOY_STRAFING_S 4
 
 #define JOY_LIFT_OP    5
-#define JOY_CLAW       6
-#define JOY_LIFT_SLOW 7
-//#define JOY_LIFT_AUTO  7
-#define JOY_HOIST      8
+#define JOY_LIFT       6
 
 
 // MOTOR PINS + CONSTANTS
@@ -25,17 +22,9 @@
 #define MRB 4			//
 #define MRF 5			//
 
-#define MIR 6			//
-#define MIR_POW 20
-
-#define MLI 7			//
-#define MLI_POW 127
-#define MLI_SLOW 50
-
-#ifdef PASCAL
-#define MCLAW 8			//
-#define MLI2 9			//
-#define MCLAW_POW 127
+#ifdef IMP
+#define MLIFT 8			//
+#define MLIFT_POW 127
 #endif
 
 #ifdef GODDARD

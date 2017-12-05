@@ -104,7 +104,7 @@ int ir_rotate(int power, int ratio_ticks)
 	}
 	tick++;
 	
-	motorSet(MIR,power);
+	//motorSet(MIR,power);
 	return power;
 }
 #ifdef GODDARD
