@@ -49,8 +49,8 @@
 #endif
 
 // Ultrasonic Sensors
-Ultrasonic ult1;
-Ultrasonic ult2;
+Ultrasonic US1;
+Ultrasonic US2;
 
 #define FORWARD_lb 1
 #define FORWARD_lf 1

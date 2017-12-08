@@ -202,29 +202,22 @@ void op_lift()
 	op_auto_lift(false, false, false);
 }
 
-void UltrasonicStart(Ultrasonic ult1,unsigned char portEcho1, unsigned char portPing1, Ultrasonic ult2,unsigned char portEcho2, unsigned char portPing2){
-	ult1=ultrasonicInit(portEcho1,portPing1);
-	ult2=ultrasonicInit(portEcho2,portPing2);								
-}
 void UltrasonicActivate(int push_button){
 	static int distance1 = 0;
-	static int distance2 = 0;
-	UltrasonicStart(US1,US_portEcho,US_portPing,US2,10,12);
-	while(push_button == 1){
+	//static int distance2 = 0;
 		if(US1 == NULL){
 			distance1 = ultrasonicGet(US1);
 			printf("The distance from the cone is %d centimeters \r\n", distance1);
 			delay(1000);
 			ultrasonicShutdown(US1);}
-		else if(US2 == NULL){
+		/*else if(US2 == NULL){
 			distance2 = ultrasonicGet(US2);
 			printf("The distance from the cone is %d centimeters \r\n", distance2);
 			delay(1000);
-			ultrasonicShutdown(US2);}
+			ultrasonicShutdown(US2);}*/
 		else if(US1 != NULL || US2 != NULL){
-			UltrasonicActivate(push_button);
-			break;}
-	
+			US1=ultrasonicInit(US_portEcho,US_portPing);
+			//US2=ultrasonicInit(10,12);	
 	}
 	
 }
@@ -389,8 +382,10 @@ void opcontrol()
 	push_button += joystickGetDigital( 0 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
 	push_button -= joystickGetDigital( 0 , JOY_CLAW , JOY_DOWN ) ? 1 : 0 ;
 	printf("%d\r\n",push_button);
-	UltrasonicActivate(push_button);
-	
+	while(push_button == 1){
+		UltrasonicActivate(push_button);
+		push_button=0;
+	}
 }
 
 void operatorControl() {

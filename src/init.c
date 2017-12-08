@@ -71,7 +71,8 @@ void initialize() {
 	pinMode(BTN_UP ,INPUT);
 	pinMode(BTN_DWN,INPUT);
 	
-	
+	US1=ultrasonicInit(US_portEcho,US_portPing);
+	//US2=ultrasonicInit(10,12);
 	// Stephen what is this?  LED?
 	pinMode(CLAW_PIN, OUTPUT);
 }
