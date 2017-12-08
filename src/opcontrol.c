@@ -382,10 +382,11 @@ void opcontrol()
 	push_button += joystickGetDigital( 0 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
 	push_button -= joystickGetDigital( 0 , JOY_CLAW , JOY_DOWN ) ? 1 : 0 ;
 	printf("%d\r\n",push_button);
-	while(push_button == 1){
+	if(push_button == 1){
 		UltrasonicActivate(push_button);
 		push_button=0;
 	}
+
 }
 
 void operatorControl() {
