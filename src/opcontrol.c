@@ -359,12 +359,12 @@ void drop_object()//assume lift is at top
 
 void open_claw()
 {
-	digitalWrite(CLAW_PIN, 0);//open claw
+	digitalWrite(CLAW_PIN, 1);//open claw
 	printf("Open_claw");
 }
 void close_claw()
 {
-	digitalWrite(CLAW_PIN, 1);//close claw
+	digitalWrite(CLAW_PIN, 0);//close claw
 	printf("Close_claw");
 }
 
@@ -521,7 +521,7 @@ void test_auto_find_cone()
 					printf("Entered state: %d.%d\r\n",state,substate);
 					visibility_state = 0;
 					width_timer /= 2.0;
-					waited(-1);
+					waited(WAIT_RESET);
 				}
 			}
 			width_timer++;
@@ -534,7 +534,7 @@ void test_auto_find_cone()
 			{
 				substate = 3;
 				printf("Entered state: %d.%d\r\n",state,substate);
-				waited(-1);
+				waited(WAIT_RESET);
 			}
 		}
 		else if (substate == 3) // 1.3 back up proper distance
@@ -544,7 +544,7 @@ void test_auto_find_cone()
 				state = 2;
 				substate = 0;
 				printf("Entered state: %d.%d\r\n",state,substate);
-				waited(-1);
+				waited(WAIT_RESET);
 			}
 			else
 			{
@@ -562,7 +562,7 @@ void test_auto_find_cone()
 			if (waited(LIFT_TIMER*DELAY_ms))// TODO: tweak
 			{
 				substate = 1;
-				waited(-1);
+				waited(WAIT_RESET);
 			}
 			else
 			{
@@ -586,7 +586,7 @@ void test_auto_find_cone()
 				motorSet(MLIFT,MLIFT_POW);
 				digitalWrite(CLAW_PIN, 1);
 				//close_claw();
-				waited(-1);
+				waited(WAIT_RESET);
 			}
 			else
 			{
@@ -603,7 +603,7 @@ void test_auto_find_cone()
 				substate = 0;
 				last_dist = FAR_DIST+CONE_DELTA; // reset find
 				//digitalWrite(CLAW_PIN, 0);// 0 open, 1 closed
-				waited(-1);
+				waited(WAIT_RESET);
 			}
 			else
 			{
@@ -714,8 +714,8 @@ void straigt_forward_auto_score_cone()
 		if (waited2(1000) && (waited(4000) || (dist < SORTA_CLOSE && dist > 0) ))
 		{
 			state = 2;
-			waited(-1);
-			waited2(-1);
+			waited(WAIT_RESET);
+			waited2(WAIT_RESET);
 		}
 		else
 		{
@@ -754,7 +754,7 @@ void straigt_forward_auto_score_cone()
 			{
 				if (waited(40*DELAY_ms)) // 1 sec
 				{
-					waited(-1);
+					waited(WAIT_RESET);
 					state = 3;// enter placing code
 					//arm down
 					printf("Entered state: %d.%d\r\n",state,substate);
@@ -778,7 +778,7 @@ void straigt_forward_auto_score_cone()
 	{
 		if (waited(500))
 		{
-			waited(-1);
+			waited(WAIT_RESET);
 			state = 4;
 			open_claw();
 		}

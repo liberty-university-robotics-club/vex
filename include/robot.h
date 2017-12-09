@@ -55,12 +55,9 @@
 #define ENC_RBB  6
 #define ENC_RFT  7
 #define ENC_RFB  8
-#define CLAW_PIN 12
-
-//#define IME_IR 0
-
-#define US_portPing 10
 #define US_portEcho 9
+#define US_portPing 10
+#define CLAW_PIN 12
 
 #define TARGET_POW 64
 #define POS_POW 64
@@ -86,6 +83,7 @@ Ultrasonic US;
 #define LIFT_TIMEOUT_s 2.5 //float
 #define CLAW_TIMEOUT_s 3.5 //float
 //#define HOIST_PERIOD_s .25 //float
+#define WAIT_RESET -1
 
 
 #define JOY_DEAD_T 40
