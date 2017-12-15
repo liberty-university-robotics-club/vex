@@ -8,8 +8,7 @@
 #include "controlloop.h"
 #include "opcontrol.h"
 
-Ultrasonic US1;
-Ultrasonic US2;
+
 
 void controlmotors(int lb, int lf, int rb, int rf)
 {
@@ -215,7 +214,7 @@ void UltrasonicActivate(int push_button){
 			printf("The distance from the cone is %d centimeters \r\n", distance2);
 			delay(1000);
 			ultrasonicShutdown(US2);}*/
-		else if(US1 != NULL || US2 != NULL){
+		else if(US1 != NULL /*|| US2 != NULL*/){
 			US1=ultrasonicInit(US_portEcho,US_portPing);
 			//US2=ultrasonicInit(10,12);	
 	}
