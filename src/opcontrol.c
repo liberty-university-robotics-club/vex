@@ -204,20 +204,20 @@ void op_lift()
 void UltrasonicActivate(int push_button){
 	static int distance1 = 0;
 	//static int distance2 = 0;
-		if(US1 == NULL){
+		//if(US1 == NULL){
 			distance1 = ultrasonicGet(US1);
 			printf("The distance from the cone is %d centimeters \r\n", distance1);
 			delay(1000);
-			ultrasonicShutdown(US1);}
+			ultrasonicShutdown(US1);//}
 		/*else if(US2 == NULL){
 			distance2 = ultrasonicGet(US2);
 			printf("The distance from the cone is %d centimeters \r\n", distance2);
 			delay(1000);
 			ultrasonicShutdown(US2);}*/
-		else if(US1 != NULL /*|| US2 != NULL*/){
+		//else if(US1 != NULL /*|| US2 != NULL*/){
 			US1=ultrasonicInit(US_portEcho,US_portPing);
 			//US2=ultrasonicInit(10,12);	
-	}
+	//}
 	
 }
 //----------------------------------------------------------------------
