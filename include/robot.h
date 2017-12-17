@@ -1,8 +1,6 @@
 #ifndef robot_h
 #define robot_h
-#ifndef API_H_
 #include "API.h"
-#endif
 //#define GODDARD
 #define IMP
 

@@ -78,284 +78,16 @@ void controldrive(int t, int f, int s)
 	);
 }
 
-void op_auto_drive(bool auto_mode)// add parameters
+void op_drive()
 {
 	int joyforwardT  = (abs(joystickGetAnalog(1,JOY_FORWARD_T )) > JOY_DEAD_T) ? joystickGetAnalog(1,JOY_FORWARD_T ) : 0;
 	int joyforwardS  = (abs(joystickGetAnalog(1,JOY_FORWARD_S )) > JOY_DEAD_T) ? joystickGetAnalog(1,JOY_FORWARD_S ) : 0;
 	int joyturnT     = (abs(joystickGetAnalog(1,JOY_TURN_T    )) > JOY_DEAD_T) ? joystickGetAnalog(1,JOY_TURN_T    ) : 0;
 	int joystrafingS = (abs(joystickGetAnalog(1,JOY_STRAFING_S)) > JOY_DEAD_T) ? joystickGetAnalog(1,JOY_STRAFING_S) : 0;
-	
-	if (!auto_mode)
-	{
-		
-	}
-	else
-	{
-		
-	}
-	
 	controldrive(joyturnT,joyforwardT+joyforwardS,joystrafingS);
+
 }
 
-void op_drive()
-{
-	op_auto_drive(false);// add arguments
-}
-//----------------------------------------------------------------------
-/*
-bool isLiftUp()
-{
-	return !digitalRead(BTN_UP );//switch pressed is low => 0
-}
-
-bool isLiftDown()
-{
-	return !digitalRead(BTN_DWN);//switch pressed is low => 0
-}
-
-int op_auto_lift(bool auto_mode, bool begin_auto, bool go_up)
-{
-	//first call:
-	static int lift_auto=0;
-	static int lift_pow=0;
-	static float timer=0;
-	
-	//every call:
-	lift_pow=0;
-	if(!auto_mode)//if in operator mode:
-	{
-		// get op button input
-		lift_pow += joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_UP   ) ? MLI_POW : 0 ;
-		lift_pow -= joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_DOWN ) ? MLI_POW : 0 ;
-		lift_pow += joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_UP   ) ? MLI_POW : 0 ;
-		lift_pow -= joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_DOWN ) ? MLI_POW : 0 ;
-		
-		lift_pow += joystickGetDigital( 1 , JOY_LIFT_SLOW , JOY_UP   ) ? MLI_SLOW : 0 ;
-		lift_pow -= joystickGetDigital( 1 , JOY_LIFT_SLOW , JOY_DOWN ) ? MLI_SLOW : 0 ;
-		lift_pow += joystickGetDigital( 2 , JOY_LIFT_SLOW , JOY_UP   ) ? MLI_SLOW : 0 ;
-		lift_pow -= joystickGetDigital( 2 , JOY_LIFT_SLOW , JOY_DOWN ) ? MLI_SLOW : 0 ;
-		
-	//	// if op buttons pressed, cancel auto button records
-	//	if(!lift_pow&&lift_auto){lift_pow=lift_auto;}
-	//	else{lift_auto=0;}
-		
-		#ifdef JOY_LIFT_AUTO
-		// if auto buttons pressed, then record state
-	//	if( joystickGetDigital( 1 , JOY_LIFT_AUTO , JOY_UP   )
-	//	 || joystickGetDigital( 2 , JOY_LIFT_AUTO , JOY_UP   )
-	//	){
-	//		lift_auto = MLI_POW;
-	//	}
-	//	if( joystickGetDigital( 1 , JOY_LIFT_AUTO , JOY_DOWN )
-	//	 || joystickGetDigital( 2 , JOY_LIFT_AUTO , JOY_DOWN )
-	//	){
-	//		lift_auto = -MLI_POW;
-	//	}
-		#endif
-	}
-	//else //autonomous mode code
-	//{
-	//	if (begin_auto)
-	//	{
-	//		lift_auto=go_up?MLI_POW:-MLI_POW;
-	//	}
-	//}
-	//
-	//// limit switches - don't stall motors if bottomed out
-	//if(lift_pow>0&&  isLiftUp()){lift_pow=0;lift_auto=0;}
-	//if(lift_pow<0&&isLiftDown()){lift_pow=0;lift_auto=0;}
-	//
-	//// Timeout - it shouldn't take that long to raise/lower!
-	//if(lift_pow){timer+=.001*DELAY_ms;}
-	//else{timer=0;}
-	//if(timer > LIFT_TIMEOUT_s){timer=0;lift_pow=0;lift_auto=0;}
-	
-	// raw motor power
-	#ifdef GODDARD
-	motorSet(MIR,lift_pow);
-	motorSet(MLI,-lift_pow);
-	#endif
-	#ifdef PASCAL
-	motorSet(MIR,-lift_pow);
-	motorSet(MLI,lift_pow);
-	motorSet(MLI2,-lift_pow);
-	#endif
-	return lift_pow;
-}
-
-int auto_lift(bool begin_auto, bool go_up)//generalized version of the two following functions:
-{
-	return op_auto_lift(true, begin_auto, go_up);
-}
-
-void start_auto_lift(bool go_up)// to be called once to start lift
-{
-	op_auto_lift(true, true, go_up);
-}
-
-bool continue_auto_lift()//returns 0 when motor is stopped //to be called to constantly update lift and eventually trigger timeout
-{
-	return op_auto_lift(true, false, false);
-}
-
-void op_lift()
-{
-	op_auto_lift(false, false, false);
-}
-
-//----------------------------------------------------------------------
-void op_hoist()
-{
-	#ifdef GODDARD
-	//static float timer=0;
-	int hoist_pow = 0;
-	// get op button input
-	hoist_pow += joystickGetDigital( 1 , JOY_HOIST , JOY_UP   ) ? HOIST_POW : 0 ;
-	hoist_pow -= joystickGetDigital( 1 , JOY_HOIST , JOY_DOWN ) ? HOIST_POW : 0 ;
-	hoist_pow += joystickGetDigital( 2 , JOY_HOIST , JOY_UP   ) ? HOIST_POW : 0 ;
-	hoist_pow -= joystickGetDigital( 2 , JOY_HOIST , JOY_DOWN ) ? HOIST_POW : 0 ;
-	
-	motorSet(MHOIST,hoist_pow);
-	#endif
-	//
-	////keep track of time
-	//if(hoist_pow){timer+=.001*DELAY_ms;}
-	//else{timer=0;}
-	////set pistons based on time
-	////digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .30*HOIST_PERIOD_s)));
-	////digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.15*HOIST_PERIOD_s < timer && timer < .75*HOIST_PERIOD_s)));
-	////digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .50*HOIST_PERIOD_s)));
-	////digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.25*HOIST_PERIOD_s < timer && timer < .75*HOIST_PERIOD_s)));
-	//digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .50*HOIST_PERIOD_s)));
-	//digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.50*HOIST_PERIOD_s < timer && timer < 1.0*HOIST_PERIOD_s)));
-	//if(timer>=HOIST_PERIOD_s)
-	//{
-	//	//printf("It has been %f secs.\r\n",timer);
-	//	timer=0;
-	//}
-}
-
-void op_hook()
-{
-	#ifdef GODDARD
-	int hook_pow = 0;
-	// get op button input
-	hook_pow += joystickGetDigital( 1 , JOY_LIFT , JOY_UP   ) ? HOOK_POW : 0 ;
-	hook_pow -= joystickGetDigital( 1 , JOY_LIFT , JOY_DOWN ) ? HOOK_POW : 0 ;
-	hook_pow += joystickGetDigital( 2 , JOY_LIFT , JOY_UP   ) ? HOOK_POW : 0 ;
-	hook_pow -= joystickGetDigital( 2 , JOY_LIFT , JOY_DOWN ) ? HOOK_POW : 0 ;
-	
-	motorSet(MHOOK,-hook_pow);
-	#endif
-}
-//----------------------------------------------------------------------
-int op_auto_claw(bool auto_mode, bool begin_auto, bool clench)
-{
-	#ifdef PASCAL
-	
-	/////////////////////////////////////////////
-	////simple working op mode code
-	////static float timer=0;
-	//int claw_pow = 0;
-	//
-	//if (!auto_mode)
-	//{
-	//	// get op button input
-	//	claw_pow += joystickGetDigital( 1 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
-	//	claw_pow -= joystickGetDigital( 1 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
-	//	claw_pow += joystickGetDigital( 2 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
-	//	claw_pow -= joystickGetDigital( 2 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
-	//}
-	//else // if (auto_mode)
-	//{
-	//	//if (begin_auto)
-	//	//{
-	//	//	claw_auto=clench?MLIFT_POW:-MLIFT_POW;
-	//	//}
-	//}
-	//motorSet(MLIFT,claw_pow);
-	/////////////////////////////////////////////
-	
-	
-	//first call:
-	static int claw_auto=0;
-	static int claw_pow=0;
-	static float timer=0;
-	
-	//every call:
-	claw_pow=0;
-	if(!auto_mode)//if in operator mode:
-	{
-		// get op button input
-		claw_pow += joystickGetDigital( 1 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
-		claw_pow -= joystickGetDigital( 1 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
-		claw_pow += joystickGetDigital( 2 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
-		claw_pow -= joystickGetDigital( 2 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
-		
-		// if op buttons pressed, cancel auto button records
-		if(!claw_pow&&claw_auto){claw_pow=claw_auto;}
-		else{claw_auto=0;}
-		
-	}
-	else //autonomous mode code
-	{
-		if (begin_auto)
-		{
-			claw_auto=clench?MLIFT_POW:-MLIFT_POW;
-		}
-	}
-	
-	//// Are we sensing this for the claw?
-	//// limit switches - don't stall motors if bottomed out
-	//if(claw_pow>0&&  isclawUp()){claw_pow=0;claw_auto=0;}
-	//if(claw_pow<0&&isclawDown()){claw_pow=0;claw_auto=0;}
-	
-	// Timeout - it shouldn't take that long to raise/lower!
-	if(claw_pow){timer+=.001*DELAY_ms;}
-	else{timer=0;}
-	if(timer > CLAW_TIMEOUT_s){timer=0;claw_pow=0;claw_auto=0;}
-	
-	claw_pow*=-1;
-	
-	// raw motor power
-	motorSet(MLIFT,claw_pow);
-	return claw_pow;
-	
-	#endif
-	return 0;
-}
-/////////////////////////////
-int auto_claw(bool begin_auto, bool clench)//generalized version of the two following functions:
-{
-	return op_auto_claw(true, begin_auto, clench);
-}
-
-void start_auto_claw(bool clench)// to be called once to start lift
-{
-	op_auto_claw(true, true, clench);
-}
-
-bool continue_auto_claw()//returns 0 when motor is stopped //to be called to constantly update lift and eventually trigger timeout
-{
-	return op_auto_claw(true, false, false);
-}
-
-void op_claw()
-{
-	op_auto_claw(false, false, false);
-}
-
-//move to auto.c
-void drop_object()//assume lift is at top
-{
-	//go forward until hit;
-	start_auto_lift(false);
-	
-	
-	
-	
-}
-//*/
 
 void open_claw()
 {
@@ -368,6 +100,9 @@ void close_claw()
 	printf("Close_claw");
 }
 
+// TODO: maybe reset when done
+// maybe not though since done may not occur due to other conditions and
+// this would encourage lazy management of the timer.
 int waited(int ms)// true if done, false if still waiting.
 {
 	static int timer = -1;
@@ -669,6 +404,28 @@ void test_auto_find_cone()
 	//*/
 }
 
+void wheelie()
+{
+	int button = 0; // Only if button is pressed
+	button += joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_LEFT ) ? 1 : 0 ;
+	button -= joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_RIGHT) ? 1 : 0 ;
+	button += joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_LEFT ) ? 1 : 0 ;
+	button -= joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_RIGHT) ? 1 : 0 ;
+	if(!button) // reset and exit
+	{
+		state = 0;
+		substate = 0;
+		last_button = 0;
+		return;
+	}
+	if (state == 0)
+	{
+		
+		state = 1;
+	}
+	
+}
+
 void straigt_forward_auto_score_cone()
 {
 	static int switchflag = 1; // initial direction 1 or -1
@@ -800,6 +557,7 @@ void straigt_forward_auto_score_cone()
 
 void stateful_claw_arm()
 {
+	// ARM ***********************************************************//
 	int lift_pow = 0;
 	lift_pow += joystickGetDigital( 1 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
 	lift_pow -= joystickGetDigital( 1 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
@@ -808,17 +566,13 @@ void stateful_claw_arm()
 	
 	motorSet(MLIFT,-lift_pow);
 	
-	
-	
-	
-	
+	// CLAW **********************************************************//
 	static int last_claw_bool = 0;
 	int claw_bool = 0;
 	int claw_state = 0;
 	claw_state += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
-	claw_state += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
-	
 	claw_state -= joystickGetDigital( 1 , JOY_CLAW , JOY_DOWN ) ? 1 : 0 ;
+	claw_state += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
 	claw_state -= joystickGetDigital( 2 , JOY_CLAW , JOY_DOWN ) ? 1 : 0 ;
 	
 	if (claw_state > 0)
@@ -875,12 +629,19 @@ void stateful_claw_arm()
 //	motorSet(MLIFT,-lift_pow);
 //}
 
+
+
+
+
+
+
 void opcontrol()
 {
 	op_drive();
 	stateful_claw_arm();
 	//test_auto_find_cone();
 	straigt_forward_auto_score_cone();
+	wheelie();
 	//op_lift();
 	//op_claw();
 	//op_hoist();

@@ -114,7 +114,8 @@ void autonomous()
 			//done
 		}
 		
-		
+		//delay ms
+		delay(DELAY_ms);	
 	}
 }
 
