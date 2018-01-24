@@ -66,6 +66,8 @@
 #define LIFT_TIMER 20
 #define CLAW_TIMER 20
 
+#define POW_WHEELIE 127
+
 
 void* ENC_LB;
 void* ENC_LF;

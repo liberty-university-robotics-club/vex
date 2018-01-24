@@ -406,6 +406,9 @@ void test_auto_find_cone()
 
 void wheelie()
 {
+	static int state;
+	static int substate;
+	static int last_button;
 	int button = 0; // Only if button is pressed
 	button += joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_LEFT ) ? 1 : 0 ;
 	button -= joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_RIGHT) ? 1 : 0 ;
@@ -420,8 +423,57 @@ void wheelie()
 	}
 	if (state == 0)
 	{
-		
+		waited(WAIT_RESET);//Need more of this.
+		waited2(WAIT_RESET);
 		state = 1;
+		printf("Entered state: %d.%d\r\n",state,substate);
+	}
+	else if (state == 1)
+	{
+		if (waited(20*DELAY_ms))//<<<<<-----------This breaks right now.
+		{
+			state = 2;
+			waited(WAIT_RESET);
+			printf("Entered state: %d.%d\r\n",state,substate);
+		}
+		//go backward
+		controldrive(0,-POW_WHEELIE,0);
+	}
+	else if (state == 2)
+	{
+		if (waited(20*DELAY_ms))
+		{
+			state = 3;
+			waited(WAIT_RESET);
+			printf("Entered state: %d.%d\r\n",state,substate);
+		}
+		//go backward
+		controldrive(0,-POW_WHEELIE,0);
+		// raise arm
+		motorSet(MLIFT,-MLIFT_POW);
+	}
+	else if (state == 3)
+	{
+		if (waited(20*DELAY_ms))
+		{
+			state = 4;
+			waited(WAIT_RESET);
+			printf("Entered state: %d.%d\r\n",state,substate);
+		}
+		//go forward
+		controldrive(0,POW_WHEELIE,0);
+		//lower arm
+		motorSet(MLIFT,MLIFT_POW);
+	}
+	else if (state == 4)
+	{
+		if (waited(20*DELAY_ms))
+		{
+			state = 5;
+			waited(WAIT_RESET);
+			printf("Entered state: %d.%d\r\n",state,substate);
+		}
+		//stop
 	}
 	
 }
