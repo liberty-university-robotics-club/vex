@@ -20,6 +20,8 @@ double na(double t) {//normalize angle
 	return fmod(t,2*PI);
 }
 void rotate(tank *v, double dh) {
+	double s=0.01;
+	dh=dh*s;
 	v->h=v->h-dh;
 	v->h=na(v->h);
 	
@@ -30,12 +32,18 @@ void simtank(tank *v,int lb, int lf, int rb, int rf) {
 	//except that the motors are flipped in polarity so invert all that
 	//except we now the encoders are flipped so we don't
 	double dx,dy,dh;
+	double s=0.5;
+	lb=lb*s;
+	lf=lf*s;
+	rf=rf*s;
+	rb=rb*s;
 	//if(fabs(lspeed-rspeed)>100)
 //		v->h=v->h+((lspeed-rspeed))/33.0;//TODO: use math
 	
-	dh=(lb+lf+rb+rf)/4;
-	dx=(-lb+lf-rb+rf)/4;
-	dy=(lb+lf-rf-rb)/4;
+	dh=(lb+lf+(rb+rf))/4;
+	//dh=(lb-rf)/4.;
+	dx=(-lb+lf-rb+rf)/4.;
+	dy=(lb+lf-rf-rb)/4.;
 	rotate(v,dh);
 
 	v->x=v->x+(dy*cos(v->h));

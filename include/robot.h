@@ -45,14 +45,18 @@
 
 // SENSOR PINS + CONSTANTS
 
-#define ENC_LBT  1
+/*#define ENC_LBT  1
 #define ENC_LBB  2
 #define ENC_LFT  3
 #define ENC_LFB  4
 #define ENC_RBT  5
 #define ENC_RBB  6
 #define ENC_RFT  7
-#define ENC_RFB  8
+#define ENC_RFB  8*/
+#define EMLB 1
+#define EMLF 2
+#define EMRB 3
+#define EMRF 4
 #define US_portEcho 9
 #define US_portPing 10
 #define CLAW_PIN 12
