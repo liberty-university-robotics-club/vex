@@ -583,20 +583,34 @@ void straigt_forward_auto_score_cone()
 			controldrive(switchflag*TARGET_POW/2,0,0);// turn
 		}
 	}
-	else if (state == 3) // 2.0 score
+	else if (state == 3)
 	{
-		if (waited(500))
+		if (waited(125))
 		{
 			waited(WAIT_RESET);
 			state = 4;
+			controldrive(0,0,0);
+		}
+		else
+		{
+			controldrive(0,-128,0);
+		}
+	}
+	else if (state == 4) // 2.0 score
+	{
+		if (waited(3000))
+		{
+			waited(WAIT_RESET);
+			state = 5;
 			open_claw();
 		}
 		else
 		{
-			motorSet(MLIFT,MLIFT_POW); // arm down
+			//motorSet(MLIFT,MLIFT_POW); // arm down
+			motorSet(MLIFT,0);
 		}
 	}
-	else if (state == 4)
+	else if (state == 5)
 	{
 		//open_claw();
 	}

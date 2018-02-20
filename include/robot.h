@@ -57,9 +57,9 @@
 #define US_portPing 10
 #define CLAW_PIN 12
 
-#define TARGET_POW 64
+#define TARGET_POW 128 //64
 #define POS_POW 64
-#define TARGET_DIST 20
+#define TARGET_DIST 30 //20
 #define CONE_DELTA 10
 #define FAR_DIST 100
 #define SORTA_CLOSE 50
