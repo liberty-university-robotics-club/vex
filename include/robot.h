@@ -1,11 +1,15 @@
 #ifndef robot_h
 #define robot_h
+<<<<<<< HEAD
 
 //Includes
 #include "API.h"
 
+=======
+#include "API.h"
+>>>>>>> 35f32d4d8c4a95f7b8773357600c433fca1ddec7
 //#define GODDARD
-#define PASCAL
+#define IMP
 
 // CONTROLLER PINS + CONSTANTS
 
@@ -14,44 +18,45 @@
 #define JOY_TURN_T     1
 #define JOY_STRAFING_S 4
 
-#define JOY_LIFT_OP    5
+#define JOY_LIFT       5
 #define JOY_CLAW       6
-#define JOY_LIFT_SLOW 7
-//#define JOY_LIFT_AUTO  7
-#define JOY_HOIST      8
+#define JOY_AUTO_TEST  7
+#define JOY_OP_AUTO    8
 
 
 // MOTOR PINS + CONSTANTS
 
-#define MLB 2			//
-#define MLF 3			//
-#define MRB 4			//
-#define MRF 5			//
+#define MLB 2			
+#define MLF 3			
+#define MRB 4			
+#define MRF 5			
 
-#define MIR 6			//
-#define MIR_POW 20
+#define MLIFTLB 6
+#define MLIFTRB 7
+#define MLIFTLT 8
+#define MLIFTRT 9
 
-#define MLI 7			//
-#define MLI_POW 127
-#define MLI_SLOW 50
+#define MCLAWPIV 10
+#define MCLAWP 11
 
-#ifdef PASCAL
-#define MCLAW 8			//
-#define MLI2 9			//
-#define MCLAW_POW 127
+#define MGLIFTL 1
+#define MGLIFTR 12
+
+#ifdef IMP
+#define MLIFT 8			
+#define MLIFT_POW 127
 #endif
 
 #ifdef GODDARD
-#define MHOIST 8		//
-#define MHOOK 9			//
-#define HOIST_POW 127
-#define HOOK_POW 127
 #endif
 
+<<<<<<< HEAD
 // Ultrasonic Sensors
 Ultrasonic US1;
 Ultrasonic US2;
 
+=======
+>>>>>>> 35f32d4d8c4a95f7b8773357600c433fca1ddec7
 #define FORWARD_lb 1
 #define FORWARD_lf 1
 #define FORWARD_rb -1
@@ -65,38 +70,41 @@ Ultrasonic US2;
 
 // SENSOR PINS + CONSTANTS
 
-#define ENC_LBT  1
+/*#define ENC_LBT  1
 #define ENC_LBB  2
 #define ENC_LFT  3
 #define ENC_LFB  4
 #define ENC_RBT  5
 #define ENC_RBB  6
 #define ENC_RFT  7
-#define ENC_RFB  8
-#define BTN_UP   9
-#define BTN_DWN 10
+#define ENC_RFB  8*/
+#define EMLB 1
+#define EMLF 2
+#define EMRB 3
+#define EMRF 4
 
-#define IME_IR 0
-
-#define US_portPing 10
 #define US_portEcho 9
+#define US_portPing 10
+#define CLAW_PIN 12
 
-#define TARGET_POW 64
+#define TARGET_POW 128 //64
 #define POS_POW 64
-#define TARGET_DIST 20
+#define TARGET_DIST 30 //20
 #define CONE_DELTA 10
 #define FAR_DIST 100
 #define SORTA_CLOSE 50
 #define LIFT_TIMER 20
 #define CLAW_TIMER 20
-#define CLAW_JOY 8
 
-#define CLAW_PIN 12
+#define POW_WHEELIE 127
+
 
 void* ENC_LB;
 void* ENC_LF;
 void* ENC_RB;
 void* ENC_RF;
+
+Ultrasonic US;
 
 
 // OTHER THRESHOLDS AND CONSTANTS
@@ -105,6 +113,7 @@ void* ENC_RF;
 #define LIFT_TIMEOUT_s 2.5 //float
 #define CLAW_TIMEOUT_s 3.5 //float
 //#define HOIST_PERIOD_s .25 //float
+#define WAIT_RESET -1
 
 
 #define JOY_DEAD_T 40
