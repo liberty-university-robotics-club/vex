@@ -19,13 +19,24 @@
 
 // MOTOR PINS + CONSTANTS
 
-#define MLB 2			//
-#define MLF 3			//
-#define MRB 4			//
-#define MRF 5			//
+#define MLB 2			
+#define MLF 3			
+#define MRB 4			
+#define MRF 5			
+
+#define MLIFTLB 6
+#define MLIFTRB 7
+#define MLIFTLT 8
+#define MLIFTRT 9
+
+#define MCLAWPIV 10
+#define MCLAWP 11
+
+#define MGLIFTL 1
+#define MGLIFTR 12
 
 #ifdef IMP
-#define MLIFT 8			//
+#define MLIFT 8			
 #define MLIFT_POW 127
 #endif
 
@@ -57,6 +68,7 @@
 #define EMLF 2
 #define EMRB 3
 #define EMRF 4
+
 #define US_portEcho 9
 #define US_portPing 10
 #define CLAW_PIN 12
