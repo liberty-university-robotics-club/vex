@@ -134,7 +134,7 @@ int waited2(int ms)// true if done, false if still waiting.
 
 void test_auto_find_cone()
 {
-	/*
+	//*
 	static int switchflag = 1; // initial direction 1 or -1
 	static int state = 0; // 0 is finding cone, 1 is positioning on cone
 	static int substate = 0; // depends on state
@@ -145,10 +145,10 @@ void test_auto_find_cone()
 	static int last_button = 0;
 	
 	int button = 0; // Only if button is pressed
-	button += joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_UP   ) ? 1 : 0 ;
-	button -= joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_DOWN ) ? 1 : 0 ;
-	button += joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_UP   ) ? 1 : 0 ;
-	button -= joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_DOWN ) ? 1 : 0 ;
+	button += joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_LEFT ) ? 1 : 0 ;
+	button -= joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_RIGHT) ? 1 : 0 ;
+	button += joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_LEFT ) ? 1 : 0 ;
+	button -= joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_RIGHT) ? 1 : 0 ;
 	if(!button) // reset and exit
 	{
 		state = 0;
@@ -283,9 +283,9 @@ void test_auto_find_cone()
 			}
 			else
 			{
-						//controldrive(0,0,0);
+				//controldrive(0,0,0);
 				controldrive(0,-POS_POW,0);
-						//motorSet(MLIFT,MLIFT_POW);
+				//motorSet(MLIFT,MLIFT_POW);
 			}
 		}
 	}
@@ -309,7 +309,7 @@ void test_auto_find_cone()
 			// close claw code here
 			motorSet(MLIFT,MLIFT_POW);
 			digitalWrite(CLAW_PIN, 1);
-			//close_claw();
+			close_claw();
 			substate = 2;
 		}
 		else if (substate == 2) // Closing claw
@@ -319,14 +319,14 @@ void test_auto_find_cone()
 			{
 				substate = 3;
 				motorSet(MLIFT,MLIFT_POW);
-				digitalWrite(CLAW_PIN, 1);
-				//close_claw();
+				//digitalWrite(CLAW_PIN, 1);
+				close_claw();
 				waited(WAIT_RESET);
 			}
 			else
 			{
-				digitalWrite(CLAW_PIN, 1);
-				//close_claw();
+				//digitalWrite(CLAW_PIN, 1);
+				close_claw();
 			}
 		}
 		else if (substate == 3) // arm going up
@@ -410,10 +410,10 @@ void wheelie()
 	static int substate;
 	static int last_button;
 	int button = 0; // Only if button is pressed
-	button += joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_LEFT ) ? 1 : 0 ;
-	button -= joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_RIGHT) ? 1 : 0 ;
-	button += joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_LEFT ) ? 1 : 0 ;
-	button -= joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_RIGHT) ? 1 : 0 ;
+	button += joystickGetDigital( 1 , JOY_OP_AUTO , JOY_LEFT ) ? 1 : 0 ;
+	button -= joystickGetDigital( 1 , JOY_OP_AUTO , JOY_RIGHT) ? 1 : 0 ;
+	button += joystickGetDigital( 2 , JOY_OP_AUTO , JOY_LEFT ) ? 1 : 0 ;
+	button -= joystickGetDigital( 2 , JOY_OP_AUTO , JOY_RIGHT) ? 1 : 0 ;
 	if(!button) // reset and exit
 	{
 		state = 0;
@@ -528,7 +528,7 @@ void straigt_forward_auto_score_cone()
 		}
 		else
 		{
-			controldrive(0,TARGET_POW,0);// drive straight
+			controldrive(0,GOAL_POW,0);// drive straight
 		}
 	}
 	else if (state == 2) // 3.0 find Base
@@ -575,12 +575,12 @@ void straigt_forward_auto_score_cone()
 			}
 			else
 			{
-				controldrive(0,TARGET_POW-(FAR_DIST-dist)/3,0);// drive straight
+				controldrive(0,GOAL_POW-(FAR_DIST-dist)/3,0);// drive straight
 			}
 		}
 		else
 		{
-			controldrive(switchflag*TARGET_POW/2,0,0);// turn
+			controldrive(switchflag*GOAL_POW/2,0,0);// turn
 		}
 	}
 	else if (state == 3)
@@ -705,7 +705,7 @@ void opcontrol()
 {
 	op_drive();
 	stateful_claw_arm();
-	//test_auto_find_cone();
+	test_auto_find_cone();
 	straigt_forward_auto_score_cone();
 	wheelie();
 	//op_lift();
