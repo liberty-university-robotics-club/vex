@@ -11,11 +11,7 @@
 #include "controlloop.h"
 #include "opcontrol.h"
 
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 35f32d4d8c4a95f7b8773357600c433fca1ddec7
 void controlmotors(int lb, int lf, int rb, int rf)
 {
 	if(!DONT_MOVE)
@@ -198,7 +194,7 @@ void op_lift()
 	op_auto_lift(false, false, false);
 }
 
-void UltrasonicActivate(int push_button){
+/*void UltrasonicActivate(int push_button){
 	static int distance1 = 0;
 	//static int distance2 = 0;
 		//if(US1 == NULL){
@@ -212,11 +208,11 @@ void UltrasonicActivate(int push_button){
 			delay(1000);
 			ultrasonicShutdown(US2);}*/
 		//else if(US1 != NULL /*|| US2 != NULL*/){
-			US1=ultrasonicInit(US_portEcho,US_portPing);
+			//US1=ultrasonicInit(US_portEcho,US_portPing);
 			//US2=ultrasonicInit(10,12);	
 	//}
 	
-}
+//}
 //----------------------------------------------------------------------
 void op_hoist()
 {
@@ -353,12 +349,11 @@ bool continue_auto_claw()//returns 0 when motor is stopped //to be called to con
 {
 	return op_auto_claw(true, false, false);
 }
-=======
->>>>>>> 35f32d4d8c4a95f7b8773357600c433fca1ddec7
+
 
 }
 
-<<<<<<< HEAD
+
 //move to auto.c
 void drop_object()//assume lift is at top
 {
@@ -372,7 +367,7 @@ void drop_object()//assume lift is at top
 
 void opcontrol()
 {
-	int push_button=0;
+	/*int push_button=0;
 	push_button += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
 	push_button -= joystickGetDigital( 1 , JOY_CLAW , JOY_DOWN ) ? 1 : 0 ;
 	push_button += joystickGetDigital( 0 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
@@ -381,11 +376,11 @@ void opcontrol()
 	if(push_button == 1){
 		UltrasonicActivate(push_button);
 		push_button=0;
-	}
+	}*/
 
 }
 
-=======
+
 
 void open_claw()
 {
@@ -928,10 +923,10 @@ void stateful_claw_arm()
 	lift_pow += joystickGetDigital( 2 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
 	lift_pow -= joystickGetDigital( 2 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
 	
-	motorSet(MLIFTlb,-lift_pow);
-	motorSet(MLIFTrb, lift_pow);
-	motorSet(MLIFTlf,-lift_pow);
-	motorSet(MLIFTrf, lift_pow);
+	motorSet(MLIFTLB,-lift_pow);
+	motorSet(MLIFTRB, lift_pow);
+	motorSet(MLIFTLT,-lift_pow);
+	motorSet(MLIFTRT, lift_pow);
 	
 	
 	// CLAW **********************************************************//
@@ -1019,7 +1014,7 @@ void opcontrol()
 void inittest()//TODO: remove this lazy
 {
 }
->>>>>>> 35f32d4d8c4a95f7b8773357600c433fca1ddec7
+
 void operatorControl() {
 
 	//autonomous(); //TODO: remove this (too lazy to grab joysticks rn)

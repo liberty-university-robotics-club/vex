@@ -1,13 +1,13 @@
 #ifndef robot_h
 #define robot_h
-<<<<<<< HEAD
+
 
 //Includes
 #include "API.h"
 
-=======
+
 #include "API.h"
->>>>>>> 35f32d4d8c4a95f7b8773357600c433fca1ddec7
+
 //#define GODDARD
 #define IMP
 
@@ -50,13 +50,12 @@
 #ifdef GODDARD
 #endif
 
-<<<<<<< HEAD
+
 // Ultrasonic Sensors
 Ultrasonic US1;
 Ultrasonic US2;
 
-=======
->>>>>>> 35f32d4d8c4a95f7b8773357600c433fca1ddec7
+
 #define FORWARD_lb 1
 #define FORWARD_lf 1
 #define FORWARD_rb -1

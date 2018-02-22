@@ -62,22 +62,22 @@ void initializeIO() {
  */
 void initialize() {
 	// drive enc
-	ENC_LB = encoderInit(ENC_LBT,ENC_LBB,FORWARD_lf);
+	/*ENC_LB = encoderInit(ENC_LBT,ENC_LBB,FORWARD_lf);
 	ENC_LF = encoderInit(ENC_LFT,ENC_LFB,FORWARD_lb);
 	ENC_RB = encoderInit(ENC_RBT,ENC_RBB,FORWARD_rf);
-	ENC_RF = encoderInit(ENC_RFT,ENC_RFB,FORWARD_rb);
+	ENC_RF = encoderInit(ENC_RFT,ENC_RFB,FORWARD_rb);*/
 	
-<<<<<<< HEAD
+
 	//lift enc
-	pinMode(BTN_UP ,INPUT);
-	pinMode(BTN_DWN,INPUT);
+	//pinMode(BTN_UP ,INPUT);
+	//pinMode(BTN_DWN,INPUT);
 	
-	US1=ultrasonicInit(US_portEcho,US_portPing);
+	//US1=ultrasonicInit(US_portEcho,US_portPing);
 	//US2=ultrasonicInit(10,12);
 	// Stephen what is this?  LED?
-=======
+
 	US = ultrasonicInit(US_portEcho, US_portPing);//robot.h
 	// Claw Solenoid
->>>>>>> 35f32d4d8c4a95f7b8773357600c433fca1ddec7
+
 	pinMode(CLAW_PIN, OUTPUT);
 }
