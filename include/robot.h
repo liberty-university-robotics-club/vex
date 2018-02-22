@@ -35,16 +35,19 @@
 #endif
 
 #ifdef WALTER
+#define MCLAW 10
 #define MLIFTL 6
 #define MLIFTR 7
 #define MHOIST 8
 #define MHOOK 9
 #define HOIST_POW 127
 #define HOOK_POW 127
+#define MLIFT_POW 127
+#define CLAW_POW 64
+
 
 #endif
 
-#define MLIFT_POW 127
 
 #define FORWARD_lb 1
 #define FORWARD_lf 1

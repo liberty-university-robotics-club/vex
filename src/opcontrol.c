@@ -694,8 +694,9 @@ void quick_claw_arm()
 		digitalWrite(CLAW_PIN, claw_bool);
 	}
 	last_claw_bool = claw_bool;
-	motorSet(MLIFTL,lift_pow);
-	motorSet(MLIFTR,-lift_pow);
+	
+	motorSet(MLIFTL,-lift_pow);
+	motorSet(MLIFTR,lift_pow);
 }
 
 //----------------------------------------------------------------------
@@ -740,7 +741,24 @@ void op_hook()
 	hook_pow += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? HOOK_POW : 0 ;
 	hook_pow -= joystickGetDigital( 2 , JOY_CLAW , JOY_DOWN ) ? HOOK_POW : 0 ;
 	
-	motorSet(MHOOK,-hook_pow);
+	motorSet(MCLAW,hook_pow);
+	#endif
+}
+
+void op_claw()
+{
+	#ifdef WALTER
+	int claw_pow = 0;
+	// get op button input
+	claw_pow += joystickGetDigital( 1 , JOY_HOIST , JOY_LEFT ) ? CLAW_POW : 0 ;
+	claw_pow -= joystickGetDigital( 1 , JOY_HOIST , JOY_RIGHT) ? CLAW_POW : 0 ;
+	claw_pow += joystickGetDigital( 2 , JOY_HOIST , JOY_LEFT ) ? CLAW_POW : 0 ;
+	claw_pow -= joystickGetDigital( 2 , JOY_HOIST , JOY_RIGHT) ? CLAW_POW : 0 ;
+	
+	motorSet(MHOOK,claw_pow);
+	
+	
+	
 	#endif
 }
 //----------------------------------------------------------------------
@@ -752,14 +770,14 @@ void op_hook()
 void opcontrol()
 {
 	op_drive();
-	//quick_claw_arm();
+	quick_claw_arm();
 	op_hoist();
 	op_hook();//fork lift
-	test_auto_find_cone();
-	straigt_forward_auto_score_cone();
+	//test_auto_find_cone();
+	//straigt_forward_auto_score_cone();
 	wheelie();
 	//op_lift();
-	//op_claw();
+	op_claw();
 }
 
 void inittest()//TODO: remove this lazy
