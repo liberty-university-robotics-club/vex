@@ -2,7 +2,8 @@
 #define robot_h
 #include "API.h"
 //#define GODDARD
-#define IMP
+//#define IMP
+#define WALTER
 
 // CONTROLLER PINS + CONSTANTS
 
@@ -16,6 +17,11 @@
 #define JOY_AUTO_TEST  7
 #define JOY_OP_AUTO    8
 
+#define JOY_LIFT_SLOW  7
+//#define JOY_LIFT_AUTO  7
+#define JOY_HOIST      8
+
+
 
 // MOTOR PINS + CONSTANTS
 
@@ -26,11 +32,19 @@
 
 #ifdef IMP
 #define MLIFT 8			//
-#define MLIFT_POW 127
 #endif
 
-#ifdef GODDARD
+#ifdef WALTER
+#define MLIFTL 6
+#define MLIFTR 7
+#define MHOIST 8
+#define MHOOK 9
+#define HOIST_POW 127
+#define HOOK_POW 127
+
 #endif
+
+#define MLIFT_POW 127
 
 #define FORWARD_lb 1
 #define FORWARD_lf 1

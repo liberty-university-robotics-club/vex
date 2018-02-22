@@ -134,7 +134,7 @@ int waited2(int ms)// true if done, false if still waiting.
 
 void test_auto_find_cone()
 {
-	//*
+	/*
 	static int switchflag = 1; // initial direction 1 or -1
 	static int state = 0; // 0 is finding cone, 1 is positioning on cone
 	static int substate = 0; // depends on state
@@ -406,6 +406,7 @@ void test_auto_find_cone()
 
 void wheelie()
 {
+	/*
 	static int state;
 	static int substate;
 	static int last_button;
@@ -475,11 +476,12 @@ void wheelie()
 		}
 		//stop
 	}
-	
+	//*/
 }
 
 void straigt_forward_auto_score_cone()
 {
+	/*
 	static int switchflag = 1; // initial direction 1 or -1
 	static int state = 0; // 0 is finding cone, 1 is positioning on cone
 	static int substate = 0; // depends on state
@@ -616,86 +618,132 @@ void straigt_forward_auto_score_cone()
 	}
 	
 	last_button=button;
-	
+	//*/
 }
 
 
 
-void stateful_claw_arm()
-{
-	// ARM ***********************************************************//
-	int lift_pow = 0;
-	lift_pow += joystickGetDigital( 1 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
-	lift_pow -= joystickGetDigital( 1 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
-	lift_pow += joystickGetDigital( 2 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
-	lift_pow -= joystickGetDigital( 2 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
-	
-	motorSet(MLIFT,-lift_pow);
-	
-	// CLAW **********************************************************//
-	static int last_claw_bool = 0;
-	int claw_bool = 0;
-	int claw_state = 0;
-	claw_state += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
-	claw_state -= joystickGetDigital( 1 , JOY_CLAW , JOY_DOWN ) ? 1 : 0 ;
-	claw_state += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
-	claw_state -= joystickGetDigital( 2 , JOY_CLAW , JOY_DOWN ) ? 1 : 0 ;
-	
-	if (claw_state > 0)
-	{
-		claw_bool = 1;//up - close
-	}
-	else if (claw_state < 0)
-	{
-		claw_bool = 0;//down - open
-	}
-	else
-	{
-		claw_bool = last_claw_bool;// don't change
-	}
-	
-	//printf("asdf: %d\r\n",claw_bool);
-	if (last_claw_bool != claw_bool || last_claw_bool==10)
-	{
-		if(claw_bool==10)
-		{
-			close_claw();//default
-		}
-		else if(claw_bool==1)
-		{
-			close_claw();
-		}
-		else
-		{
-			open_claw();
-		}
-	}
-	last_claw_bool = claw_bool;
-}
-
-//void quick_claw_arm()
+//void stateful_claw_arm()
 //{
-//	static int last_claw_bool = 10;
+//	// ARM ***********************************************************//
 //	int lift_pow = 0;
-//	int claw_bool = 0;
 //	lift_pow += joystickGetDigital( 1 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
 //	lift_pow -= joystickGetDigital( 1 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
 //	lift_pow += joystickGetDigital( 2 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
 //	lift_pow -= joystickGetDigital( 2 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
 //	
-//	claw_bool += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
-//	claw_bool += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
+//	motorSet(MLIFT,-lift_pow);
+//	
+//	// CLAW **********************************************************//
+//	static int last_claw_bool = 0;
+//	int claw_bool = 0;
+//	int claw_state = 0;
+//	claw_state += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
+//	claw_state -= joystickGetDigital( 1 , JOY_CLAW , JOY_DOWN ) ? 1 : 0 ;
+//	claw_state += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
+//	claw_state -= joystickGetDigital( 2 , JOY_CLAW , JOY_DOWN ) ? 1 : 0 ;
+//	
+//	if (claw_state > 0)
+//	{
+//		claw_bool = 1;//up - close
+//	}
+//	else if (claw_state < 0)
+//	{
+//		claw_bool = 0;//down - open
+//	}
+//	else
+//	{
+//		claw_bool = last_claw_bool;// don't change
+//	}
 //	
 //	//printf("asdf: %d\r\n",claw_bool);
 //	if (last_claw_bool != claw_bool || last_claw_bool==10)
 //	{
-//		digitalWrite(CLAW_PIN, claw_bool);
+//		if(claw_bool==10)
+//		{
+//			close_claw();//default
+//		}
+//		else if(claw_bool==1)
+//		{
+//			close_claw();
+//		}
+//		else
+//		{
+//			open_claw();
+//		}
 //	}
 //	last_claw_bool = claw_bool;
-//	motorSet(MLIFT,-lift_pow);
 //}
 
+void quick_claw_arm()
+{
+	static int last_claw_bool = 10;
+	int lift_pow = 0;
+	int claw_bool = 0;
+	lift_pow += joystickGetDigital( 1 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
+	lift_pow -= joystickGetDigital( 1 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
+	lift_pow += joystickGetDigital( 2 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
+	lift_pow -= joystickGetDigital( 2 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
+	
+	claw_bool += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
+	claw_bool += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
+	
+	//printf("asdf: %d\r\n",claw_bool);
+	if (last_claw_bool != claw_bool || last_claw_bool==10)
+	{
+		digitalWrite(CLAW_PIN, claw_bool);
+	}
+	last_claw_bool = claw_bool;
+	motorSet(MLIFTL,lift_pow);
+	motorSet(MLIFTR,-lift_pow);
+}
 
+//----------------------------------------------------------------------
+void op_hoist()
+{
+	#ifdef WALTER
+	//static float timer=0;
+	int hoist_pow = 0;
+	// get op button input
+	hoist_pow += joystickGetDigital( 1 , JOY_HOIST , JOY_UP   ) ? HOIST_POW : 0 ;
+	hoist_pow -= joystickGetDigital( 1 , JOY_HOIST , JOY_DOWN ) ? HOIST_POW : 0 ;
+	hoist_pow += joystickGetDigital( 2 , JOY_HOIST , JOY_UP   ) ? HOIST_POW : 0 ;
+	hoist_pow -= joystickGetDigital( 2 , JOY_HOIST , JOY_DOWN ) ? HOIST_POW : 0 ;
+	
+	motorSet(MHOIST,hoist_pow);
+	#endif
+	//
+	////keep track of time
+	//if(hoist_pow){timer+=.001*DELAY_ms;}
+	//else{timer=0;}
+	////set pistons based on time
+	////digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .30*HOIST_PERIOD_s)));
+	////digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.15*HOIST_PERIOD_s < timer && timer < .75*HOIST_PERIOD_s)));
+	////digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .50*HOIST_PERIOD_s)));
+	////digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.25*HOIST_PERIOD_s < timer && timer < .75*HOIST_PERIOD_s)));
+	//digitalWrite(hoist_pow>0?HOIST1:HOIST2,(!(0.0*HOIST_PERIOD_s < timer && timer < .50*HOIST_PERIOD_s)));
+	//digitalWrite(hoist_pow>0?HOIST2:HOIST1,(!(.50*HOIST_PERIOD_s < timer && timer < 1.0*HOIST_PERIOD_s)));
+	//if(timer>=HOIST_PERIOD_s)
+	//{
+	//	//printf("It has been %f secs.\r\n",timer);
+	//	timer=0;
+	//}
+}
+
+void op_hook()
+{
+	#ifdef WALTER
+	int hook_pow = 0;
+	// get op button input
+	hook_pow += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? HOOK_POW : 0 ;
+	hook_pow -= joystickGetDigital( 1 , JOY_CLAW , JOY_DOWN ) ? HOOK_POW : 0 ;
+	hook_pow += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? HOOK_POW : 0 ;
+	hook_pow -= joystickGetDigital( 2 , JOY_CLAW , JOY_DOWN ) ? HOOK_POW : 0 ;
+	
+	motorSet(MHOOK,-hook_pow);
+	#endif
+}
+//----------------------------------------------------------------------
 
 
 
@@ -704,14 +752,14 @@ void stateful_claw_arm()
 void opcontrol()
 {
 	op_drive();
-	stateful_claw_arm();
+	//quick_claw_arm();
+	op_hoist();
+	op_hook();//fork lift
 	test_auto_find_cone();
 	straigt_forward_auto_score_cone();
 	wheelie();
 	//op_lift();
 	//op_claw();
-	//op_hoist();
-	//op_hook();//fork lift
 }
 
 void inittest()//TODO: remove this lazy
