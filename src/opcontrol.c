@@ -86,15 +86,15 @@ void op_drive()
 	int joyturnT     = (abs(joystickGetAnalog(1,JOY_TURN_T    )) > JOY_DEAD_T) ? joystickGetAnalog(1,JOY_TURN_T    ) : 0;
 	int joystrafingS = (abs(joystickGetAnalog(1,JOY_STRAFING_S)) > JOY_DEAD_T) ? joystickGetAnalog(1,JOY_STRAFING_S) : 0;
 	controldrive(joyturnT,joyforwardT+joyforwardS,joystrafingS);
-<<<<<<< HEAD
+
 }
 
-void op_drive()
+/*void op_drive()
 {
 	op_auto_drive(false);// add arguments
-}
+}*/
 //----------------------------------------------------------------------
-bool isLiftUp()
+/*bool isLiftUp()
 {
 	return !digitalRead(BTN_UP );//switch pressed is low => 0
 }
@@ -102,9 +102,9 @@ bool isLiftUp()
 bool isLiftDown()
 {
 	return !digitalRead(BTN_DWN);//switch pressed is low => 0
-}
+}*/
 
-int op_auto_lift(bool auto_mode, bool begin_auto, bool go_up)
+/*int op_auto_lift(bool auto_mode, bool begin_auto, bool go_up)
 {
 	//first call:
 	static int lift_auto=0;
@@ -172,9 +172,9 @@ int op_auto_lift(bool auto_mode, bool begin_auto, bool go_up)
 	motorSet(MLI2,-lift_pow);
 	#endif
 	return lift_pow;
-}
+}*/
 
-int auto_lift(bool begin_auto, bool go_up)//generalized version of the two following functions:
+/*int auto_lift(bool begin_auto, bool go_up)//generalized version of the two following functions:
 {
 	return op_auto_lift(true, begin_auto, go_up);
 }
@@ -187,12 +187,12 @@ void start_auto_lift(bool go_up)// to be called once to start lift
 bool continue_auto_lift()//returns 0 when motor is stopped //to be called to constantly update lift and eventually trigger timeout
 {
 	return op_auto_lift(true, false, false);
-}
+}*/
 
-void op_lift()
+/*void op_lift()
 {
 	op_auto_lift(false, false, false);
-}
+}*/
 
 /*void UltrasonicActivate(int push_button){
 	static int distance1 = 0;
@@ -351,11 +351,11 @@ bool continue_auto_claw()//returns 0 when motor is stopped //to be called to con
 }
 
 
-}
+
 
 
 //move to auto.c
-void drop_object()//assume lift is at top
+/*void drop_object()//assume lift is at top
 {
 	//go forward until hit;
 	start_auto_lift(false);
@@ -363,11 +363,11 @@ void drop_object()//assume lift is at top
 	
 	
 	
-}
+}*/
 
-void opcontrol()
+/*void opcontrol()
 {
-	/*int push_button=0;
+	int push_button=0;
 	push_button += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
 	push_button -= joystickGetDigital( 1 , JOY_CLAW , JOY_DOWN ) ? 1 : 0 ;
 	push_button += joystickGetDigital( 0 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
@@ -376,9 +376,9 @@ void opcontrol()
 	if(push_button == 1){
 		UltrasonicActivate(push_button);
 		push_button=0;
-	}*/
+	}
 
-}
+}*/
 
 
 
