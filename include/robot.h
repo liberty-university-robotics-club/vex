@@ -43,6 +43,7 @@
 #define HOIST_POW 127
 #define HOOK_POW 127
 #define MLIFT_POW 127
+#define MLIFT_SLOW -15 //actually positive
 #define CLAW_POW 64
 
 

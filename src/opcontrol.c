@@ -677,13 +677,14 @@ void straigt_forward_auto_score_cone()
 
 void quick_claw_arm()
 {
+	/*
 	static int last_claw_bool = 10;
 	int lift_pow = 0;
 	int claw_bool = 0;
-	lift_pow += joystickGetDigital( 1 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
-	lift_pow -= joystickGetDigital( 1 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
-	lift_pow += joystickGetDigital( 2 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW : 0 ;
-	lift_pow -= joystickGetDigital( 2 , JOY_LIFT , JOY_DOWN ) ? MLIFT_POW : 0 ;
+	lift_pow += joystickGetDigital( 1 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW  : 0 ;
+	lift_pow -= joystickGetDigital( 1 , JOY_LIFT , JOY_DOWN ) ? MLIFT_SLOW : 0 ;
+	lift_pow += joystickGetDigital( 2 , JOY_LIFT , JOY_UP   ) ? MLIFT_POW  : 0 ;
+	lift_pow -= joystickGetDigital( 2 , JOY_LIFT , JOY_DOWN ) ? MLIFT_SLOW : 0 ;
 	
 	claw_bool += joystickGetDigital( 1 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
 	claw_bool += joystickGetDigital( 2 , JOY_CLAW , JOY_UP   ) ? 1 : 0 ;
@@ -694,7 +695,9 @@ void quick_claw_arm()
 		digitalWrite(CLAW_PIN, claw_bool);
 	}
 	last_claw_bool = claw_bool;
-	
+	//*/
+	int value = joystickGetAnalog(2,JOY_FORWARD_S );
+	int lift_pow = (abs(value) > JOY_DEAD_T) ? value : 0;
 	motorSet(MLIFTL,-lift_pow);
 	motorSet(MLIFTR,lift_pow);
 }
