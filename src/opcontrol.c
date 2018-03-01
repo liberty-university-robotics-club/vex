@@ -677,7 +677,7 @@ void straigt_forward_auto_score_cone()
 
 void quick_claw_arm()
 {
-	/*
+	//*
 	static int last_claw_bool = 10;
 	int lift_pow = 0;
 	int claw_bool = 0;
@@ -696,8 +696,8 @@ void quick_claw_arm()
 	}
 	last_claw_bool = claw_bool;
 	//*/
-	int value = joystickGetAnalog(2,JOY_FORWARD_S );
-	int lift_pow = (abs(value) > JOY_DEAD_T) ? value : 0;
+	//int value = joystickGetAnalog(2,JOY_FORWARD_S );
+	//int lift_pow = (abs(value) > JOY_DEAD_T) ? value : 0;
 	motorSet(MLIFTL,-lift_pow);
 	motorSet(MLIFTR,lift_pow);
 }
