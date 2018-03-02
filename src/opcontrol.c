@@ -97,7 +97,7 @@ void open_claw()
 	#endif
 	#ifdef WALTER
 	//needs to be repeated over time
-	motorSet(MCLAW,HOOK_POW);
+	motorSet(MCLAW,-HOOK_POW);
 	#endif
 	printf("Open_claw");
 }
@@ -109,7 +109,7 @@ void close_claw()
 	#endif
 	#ifdef WALTER
 	//needs to be repeated over time
-	motorSet(MCLAW,-HOOK_POW);
+	motorSet(MCLAW,HOOK_POW);
 	#endif
 	printf("Close_claw");
 }
@@ -117,6 +117,10 @@ void close_claw()
 void stop_claw()
 {
 	motorSet(MCLAW,0);
+}
+void raise_fork(int hoist_pow)
+{
+	motorSet(MHOIST,hoist_pow);
 }
 #endif
 // TODO: maybe reset when done
@@ -137,6 +141,20 @@ int waited(int ms)// true if done, false if still waiting.
 	return !(timer>0);
 }
 int waited2(int ms)// true if done, false if still waiting.
+{
+	static int timer = -1;
+	if ( timer==-1 || ms==-1 ) // -1 ms means reset timer
+	{
+		timer=ms;
+	}
+	else if (timer>0)
+	{
+		timer-=DELAY_ms;
+	}
+	//printf("Timer: %d\r\n",timer);
+	return !(timer>0);
+}
+int waited3(int ms)// true if done, false if still waiting.
 {
 	static int timer = -1;
 	if ( timer==-1 || ms==-1 ) // -1 ms means reset timer
@@ -502,142 +520,142 @@ void straigt_forward_auto_score_cone()
 {
 	//*
 	#ifdef IMP
-	static int switchflag = 1; // initial direction 1 or -1
-	static int state = 0; // 0 is finding cone, 1 is positioning on cone
-	static int substate = 0; // depends on state
-	static int visibility_state = 0; // 0 is not acquired, 1 is acquired
-	static int missed = 0; // time of consecutive ultrasonic drops
-	static int width_timer = 0; // keep track of time between edges of cone
-	static int last_dist = FAR_DIST+CONE_DELTA; //helps find the closest cone instead of chasing after multiple cones at once
-	static int last_button = 0;
-	
-	int button = 0; // Only if button is pressed
-	button += joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_UP   ) ? 1 : 0 ;
-	button -= joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_DOWN ) ? 1 : 0 ;
-	button += joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_UP   ) ? 1 : 0 ;
-	button -= joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_DOWN ) ? 1 : 0 ;
-	if(!button) // reset and exit
-	{
-		state = 0;
-		substate = 0;
-		visibility_state = 0;
-		missed = 0;
-		width_timer = 0;
-		last_dist = FAR_DIST+CONE_DELTA;
-		last_button = 0;
-		return;
-	}
-	
-	int dist = ultrasonicGet(US); // current dist to cone
-	if (last_button==0)switchflag = button/abs(button);
-	// close claw: digitalWrite(CLAW_PIN, 1); //open is 0
-	if (state == 0)
-	{
-		close_claw();
-		state = 1;
-	}
-	else if (state == 1)
-	{
-		//digitalWrite(CLAW_PIN, 1);//close claw
-		//close_claw();
-		motorSet(MLIFT,-MLIFT_POW); // arm staying up
-		
-		if (waited2(1000) && (waited(4000) || (dist < SORTA_CLOSE && dist > 0) ))
-		{
-			state = 2;
-			waited(WAIT_RESET);
-			waited2(WAIT_RESET);
-		}
-		else
-		{
-			controldrive(0,GOAL_POW,0);// drive straight
-		}
-	}
-	else if (state == 2) // 3.0 find Base
-	{
-		//digitalWrite(CLAW_PIN, 1);//close claw
-		//close_claw();
-		motorSet(MLIFT,-MLIFT_POW); // arm staying up
-		
-		if (dist<FAR_DIST+CONE_DELTA && dist>0 
-		// && dist < last_dist+CONE_DELTA // <--- find closest object; goal is not closest
-		)
-		{
-			missed = 0;
-			if(visibility_state == 0)
-			{
-				switchflag = -switchflag;
-			}
-			visibility_state = 1;
-			last_dist = dist;
-		}
-		else
-		{
-			missed+=DELAY_ms;
-			if(missed==5*DELAY_ms)
-			{
-				visibility_state = 0;
-			}
-		}
-		if(visibility_state == 1)
-		{
-			if(dist<TARGET_DIST && dist > 0)// changed this
-			{
-				if (waited(40*DELAY_ms)) // 1 sec
-				{
-					waited(WAIT_RESET);
-					state = 3;// enter placing code
-					//arm down
-					printf("Entered state: %d.%d\r\n",state,substate);
-				}
-				else
-				{
-					controldrive(0,0,0);
-				}
-			}
-			else
-			{
-				controldrive(0,GOAL_POW-(FAR_DIST-dist)/3,0);// drive straight
-			}
-		}
-		else
-		{
-			controldrive(switchflag*GOAL_POW/2,0,0);// turn
-		}
-	}
-	else if (state == 3)
-	{
-		if (waited(125))
-		{
-			waited(WAIT_RESET);
-			state = 4;
-			controldrive(0,0,0);
-		}
-		else
-		{
-			controldrive(0,-128,0);
-		}
-	}
-	else if (state == 4) // 2.0 score
-	{
-		if (waited(3000))
-		{
-			waited(WAIT_RESET);
-			state = 5;
-			open_claw();
-		}
-		else
-		{
-			//motorSet(MLIFT,MLIFT_POW); // arm down
-			motorSet(MLIFT,0);
-		}
-	}
-	else if (state == 5)
-	{
-		//open_claw();
-	}
-	
-	last_button=button;
+	//static int switchflag = 1; // initial direction 1 or -1
+	//static int state = 0; // 0 is finding cone, 1 is positioning on cone
+	//static int substate = 0; // depends on state
+	//static int visibility_state = 0; // 0 is not acquired, 1 is acquired
+	//static int missed = 0; // time of consecutive ultrasonic drops
+	//static int width_timer = 0; // keep track of time between edges of cone
+	//static int last_dist = FAR_DIST+CONE_DELTA; //helps find the closest cone instead of chasing after multiple cones at once
+	//static int last_button = 0;
+	//
+	//int button = 0; // Only if button is pressed
+	//button += joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_UP   ) ? 1 : 0 ;
+	//button -= joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_DOWN ) ? 1 : 0 ;
+	//button += joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_UP   ) ? 1 : 0 ;
+	//button -= joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_DOWN ) ? 1 : 0 ;
+	//if(!button) // reset and exit
+	//{
+	//	state = 0;
+	//	substate = 0;
+	//	visibility_state = 0;
+	//	missed = 0;
+	//	width_timer = 0;
+	//	last_dist = FAR_DIST+CONE_DELTA;
+	//	last_button = 0;
+	//	return;
+	//}
+	//
+	//int dist = ultrasonicGet(US); // current dist to cone
+	//if (last_button==0)switchflag = button/abs(button);
+	//// close claw: digitalWrite(CLAW_PIN, 1); //open is 0
+	//if (state == 0)
+	//{
+	//	close_claw();
+	//	state = 1;
+	//}
+	//else if (state == 1)
+	//{
+	//	//digitalWrite(CLAW_PIN, 1);//close claw
+	//	//close_claw();
+	//	motorSet(MLIFT,-MLIFT_POW); // arm staying up
+	//	
+	//	if (waited2(1000) && (waited(4000) || (dist < SORTA_CLOSE && dist > 0) ))
+	//	{
+	//		state = 2;
+	//		waited(WAIT_RESET);
+	//		waited2(WAIT_RESET);
+	//	}
+	//	else
+	//	{
+	//		controldrive(0,GOAL_POW,0);// drive straight
+	//	}
+	//}
+	//else if (state == 2) // 3.0 find Base
+	//{
+	//	//digitalWrite(CLAW_PIN, 1);//close claw
+	//	//close_claw();
+	//	motorSet(MLIFT,-MLIFT_POW); // arm staying up
+	//	
+	//	if (dist<FAR_DIST+CONE_DELTA && dist>0 
+	//	// && dist < last_dist+CONE_DELTA // <--- find closest object; goal is not closest
+	//	)
+	//	{
+	//		missed = 0;
+	//		if(visibility_state == 0)
+	//		{
+	//			switchflag = -switchflag;
+	//		}
+	//		visibility_state = 1;
+	//		last_dist = dist;
+	//	}
+	//	else
+	//	{
+	//		missed+=DELAY_ms;
+	//		if(missed==5*DELAY_ms)
+	//		{
+	//			visibility_state = 0;
+	//		}
+	//	}
+	//	if(visibility_state == 1)
+	//	{
+	//		if(dist<TARGET_DIST && dist > 0)// changed this
+	//		{
+	//			if (waited(40*DELAY_ms)) // 1 sec
+	//			{
+	//				waited(WAIT_RESET);
+	//				state = 3;// enter placing code
+	//				//arm down
+	//				printf("Entered state: %d.%d\r\n",state,substate);
+	//			}
+	//			else
+	//			{
+	//				controldrive(0,0,0);
+	//			}
+	//		}
+	//		else
+	//		{
+	//			controldrive(0,GOAL_POW-(FAR_DIST-dist)/3,0);// drive straight
+	//		}
+	//	}
+	//	else
+	//	{
+	//		controldrive(switchflag*GOAL_POW/2,0,0);// turn
+	//	}
+	//}
+	//else if (state == 3)
+	//{
+	//	if (waited(125))
+	//	{
+	//		waited(WAIT_RESET);
+	//		state = 4;
+	//		controldrive(0,0,0);
+	//	}
+	//	else
+	//	{
+	//		controldrive(0,-128,0);
+	//	}
+	//}
+	//else if (state == 4) // 2.0 score
+	//{
+	//	if (waited(3000))
+	//	{
+	//		waited(WAIT_RESET);
+	//		state = 5;
+	//		open_claw();
+	//	}
+	//	else
+	//	{
+	//		//motorSet(MLIFT,MLIFT_POW); // arm down
+	//		motorSet(MLIFT,0);
+	//	}
+	//}
+	//else if (state == 5)
+	//{
+	//	//open_claw();
+	//}
+	//
+	//last_button=button;
 	#endif
 	//*/
 	//*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -654,10 +672,10 @@ void straigt_forward_auto_score_cone()
 	static int last_button = 0;
 	
 	int button = 0; // Only if button is pressed
-	button += joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_UP   ) ? 1 : 0 ;
-	button -= joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_DOWN ) ? 1 : 0 ;
-	button += joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_UP   ) ? 1 : 0 ;
-	button -= joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_DOWN ) ? 1 : 0 ;
+	button += joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_UP   ) ? 1 : 0 ;//RED
+	button -= joystickGetDigital( 1 , JOY_AUTO_TEST , JOY_DOWN ) ? 1 : 0 ;//BLUE
+	button += joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_UP   ) ? 1 : 0 ;//RED
+	button -= joystickGetDigital( 2 , JOY_AUTO_TEST , JOY_DOWN ) ? 1 : 0 ;//BLUE
 	if(!button) // reset and exit
 	{
 		state = 0;
@@ -673,19 +691,34 @@ void straigt_forward_auto_score_cone()
 	int dist = ultrasonicGet(US); // current dist to cone
 	if (last_button==0)switchflag = button/abs(button);
 	// close claw: digitalWrite(CLAW_PIN, 1); //open is 0
+	////////////////////////////////////////////////////////////////////
 	if (state == 0)
 	{
-		close_claw();
-		state = 1;
+		//close_claw();
+		//printf("%d",waited3(500));
+		if (waited3(500))
+		{
+			printf("motorSet(MHOOK,0);");
+			motorSet(MHOOK,0);
+			state = 1;
+			waited3(WAIT_RESET);
+		}
+		else
+		{
+			printf("motorSet(MHOOK,CLAW_POW);");
+			motorSet(MHOOK,CLAW_POW);// +CCW
+		}
 	}
 	else if (state == 1)
 	{
 		//digitalWrite(CLAW_PIN, 1);//close claw
 		//close_claw();
+		
 		lift_arm(MLIFT_POW); // arm staying up
 		
 		if (waited2(1000) && (waited(4000) || (dist < SORTA_CLOSE && dist > 0) ))
 		{
+			printf("RESET");
 			state = 2;
 			waited(WAIT_RESET);
 			waited2(WAIT_RESET);
@@ -749,24 +782,26 @@ void straigt_forward_auto_score_cone()
 	}
 	else if (state == 3)// back up for positioning
 	{
-		if (waited(125))
-		{
-			waited(WAIT_RESET);
+		//if (waited(125))
+		//{
+		//	waited(WAIT_RESET);
 			state = 4;
 			controldrive(0,0,0);
-		}
-		else
-		{
-			controldrive(0,-128,0);
-		}
+		//}
+		//else
+		//{
+		//	controldrive(0,-128,0);
+		//}
 	}
 	else if (state == 4) // 2.0 score
 	{
 		if (waited(3000))
 		{
+			printf("Open Claw");
 			waited(WAIT_RESET);
 			state = 5;
 			open_claw();
+			lift_arm(0);
 		}
 		else
 		{
@@ -774,24 +809,100 @@ void straigt_forward_auto_score_cone()
 			lift_arm(-MLIFT_SLOW);
 		}
 	}
-	else if (state == 5)
+	else if (state == 5)//open claw
 	{
 		if (waited(1000))
 		{
 			state = 6;
+			stop_claw();
 			waited(WAIT_RESET);
 		}
 		else
 		{
 			open_claw();
-			
 		}
 	}
-	else if (state == 6)
+	else if (state == 6)// raise fork
 	{
-		stop_claw();
+		if (waited(3500))
+		{
+			state = 7;
+			waited(WAIT_RESET);
+			raise_fork(0);
+		}
+		else
+		{
+			raise_fork(HOIST_POW);
+		}
 	}
-	
+	else if (state == 7)//back up
+	{
+		if (waited(3000))
+		{
+			state = 8;
+			waited(WAIT_RESET);
+			controldrive(0,0,0);
+		}
+		else
+		{
+			//strafe
+			controldrive(0,-switchflag*GOAL_POW,0);
+		}
+	}
+	//else if (state == 8)//turn left for blue
+	//{
+	//	if (waited(3000))
+	//	{
+	//		state = 9;
+	//		waited(WAIT_RESET);
+	//		controldrive(0,0,0);
+	//	}
+	//	else
+	//	{
+	//		//turn left for blue
+	//		controldrive(-switchflag*GOAL_POW,0,0);
+	//	}
+	//}
+	//else if (state == 9)//straight to score
+	//{
+	//	if (waited(3000))
+	//	{
+	//		state = 10;
+	//		waited(WAIT_RESET);
+	//		controldrive(0,0,0);
+	//	}
+	//	else
+	//	{
+	//		controldrive(0,127,0);//straight to score
+	//	}
+	//}
+	//else if (state == 10)// lower fork
+	//{
+	//	if (waited(3000))
+	//	{
+	//		state = 11;
+	//		waited(WAIT_RESET);
+	//		raise_fork(0);
+	//	}
+	//	else
+	//	{
+	//		raise_fork(-HOIST_POW);//lower fork
+	//	}
+	//}
+	//else if (state == 11)//straight back to score
+	//{
+	//	if (waited(3000))
+	//	{
+	//		state = 12;
+	//		waited(WAIT_RESET);
+	//		controldrive(0,0,0);
+	//	}
+	//	else
+	//	{
+	//		controldrive(0,-127,0);//straight back to score
+	//	}
+	//}
+	////////////////////////////////////////////////////////////////////
 	last_button=button;
 	#endif
 	//*/
@@ -854,8 +965,8 @@ void straigt_forward_auto_score_cone()
 void lift_arm(int lift_pow)
 {
 	#ifdef WALTER
-	motorSet(MLIFTL,-lift_pow);
-	motorSet(MLIFTR,lift_pow);
+	motorSet(MLIFTL,lift_pow);
+	motorSet(MLIFTR,-lift_pow);
 	#endif
 	#ifdef IMP
 	motorSet(MLIFT,-lift_pow);
@@ -896,7 +1007,7 @@ void quick_claw_arm()
 }
 
 //----------------------------------------------------------------------
-void op_hoist()
+void op_hoist() //goal fork lift
 {
 	#ifdef WALTER
 	//static float timer=0;
@@ -927,7 +1038,7 @@ void op_hoist()
 	//}
 }
 
-void op_hook()
+void op_hook() // Open and close claw
 {
 	#ifdef WALTER
 	int hook_pow = 0;
@@ -941,7 +1052,7 @@ void op_hook()
 	#endif
 }
 
-void op_claw()
+void op_claw() // Claw side to side.
 {
 	#ifdef WALTER
 	int claw_pow = 0;
@@ -970,7 +1081,7 @@ void opcontrol()
 	op_hoist();
 	op_hook();//fork lift
 	//test_auto_find_cone();
-	//straigt_forward_auto_score_cone();
+	straigt_forward_auto_score_cone();
 	wheelie();
 	//op_lift();
 	op_claw();

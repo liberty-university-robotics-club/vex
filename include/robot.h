@@ -3,7 +3,20 @@
 #include "API.h"
 //#define GODDARD
 //#define IMP
+//#define FREAKING_OUT
+
 #define WALTER
+//#define RED
+#define BLUE
+
+#ifdef RED
+#define SWITCHFLAG 1
+#endif
+
+#ifdef BLUE
+#define SWITCHFLAG -1
+#endif
+
 
 // CONTROLLER PINS + CONSTANTS
 
@@ -44,7 +57,7 @@
 
 #define HOIST_POW 127
 #define HOOK_POW 127
-#define MLIFT_POW 50
+#define MLIFT_POW 127
 #define MLIFT_SLOW 20 //actually positive
 #define CLAW_POW 64
 
@@ -76,7 +89,7 @@
 #define CLAW_PIN 12
 
 #define TARGET_POW 64 //64
-#define GOAL_POW 128
+#define GOAL_POW 127
 #define POS_POW 64
 #define TARGET_DIST 30 //20
 #define CONE_DELTA 10

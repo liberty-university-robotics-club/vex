@@ -10,11 +10,14 @@ void controldrive(int t, int f, int s);
 //int auto_claw(bool begin_auto, bool clench);
 
 void lift_arm(int lift_pow);
+void stop_claw();
+void raise_fork(int hoist_pow);
 
 void open_claw();
 void close_claw();
 int waited(int ms);
 int waited2(int ms);
+int waited3(int ms);
 
 
 #define DONT_MOVE 0
