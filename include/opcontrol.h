@@ -9,6 +9,8 @@ void controldrive(int t, int f, int s);
 //bool continue_auto_claw();
 //int auto_claw(bool begin_auto, bool clench);
 
+void lift_arm(int lift_pow);
+
 void open_claw();
 void close_claw();
 int waited(int ms);
